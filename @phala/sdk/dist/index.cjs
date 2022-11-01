@@ -60,7 +60,11 @@ var types = {
   },
   InkQueryData: {
     _enum: {
-      InkMessage: "Vec<u8>",
+      InkMessage: {
+        payload: "Vec<u8>",
+        deposit: "u128",
+        transfer: "u128"
+      },
       SidevmMessage: "Vec<u8>"
     }
   },
@@ -85,7 +89,10 @@ var types = {
   },
   InkMessage: {
     nonce: "Vec<u8>",
-    message: "Vec<u8>"
+    message: "Vec<u8>",
+    transfer: 'u128',
+    gasLimit: 'u64',
+    storageDepositLimit: 'Option<u128>',
   },
   InkCommand: { _enum: { InkMessage: "InkMessage" } },
   WeightV2: {
@@ -5815,7 +5822,7 @@ var createPruntimeApi = (baseURL) => {
   );
   return pruntimeApi;
 };
-var create = async ({ api, baseURL, contractId }) => {
+var create = async ({ api, baseURL, contractId, autoDeposit = false }) => {
   await (0, import_wasm_crypto.waitReady)();
   const pruntimeApi = createPruntimeApi(baseURL);
   const { publicKey } = await pruntimeApi.getInfo({});
@@ -5829,6 +5836,12 @@ var create = async ({ api, baseURL, contractId }) => {
     (0, import_util2.hexToU8a)((0, import_util2.hexAddPrefix)(remotePubkey)),
     sk
   );
+  let gasPrice = 0;
+  if (autoDeposit) {
+    // TODO: no unwrap
+    const cluster = (await api.query.phalaFatContracts.contracts(contractId)).unwrap().cluster;
+    gasPrice = (await api.query.phalaFatContracts.clusters(cluster)).unwrap().gasPrice;
+  }
   const contractKey = (await api.query.phalaRegistry.contractKeys(contractId)).toString();
   if (!contractKey) {
     throw new Error(`No contract key for ${contractId}`);
@@ -5873,24 +5886,35 @@ var create = async ({ api, baseURL, contractId }) => {
     }).toHex(),
     certificateData
   );
-  const command = ({ contractId: contractId2, payload }) => {
+  const command = ({ contractId: contractId2, payload, deposit }) => {
     const encodedPayload = api.createType("CommandPayload", {
       encrypted: createEncryptedData(payload, commandAgreementKey)
     }).toHex();
-    return api.tx.phalaMq.pushMessage(
-      (0, import_util2.stringToHex)(`phala/contract/${(0, import_util2.hexStripPrefix)(contractId2)}/command`),
-      encodedPayload
+    return api.tx.phalaFatContracts.pushContractMessage(
+      contractId2,
+      encodedPayload,
+      deposit
     );
   };
   const txContracts = (dest, value, gas, storageDepositLimit, encParams) => {
+    let deposit = 0;
+    if (autoDeposit) {
+      // FIXME: use BN.js
+      const gasFee = gas * gasPrice;
+      deposit = value + gasFee + (storageDepositLimit || 0);
+    }
     return command({
       contractId: dest.toHex(),
       payload: api.createType("InkCommand", {
         InkMessage: {
           nonce: (0, import_util2.hexAddPrefix)(randomHex(32)),
-          message: api.createType("Vec<u8>", encParams).toHex()
+          message: api.createType("Vec<u8>", encParams).toHex(),
+          transfer: value,
+          gasLimit: gas,
+          storageDepositLimit
         }
-      }).toHex()
+      }).toHex(),
+      deposit
     });
   };
   Object.defineProperty(txContracts, "meta", {
@@ -5917,7 +5941,8 @@ var create = async ({ api, baseURL, contractId }) => {
                 id: dest
               },
               data: {
-                InkMessage: inputData
+                // Better pass the `deposit` in by the caller. A hard coded large enough value is acceptable at the moment.
+                InkMessage: { payload: inputData, deposit: "10000000000000000", transfer: value }
               }
             }).toHex(),
             origin
