@@ -1,15 +1,17 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 import { objectSpread } from '@polkadot/util';
-import { runtime } from "./runtime.js"; // The runtime definition of SessionKeys are passed as a Trait to session
+import { runtime } from "./runtime.js";
+
+// The runtime definition of SessionKeys are passed as a Trait to session
 // Defined in `node/runtime/src/lib.rs` as follow
 //   impl_opaque_keys! {
 //     pub struct SessionKeys {
 // Here we revert to tuples to keep the interfaces "opaque", as per the use
-
 const keyTypes = {
   // key for beefy
   BeefyKey: '[u8; 33]',

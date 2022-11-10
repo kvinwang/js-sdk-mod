@@ -39,9 +39,6 @@ Object.defineProperty(exports, "expandMetadata", {
     return _decorate.expandMetadata;
   }
 });
-
 var _Metadata = require("./Metadata");
-
 var _PortableRegistry = require("./PortableRegistry");
-
 var _decorate = require("./decorate");

@@ -51,7 +51,18 @@ var types = {
     nonce: "Vec<u8>",
     message: "Vec<u8>"
   },
-  InkCommand: { _enum: { InkMessage: "InkMessage" } }
+  InkCommand: { _enum: { InkMessage: "InkMessage" } },
+  WeightV2: {
+    refTime: "Compact<u64>",
+    proofSize: "Compact<u64>"
+  },
+  ContractExecResultV2: {
+    gasConsumedV2: "WeightV2",
+    gasRequiredV2: "WeightV2",
+    storageDeposit: "StorageDeposit",
+    debugMessage: "Text",
+    result: "ContractExecResultResult"
+  }
 };
 
 // src/lib/hex.ts
@@ -5886,10 +5897,19 @@ var create = async ({ api, baseURL, contractId }) => {
             }).toHex(),
             origin
           ).then((data) => {
-            return api.createType(
-              "ContractExecResult",
-              api.createType("InkResponse", hexAddPrefix2(data)).toJSON().result.ok.inkMessageReturn
-            );
+            const inkMessageReturn = api.createType("InkResponse", hexAddPrefix2(data)).toJSON().result.ok.inkMessageReturn;
+            let result;
+            try {
+              result = api.createType("ContractExecResult", inkMessageReturn);
+            } catch (err) {
+              result = api.createType(
+                "ContractExecResultV2",
+                inkMessageReturn
+              );
+              result.gasConsumed = result.gasConsumedV2.proofSize.unwrap();
+              result.gasRequired = result.gasRequiredV2.proofSize.unwrap();
+            }
+            return result;
           })
         );
       }

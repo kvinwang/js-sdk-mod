@@ -1080,6 +1080,19 @@ export default [
 		"website": "https://centrifuge.io/"
 	},
 	{
+		"prefix": 137,
+		"network": "vara",
+		"displayName": "Vara Network",
+		"symbols": [
+			"VARA"
+		],
+		"decimals": [
+			12
+		],
+		"standardAccount": "*25519",
+		"website": "https://vara-network.io/"
+	},
+	{
 		"prefix": 172,
 		"network": "parallel",
 		"displayName": "Parallel",
@@ -1275,6 +1288,19 @@ export default [
 		"website": "https://totemaccounting.com"
 	},
 	{
+		"prefix": 2009,
+		"network": "cloudwalk_mainnet",
+		"displayName": "CloudWalk Network Mainnet",
+		"symbols": [
+			"CWN"
+		],
+		"decimals": [
+			18
+		],
+		"standardAccount": "*25519",
+		"website": "https://explorer.mainnet.cloudwalk.io"
+	},
+	{
 		"prefix": 2032,
 		"network": "interlay",
 		"displayName": "Interlay",
@@ -1299,6 +1325,19 @@ export default [
 		],
 		"standardAccount": "*25519",
 		"website": "https://interlay.io/"
+	},
+	{
+		"prefix": 2106,
+		"network": "bitgreen",
+		"displayName": "Bitgreen",
+		"symbols": [
+			"BBB"
+		],
+		"decimals": [
+			18
+		],
+		"standardAccount": "*25519",
+		"website": "https://bitgreen.org/"
 	},
 	{
 		"prefix": 2112,
@@ -1511,6 +1550,19 @@ export default [
 		],
 		"standardAccount": "*25519",
 		"website": "https://www.dentnet.io"
+	},
+	{
+		"prefix": 9935,
+		"network": "t3rn",
+		"displayName": "t3rn",
+		"symbols": [
+			"TRN"
+		],
+		"decimals": [
+			12
+		],
+		"standardAccount": "*25519",
+		"website": "https://t3rn.io/"
 	},
 	{
 		"prefix": 10041,

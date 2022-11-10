@@ -46,19 +46,12 @@ Object.defineProperty(exports, "filterEventsSome", {
     return _events.filterEventsSome;
   }
 });
-
 var _Metadata = require("../Metadata");
-
 var _constants = require("./constants");
-
 var _errors = require("./errors");
-
 var _events = require("./events");
-
 var _extrinsics = require("./extrinsics");
-
 var _storage = require("./storage");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -69,7 +62,6 @@ function expandMetadata(registry, metadata) {
   if (!(metadata instanceof _Metadata.Metadata)) {
     throw new Error('You need to pass a valid Metadata instance to Decorated');
   }
-
   const latest = metadata.asLatest;
   const version = metadata.version;
   return {

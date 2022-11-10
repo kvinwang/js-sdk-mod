@@ -21,9 +21,6 @@ Object.defineProperty(exports, "GenericExtrinsicV4", {
     return _Extrinsic.GenericExtrinsicV4;
   }
 });
-
 var _Extrinsic = require("./Extrinsic");
-
 var _ExtrinsicPayload = require("./ExtrinsicPayload");
-
 var _ExtrinsicSignature = require("./ExtrinsicSignature");

@@ -4,11 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.GenericExtrinsicUnknown = void 0;
-
 var _typesCodec = require("@polkadot/types-codec");
-
 var _constants = require("./constants");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -26,7 +23,5 @@ class GenericExtrinsicUnknown extends _typesCodec.Struct {
     super(registry, {});
     throw new Error(`Unsupported ${isSigned ? '' : 'un'}signed extrinsic version ${version & _constants.UNMASK_VERSION}`);
   }
-
 }
-
 exports.GenericExtrinsicUnknown = GenericExtrinsicUnknown;

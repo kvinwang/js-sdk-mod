@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 export const rpc = {
   getKeys: {
     description: 'Returns the keys with prefix from a child storage, leave empty to get all the keys',

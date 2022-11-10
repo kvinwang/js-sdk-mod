@@ -20,8 +20,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 // GNU General Public License for more details.
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import { start as startInstance } from './instance/instance.js';
-export { CrashError } from './instance/instance.js';
+import { MalformedJsonRpcError, start as startInstance } from './instance/instance.js';
+export { MalformedJsonRpcError, QueueFullError, CrashError } from './instance/instance.js';
 /**
  * Thrown in case of a problem when initializing the chain.
  */
@@ -111,19 +111,7 @@ export function start(options, platformBindings) {
                     potentialRelayChainsIds.push(id);
                 }
             }
-            // We need to tweak the JSON-RPC callback to absorb exceptions that the user might throw.
-            if (options.jsonRpcCallback) {
-                const cb = options.jsonRpcCallback;
-                options.jsonRpcCallback = (response) => {
-                    try {
-                        cb(response);
-                    }
-                    catch (error) {
-                        console.warn("Uncaught exception in JSON-RPC callback:", error);
-                    }
-                };
-            }
-            const outcome = yield instance.addChain(options.chainSpec, typeof options.databaseContent === 'string' ? options.databaseContent : "", potentialRelayChainsIds, options.jsonRpcCallback);
+            const outcome = yield instance.addChain(options.chainSpec, typeof options.databaseContent === 'string' ? options.databaseContent : "", potentialRelayChainsIds, !!options.disableJsonRpc);
             if (!outcome.success)
                 throw new AddChainError(outcome.error);
             const chainId = outcome.chainId;
@@ -136,21 +124,24 @@ export function start(options, platformBindings) {
                         throw alreadyDestroyedError;
                     if (wasDestroyed.destroyed)
                         throw new AlreadyDestroyedError();
-                    if (!options.jsonRpcCallback)
+                    if (options.disableJsonRpc)
                         throw new JsonRpcDisabledError();
                     if (request.length >= 64 * 1024 * 1024) {
-                        console.error("Client.sendJsonRpc ignored a JSON-RPC request because it was too large (" + request.length + " bytes)");
-                        return;
+                        throw new MalformedJsonRpcError();
                     }
                     ;
                     instance.request(request, chainId);
                 },
-                databaseContent: (maxUtf8BytesSize) => {
+                nextJsonRpcResponse: () => {
                     if (alreadyDestroyedError)
                         return Promise.reject(alreadyDestroyedError);
                     if (wasDestroyed.destroyed)
-                        throw new AlreadyDestroyedError();
-                    return instance.databaseContent(chainId, maxUtf8BytesSize);
+                        return Promise.reject(new AlreadyDestroyedError());
+                    if (options.disableJsonRpc)
+                        return Promise.reject(new JsonRpcDisabledError());
+                    return new Promise((resolve, reject) => {
+                        instance.nextJsonRpcResponse(chainId, resolve, reject);
+                    });
                 },
                 remove: () => {
                     if (alreadyDestroyedError)

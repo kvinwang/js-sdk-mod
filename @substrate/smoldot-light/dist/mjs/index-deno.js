@@ -22,7 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { start as innerStart } from './client.js';
 import { ConnectionError } from './instance/instance.js';
-export { AddChainError, AlreadyDestroyedError, CrashError, JsonRpcDisabledError } from './client.js';
+export { AddChainError, AlreadyDestroyedError, CrashError, MalformedJsonRpcError, QueueFullError, JsonRpcDisabledError } from './client.js';
 /**
  * Initializes a new client. This is a pre-requisite to connecting to a blockchain.
  *
@@ -93,7 +93,7 @@ function trustedBase64Decode(base64) {
  * Tries to open a new connection using the given configuration.
  *
  * @see Connection
- * @throws ConnectionError If the multiaddress couldn't be parsed or contains an invalid protocol.
+ * @throws {@link ConnectionError} If the multiaddress couldn't be parsed or contains an invalid protocol.
  */
 function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
     let connection;
@@ -121,7 +121,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         };
         connection.socket.onclose = (event) => {
             const message = "Error code " + event.code + (!!event.reason ? (": " + event.reason) : "");
-            config.onConnectionClose(message);
+            config.onConnectionReset(message);
         };
         connection.socket.onmessage = (msg) => {
             config.onMessage(new Uint8Array(msg.data));
@@ -167,7 +167,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
                     // The socket is reported closed, but `socket.destroyed` is still `false` (see
                     // check above). As such, we must inform the inner layers.
                     socket.destroyed = true;
-                    config.onConnectionClose(outcome === null ? "EOF when reading socket" : outcome);
+                    config.onConnectionReset(outcome === null ? "EOF when reading socket" : outcome);
                     return;
                 }
                 console.assert(outcome !== 0); // `read` guarantees to return a non-zero value.
@@ -182,7 +182,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         throw new ConnectionError('Unrecognized multiaddr format');
     }
     return {
-        close: () => {
+        reset: () => {
             if (connection.ty == 'websocket') {
                 // WebSocket
                 // We can't set these fields to null because the TypeScript definitions don't
@@ -202,7 +202,15 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         send: (data) => {
             if (connection.ty == 'websocket') {
                 // WebSocket
-                connection.socket.send(data);
+                // The WebSocket library that we use seems to spontaneously transition connections
+                // to the "closed" state but not call the `onclosed` callback immediately. Calling
+                // `send` on that object throws an exception. In order to avoid panicking smoldot,
+                // we thus absorb any exception thrown here.
+                // See also <https://github.com/paritytech/smoldot/issues/2937>.
+                try {
+                    connection.socket.send(data);
+                }
+                catch (_error) { }
             }
             else {
                 // TCP
@@ -225,7 +233,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
                             // The socket is reported closed, but `socket.destroyed` is still
                             // `false` (see check above). As such, we must inform the inner layers.
                             socket.destroyed = true;
-                            config.onConnectionClose(outcome);
+                            config.onConnectionReset(outcome);
                             return c;
                         }
                         // Note that, contrary to `read`, it is possible for `outcome` to be 0.

@@ -1,7 +1,7 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import { assertUnreachable } from '@polkadot/util';
 
+import { assertUnreachable } from '@polkadot/util';
 function convertType(key) {
   return (registry, {
     type
@@ -11,7 +11,6 @@ function convertType(key) {
     }
   });
 }
-
 function convertArray(registry, {
   len,
   type
@@ -23,7 +22,6 @@ function convertArray(registry, {
     }
   });
 }
-
 function convertBitSequence(registry, {
   bitOrderType,
   bitStoreType
@@ -35,9 +33,7 @@ function convertBitSequence(registry, {
     }
   });
 }
-
 const convertCompact = convertType('Compact');
-
 function convertComposite(registry, {
   fields
 }) {
@@ -47,7 +43,6 @@ function convertComposite(registry, {
     }
   });
 }
-
 function convertFields(registry, fields) {
   return fields.map(({
     docs,
@@ -61,28 +56,23 @@ function convertFields(registry, fields) {
     typeName
   }));
 }
-
 function convertPhantom(registry, path) {
   console.warn(`Converting phantom type ${path.map(p => p.toString()).join('::')} to empty tuple`);
   return registry.createType('Si1TypeDef', {
     Tuple: []
   });
 }
-
 function convertPrimitive(registry, prim) {
   return registry.createType('Si1TypeDef', {
     Primitive: prim.toString()
   });
 }
-
 const convertSequence = convertType('Sequence');
-
 function convertTuple(registry, types) {
   return registry.createType('Si1TypeDef', {
     Tuple: types.map(t => t.toNumber())
   });
 }
-
 function convertVariant(registry, {
   variants
 }) {
@@ -102,57 +92,44 @@ function convertVariant(registry, {
     }
   });
 }
-
 function convertDef(registry, {
   def,
   path
 }) {
   let result;
-
   switch (def.type) {
     case 'Array':
       result = convertArray(registry, def.asArray);
       break;
-
     case 'BitSequence':
       result = convertBitSequence(registry, def.asBitSequence);
       break;
-
     case 'Compact':
       result = convertCompact(registry, def.asCompact);
       break;
-
     case 'Composite':
       result = convertComposite(registry, def.asComposite);
       break;
-
     case 'Phantom':
       result = convertPhantom(registry, path);
       break;
-
     case 'Primitive':
       result = convertPrimitive(registry, def.asPrimitive);
       break;
-
     case 'Sequence':
       result = convertSequence(registry, def.asSequence);
       break;
-
     case 'Tuple':
       result = convertTuple(registry, def.asTuple);
       break;
-
     case 'Variant':
       result = convertVariant(registry, def.asVariant);
       break;
-
     default:
       assertUnreachable(def.type);
   }
-
   return result;
 }
-
 export function toV1(registry, types) {
   return types.map((t, index) => registry.createType('PortableType', {
     // offsets are +1 from v0

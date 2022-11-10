@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.GenericExtrinsicPayloadUnknown = void 0;
-
 var _typesCodec = require("@polkadot/types-codec");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -23,7 +21,5 @@ class GenericExtrinsicPayloadUnknown extends _typesCodec.Struct {
     super(registry, {});
     throw new Error(`Unsupported extrinsic payload version ${version}`);
   }
-
 }
-
 exports.GenericExtrinsicPayloadUnknown = GenericExtrinsicPayloadUnknown;

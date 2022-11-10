@@ -4,48 +4,40 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.toV14 = toV14;
-
 var _util = require("@polkadot/util");
-
 var _alias = require("../../interfaces/alias");
-
 var _definitions = require("../../interfaces/runtime/definitions");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const BOXES = [['<', '>'], ['<', ','], [',', '>'], ['(', ')'], ['(', ','], [',', ','], [',', ')']];
+
 /**
  * Creates a compatible type mapping
  * @internal
  **/
-
 function compatType(specs, _type) {
   const type = _type.toString();
-
   const index = specs.findIndex(_ref => {
     let {
       def
     } = _ref;
     return def.HistoricMetaCompat === type;
   });
-
   if (index !== -1) {
     return index;
   }
-
   return specs.push({
     def: {
       HistoricMetaCompat: type
     }
   }) - 1;
 }
-
 function compatTypes(specs) {
   for (let i = 0; i < (arguments.length <= 1 ? 0 : arguments.length - 1); i++) {
     compatType(specs, i + 1 < 1 || arguments.length <= i + 1 ? undefined : arguments[i + 1]);
   }
 }
-
 function makeTupleType(specs, entries) {
   return specs.push({
     def: {
@@ -53,7 +45,6 @@ function makeTupleType(specs, entries) {
     }
   }) - 1;
 }
-
 function makeVariantType(modName, variantType, specs, variants) {
   return specs.push({
     def: {
@@ -64,38 +55,33 @@ function makeVariantType(modName, variantType, specs, variants) {
     path: [`pallet_${modName.toString()}`, 'pallet', variantType]
   }) - 1;
 }
+
 /**
  * @internal
  * generate & register the OriginCaller type
  **/
-
-
 function registerOriginCaller(registry, modules, metaVersion) {
   registry.register({
     OriginCaller: {
       _enum: modules.map((mod, index) => [mod.name.toString(), metaVersion >= 12 ? mod.index.toNumber() : index]).sort((a, b) => a[1] - b[1]).reduce((result, _ref2) => {
         let [name, index] = _ref2;
-
         for (let i = Object.keys(result).length; i < index; i++) {
           result[`Empty${i}`] = 'Null';
         }
-
         result[name] = _definitions.knownOrigins[name] || 'Null';
         return result;
       }, {})
     }
   });
 }
+
 /**
  * Find and apply the correct type override
  * @internal
  **/
-
-
 function setTypeOverride(sectionTypes, types) {
   types.forEach(type => {
     const override = Object.keys(sectionTypes).find(aliased => type.eq(aliased));
-
     if (override) {
       type.setOverride(sectionTypes[override]);
     } else {
@@ -108,19 +94,17 @@ function setTypeOverride(sectionTypes, types) {
           return result.replace(`${a}${src}${z}`, `${a}${dst}${z}`);
         }, result);
       }, orig);
-
       if (orig !== alias) {
         type.setOverride(alias);
       }
     }
   });
 }
+
 /**
  * Apply module-specific type overrides (always be done as part of toV14)
  * @internal
  **/
-
-
 function convertCalls(specs, registry, modName, calls, sectionTypes) {
   const variants = calls.map((_ref5, index) => {
     let {
@@ -154,12 +138,11 @@ function convertCalls(specs, registry, modName, calls, sectionTypes) {
     type: makeVariantType(modName, 'Call', specs, variants)
   }]);
 }
+
 /**
  * Apply module-specific type overrides (always be done as part of toV14)
  * @internal
  */
-
-
 function convertConstants(specs, registry, constants, sectionTypes) {
   return constants.map(_ref8 => {
     let {
@@ -177,13 +160,12 @@ function convertConstants(specs, registry, constants, sectionTypes) {
     }]);
   });
 }
+
 /**
  * Apply module-specific type overrides (always be done as part of toV14)
  * @internal
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-
 function convertErrors(specs, registry, modName, errors, _sectionTypes) {
   const variants = errors.map((_ref9, index) => {
     let {
@@ -201,12 +183,11 @@ function convertErrors(specs, registry, modName, errors, _sectionTypes) {
     type: makeVariantType(modName, 'Error', specs, variants)
   }]);
 }
+
 /**
  * Apply module-specific type overrides (always be done as part of toV14)
  * @internal
  **/
-
-
 function convertEvents(specs, registry, modName, events, sectionTypes) {
   const variants = events.map((_ref10, index) => {
     let {
@@ -228,7 +209,6 @@ function convertEvents(specs, registry, modName, events, sectionTypes) {
     type: makeVariantType(modName, 'Event', specs, variants)
   }]);
 }
-
 function createMapEntry(specs, registry, sectionTypes, _ref11) {
   let {
     hashers,
@@ -242,18 +222,18 @@ function createMapEntry(specs, registry, sectionTypes, _ref11) {
     Map: {
       hashers,
       key: hashers.length === 1 ? compatType(specs, keys[0]) : makeTupleType(specs, keys.map(t => compatType(specs, t))),
-      value: isLinked // For previous-generation linked-map support, the actual storage result
+      value: isLinked
+      // For previous-generation linked-map support, the actual storage result
       // is a Tuple with the value and the Linkage (Option appears in teh value-part only)
       ? compatType(specs, `(${isOptional ? `Option<${value.toString()}>` : value.toString()}, Linkage<${keys[0].toString()}>)`) : compatType(specs, value)
     }
   }]);
 }
+
 /**
  * Apply module-specific storage type overrides (always part of toV14)
  * @internal
  **/
-
-
 function convertStorage(specs, registry, _ref12, sectionTypes) {
   let {
     items,
@@ -269,7 +249,6 @@ function convertStorage(specs, registry, _ref12, sectionTypes) {
         type
       } = _ref13;
       let entryType;
-
       if (type.isPlain) {
         const plain = type.asPlain;
         setTypeOverride(sectionTypes, [plain]);
@@ -304,7 +283,6 @@ function convertStorage(specs, registry, _ref12, sectionTypes) {
           value: nm.value
         });
       }
-
       return registry.createTypeUnsafe('StorageEntryMetadataV14', [{
         docs,
         fallback,
@@ -316,10 +294,9 @@ function convertStorage(specs, registry, _ref12, sectionTypes) {
     prefix
   }]);
 }
+
 /** @internal */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-
 function convertExtrinsic(registry, _ref14) {
   let {
     signedExtensions,
@@ -329,16 +306,15 @@ function convertExtrinsic(registry, _ref14) {
     signedExtensions: signedExtensions.map(identifier => ({
       identifier,
       type: 0 // we don't map the fields at all
-
     })),
+
     type: 0,
     // Map to extrinsic like in v14?
     version
   }]);
 }
+
 /** @internal */
-
-
 function createPallet(specs, registry, mod, _ref15) {
   let {
     calls,
@@ -358,15 +334,15 @@ function createPallet(specs, registry, mod, _ref15) {
     storage: storage && convertStorage(specs, registry, storage, sectionTypes)
   }]);
 }
+
 /**
  * Convert the Metadata to v14
  * @internal
  **/
-
-
 function toV14(registry, v13, metaVersion) {
-  const specs = []; // position 0 always has Null, additionally add internal defaults
+  const specs = [];
 
+  // position 0 always has Null, additionally add internal defaults
   compatTypes(specs, 'Null', 'u8', 'u16', 'u32', 'u64');
   registerOriginCaller(registry, v13.modules, metaVersion);
   const extrinsic = convertExtrinsic(registry, v13.extrinsic);

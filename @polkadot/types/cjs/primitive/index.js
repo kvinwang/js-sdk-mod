@@ -243,9 +243,6 @@ Object.defineProperty(exports, "usize", {
     return _typesCodec.usize;
   }
 });
-
 var _typesCodec = require("@polkadot/types-codec");
-
 var _Data = require("./Data");
-
 var _StorageKey = require("./StorageKey");

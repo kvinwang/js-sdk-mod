@@ -5,26 +5,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.decorateEvents = decorateEvents;
 exports.filterEventsSome = filterEventsSome;
-
 var _util = require("@polkadot/util");
-
 var _lazy = require("../../../create/lazy");
-
 var _errors = require("../errors");
-
 var _util2 = require("../util");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 function filterEventsSome(_ref) {
   let {
     events
   } = _ref;
   return events.isSome;
 }
+
 /** @internal */
-
-
 function decorateEvents(registry, _ref2, version) {
   let {
     lookup,
@@ -32,7 +27,6 @@ function decorateEvents(registry, _ref2, version) {
   } = _ref2;
   const result = {};
   const filtered = pallets.filter(filterEventsSome);
-
   for (let i = 0; i < filtered.length; i++) {
     const {
       events,
@@ -46,6 +40,5 @@ function decorateEvents(registry, _ref2, version) {
       meta: registry.createTypeUnsafe('EventMetadataLatest', [(0, _errors.variantToMeta)(lookup, variant)])
     })));
   }
-
   return result;
 }

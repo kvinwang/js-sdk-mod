@@ -10,29 +10,18 @@ Object.defineProperty(exports, "AllHashers", {
   }
 });
 exports.default = void 0;
-
 var _util = require("@polkadot/util");
-
 var _hashers = require("./hashers");
-
 var _runtime = require("./runtime");
-
 var _v = require("./v9");
-
 var _v2 = require("./v10");
-
 var _v3 = require("./v11");
-
 var _v4 = require("./v12");
-
 var _v5 = require("./v13");
-
 var _v6 = require("./v14");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 // order important in structs... :)
-
 /* eslint-disable sort-keys */
 var _default = {
   rpc: {},

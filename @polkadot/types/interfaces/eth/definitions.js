@@ -1,9 +1,11 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 // As per frontier
+
 import { objectSpread } from '@polkadot/util';
 import { rpc } from "./rpc.js";
 import { runtime } from "./runtime.js";

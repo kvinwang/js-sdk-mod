@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.runtime = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const runtime = {
   ContractsApi: [{
     methods: {
@@ -59,7 +60,7 @@ const runtime = {
           type: 'Option<Balance>'
         }, {
           name: 'code',
-          type: 'Bytes'
+          type: 'CodeSource'
         }, {
           name: 'data',
           type: 'Bytes'

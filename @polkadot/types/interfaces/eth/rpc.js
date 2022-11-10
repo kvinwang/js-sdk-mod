@@ -1,8 +1,11 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// As per frontier
-import { objectSpread } from '@polkadot/util'; // We use aliasSection here to override since these are in another namespace
 
+// As per frontier
+
+import { objectSpread } from '@polkadot/util';
+
+// We use aliasSection here to override since these are in another namespace
 const netRpc = {
   listening: {
     aliasSection: 'net',

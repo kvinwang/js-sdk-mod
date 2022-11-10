@@ -4,11 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.runtime = void 0;
-
 var _util = require("@polkadot/util");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const V1_V2_SHARED = {
   current_epoch: {
     description: 'Returns information regarding the current epoch.',

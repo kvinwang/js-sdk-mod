@@ -1,13 +1,16 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { isString, isU8a, u8aToU8a } from '@polkadot/util';
-import { MetadataVersioned } from "./MetadataVersioned.js"; // magic + lowest supported version
+import { MetadataVersioned } from "./MetadataVersioned.js";
 
-const EMPTY_METADATA = new Uint8Array([0x6d, 0x65, 0x74, 0x61, 9]); // magic u32 preceding the version id
+// magic + lowest supported version
+const EMPTY_METADATA = new Uint8Array([0x6d, 0x65, 0x74, 0x61, 9]);
 
+// magic u32 preceding the version id
 const VERSION_IDX = EMPTY_METADATA.length - 1;
-/** @internal */
 
+/** @internal */
 function decodeU8a(registry, u8a) {
   if (u8a.length === 0) {
     return EMPTY_METADATA;
@@ -22,20 +25,20 @@ function decodeU8a(registry, u8a) {
       return u8a;
     }
   }
-
   return u8a;
 }
+
 /**
  * @name Metadata
  * @description
  * The versioned runtime metadata as a decoded structure
  */
-
-
 export class Metadata extends MetadataVersioned {
   constructor(registry, value) {
     // const timeStart = performance.now()
-    super(registry, isU8a(value) || isString(value) ? decodeU8a(registry, u8aToU8a(value)) : value); // console.log('Metadata', `${(performance.now() - timeStart).toFixed(2)}ms`)
-  }
 
+    super(registry, isU8a(value) || isString(value) ? decodeU8a(registry, u8aToU8a(value)) : value);
+
+    // console.log('Metadata', `${(performance.now() - timeStart).toFixed(2)}ms`)
+  }
 }

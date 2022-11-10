@@ -4,14 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.v11 = void 0;
-
 var _hashers = require("./hashers");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 const v11 = {
   // v11
   ErrorMetadataV11: 'ErrorMetadataV10',

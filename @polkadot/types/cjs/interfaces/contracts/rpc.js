@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.rpc = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const rpc = {
   call: {
+    deprecated: 'Use the runtime interface `api.call.contractsApi.call` instead',
     description: 'Executes a call to a contract',
     params: [{
       name: 'callRequest',
@@ -21,6 +23,7 @@ const rpc = {
     type: 'ContractExecResult'
   },
   getStorage: {
+    deprecated: 'Use the runtime interface `api.call.contractsApi.getStorage` instead',
     description: 'Returns the value under a specified storage key in a contract',
     params: [{
       name: 'address',
@@ -37,6 +40,7 @@ const rpc = {
     type: 'Option<Bytes>'
   },
   instantiate: {
+    deprecated: 'Use the runtime interface `api.call.contractsApi.instantiate` instead',
     description: 'Instantiate a new contract',
     params: [{
       name: 'request',
@@ -50,6 +54,7 @@ const rpc = {
     type: 'ContractInstantiateResult'
   },
   rentProjection: {
+    deprecated: 'Not available in newer versions of the contracts interfaces',
     description: 'Returns the projected time a given contract will be able to sustain paying its rent',
     params: [{
       name: 'address',
@@ -63,6 +68,7 @@ const rpc = {
     type: 'Option<BlockNumber>'
   },
   uploadCode: {
+    deprecated: 'Use the runtime interface `api.call.contractsApi.uploadCode` instead',
     description: 'Upload new code without instantiating a contract from it',
     // The RPC here is terribly misnamed - somebody forgot how the RPCs
     // are actually done, ie. <module>_<camelCasedMethod>

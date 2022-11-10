@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.statemint = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const statemint = {
   ChargeAssetTxPayment: {
     extrinsic: {

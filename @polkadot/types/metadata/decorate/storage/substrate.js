@@ -1,9 +1,9 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { createRuntimeFunction } from "./util.js";
 const prefix = 'Substrate';
 const section = 'substrate';
-
 function createSubstrateFn(method, key, meta) {
   return createRuntimeFunction({
     method,
@@ -11,7 +11,6 @@ function createSubstrateFn(method, key, meta) {
     section
   }, key, meta);
 }
-
 export const substrate = {
   changesTrieConfig: createSubstrateFn('changesTrieConfig', ':changes_trie', {
     docs: 'Changes trie configuration is stored under this key.',

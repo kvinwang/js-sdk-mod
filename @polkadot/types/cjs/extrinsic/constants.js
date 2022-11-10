@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.UNMASK_VERSION = exports.IMMORTAL_ERA = exports.EMPTY_U8A = exports.DEFAULT_VERSION = exports.BIT_UNSIGNED = exports.BIT_SIGNED = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const BIT_SIGNED = 0b10000000;
 exports.BIT_SIGNED = BIT_SIGNED;
 const BIT_UNSIGNED = 0;

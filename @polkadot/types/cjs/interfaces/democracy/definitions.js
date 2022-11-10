@@ -6,16 +6,24 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = exports.AllConvictions = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
-const AllConvictions = [// 0.1x votes, unlocked.
-'None', // 1x votes, locked for an enactment period following a successful vote.
-'Locked1x', // 2x votes, locked for 2x enactment periods following a successful vote.
-'Locked2x', // 3x votes, locked for 4x...
-'Locked3x', // 4x votes, locked for 8x...
-'Locked4x', // 5x votes, locked for 16x...
-'Locked5x', /// 6x votes, locked for 32x...
+
+const AllConvictions = [
+// 0.1x votes, unlocked.
+'None',
+// 1x votes, locked for an enactment period following a successful vote.
+'Locked1x',
+// 2x votes, locked for 2x enactment periods following a successful vote.
+'Locked2x',
+// 3x votes, locked for 4x...
+'Locked3x',
+// 4x votes, locked for 8x...
+'Locked4x',
+// 5x votes, locked for 16x...
+'Locked5x',
+/// 6x votes, locked for 32x...
 'Locked6x'];
 exports.AllConvictions = AllConvictions;
 var _default = {

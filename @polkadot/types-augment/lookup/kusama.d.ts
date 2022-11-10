@@ -6,7 +6,7 @@ declare const _default: {
         _enum: string[];
     };
     /**
-     * Lookup264: kusama_runtime::SessionKeys
+     * Lookup265: kusama_runtime::SessionKeys
      **/
     KusamaRuntimeSessionKeys: {
         grandpa: string;
@@ -17,7 +17,7 @@ declare const _default: {
         authorityDiscovery: string;
     };
     /**
-     * Lookup339: kusama_runtime::OriginCaller
+     * Lookup340: kusama_runtime::OriginCaller
      **/
     KusamaRuntimeOriginCaller: {
         _enum: {
@@ -124,7 +124,7 @@ declare const _default: {
         };
     };
     /**
-     * Lookup405: kusama_runtime::NposCompactSolution24
+     * Lookup406: kusama_runtime::NposCompactSolution24
      **/
     KusamaRuntimeNposCompactSolution24: {
         votes1: string;
@@ -153,7 +153,7 @@ declare const _default: {
         votes24: string;
     };
     /**
-     * Lookup780: kusama_runtime::Runtime
+     * Lookup786: kusama_runtime::Runtime
      **/
     KusamaRuntimeRuntime: string;
 };

@@ -4,15 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _rpc = require("./rpc");
-
 var _runtime = require("./runtime");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 // order important in structs... :)
-
 /* eslint-disable sort-keys */
 var _default = {
   rpc: _rpc.rpc,
@@ -85,7 +81,10 @@ var _default = {
         TooManyConsumers: 'Null',
         Token: 'TokenError',
         Arithmetic: 'ArithmeticError',
-        Transactional: 'TransactionalError'
+        Transactional: 'TransactionalError',
+        Exhausted: 'Null',
+        Corruption: 'Null',
+        Unavailable: 'Null'
       }
     },
     DispatchErrorPre6: {
@@ -282,7 +281,8 @@ var _default = {
     },
     SystemOrigin: 'RawOrigin',
     TokenError: {
-      _enum: ['NoFunds', 'WouldDie', 'BelowMinimum', 'CannotCreate', 'UnknownAsset', 'Frozen', 'Unsupported', // these are dropped, but still in older versions
+      _enum: ['NoFunds', 'WouldDie', 'BelowMinimum', 'CannotCreate', 'UnknownAsset', 'Frozen', 'Unsupported',
+      // these are dropped, but still in older versions
       // (if this adjusts, will need to take a re-look)
       'Underflow', 'Overflow']
     },

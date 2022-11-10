@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { objectSpread } from '@polkadot/util';
 const BB_V2_TO_V4 = {
   // this was removed after V4
@@ -62,15 +63,18 @@ export const runtime = {
     }, BB_V2_TO_V6, BB_V3_TO_V6),
     version: 6
   }, {
-    methods: objectSpread({// apply_extrinsic result changed in 6
+    methods: objectSpread({
+      // apply_extrinsic result changed in 6
     }, BB_V2_TO_V5, BB_V2_TO_V6, BB_V3_TO_V6),
     version: 5
   }, {
-    methods: objectSpread({// random_seed removed
+    methods: objectSpread({
+      // random_seed removed
     }, BB_V2_TO_V4, BB_V2_TO_V5, BB_V2_TO_V6, BB_V3_TO_V6),
     version: 4
   }, {
-    methods: objectSpread({// finalize_block renamed
+    methods: objectSpread({
+      // finalize_block renamed
     }, BB_V2_TO_V4, BB_V2_TO_V6, BB_V3_TO_V6),
     version: 3
   }, {

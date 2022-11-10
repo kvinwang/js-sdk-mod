@@ -15,7 +15,5 @@ Object.defineProperty(exports, "convertSiV0toV1", {
     return _toV.toV1;
   }
 });
-
 var _PortableRegistry = require("./PortableRegistry");
-
 var _toV = require("./toV1");

@@ -1,25 +1,20 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _util = require("@polkadot/util");
-
 var _hrmp = _interopRequireDefault(require("./hrmp"));
-
 var _runtime = require("./runtime");
-
 var _slots = _interopRequireDefault(require("./slots"));
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 // proposeParachain
 const proposeTypes = {
   ParachainProposal: {

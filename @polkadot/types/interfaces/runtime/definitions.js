@@ -1,8 +1,9 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 import { objectSpread } from '@polkadot/util';
 import { runtime } from "./runtime.js";
 const numberTypes = {
@@ -19,9 +20,10 @@ const numberTypes = {
   Percent: 'UInt<8, Percent>',
   Permill: 'UInt<32, Permill>',
   Perquintill: 'UInt<64, Perquintill>'
-}; // Since we don't have insight into the origin specification, we can only define what we know about
-// in a pure Substrate/Polkadot implementation, any other custom origins won't be handled at all
+};
 
+// Since we don't have insight into the origin specification, we can only define what we know about
+// in a pure Substrate/Polkadot implementation, any other custom origins won't be handled at all
 export const knownOrigins = {
   //
   // (1) Defaults from Substrate
@@ -99,9 +101,9 @@ export default {
         ChangesTrieSignal: 'ChangesTrieSignal',
         // 7
         RuntimeEnvironmentUpdated: 'Null' // 8
-
       }
     },
+
     ExtrinsicsWeight: {
       normal: 'Weight',
       operational: 'Weight'
@@ -214,7 +216,12 @@ export default {
     },
     ValidatorId: 'AccountId',
     ValidatorIdOf: 'ValidatorId',
-    Weight: 'u64',
+    WeightV1: 'u64',
+    WeightV2: {
+      refTime: 'Compact<u64>',
+      proofSize: 'Compact<u64>'
+    },
+    Weight: 'WeightV1',
     WeightMultiplier: 'Fixed64',
     // digest
     PreRuntime: '(ConsensusEngineId, Bytes)',

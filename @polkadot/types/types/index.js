@@ -1,10 +1,14 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 // augment our internal Lookup & Registry interfaces
 import "./augmentLookup.js";
-import "./augmentRegistry.js"; // augmented exports
+import "./augmentRegistry.js";
 
-export * from '@polkadot/types/types/registry'; // used inside augmented definitions
+// augmented exports
+export * from '@polkadot/types/types/registry';
+
+// used inside augmented definitions
 
 // other exports
 export * from "../create/types.js";

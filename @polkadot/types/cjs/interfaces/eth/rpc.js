@@ -4,12 +4,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.rpc = void 0;
-
 var _util = require("@polkadot/util");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 // As per frontier
+
 // We use aliasSection here to override since these are in another namespace
 const netRpc = {
   listening: {

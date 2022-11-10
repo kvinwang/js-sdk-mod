@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 export * from "../ethereum/index.js";
 export { GenericAccountId, GenericAccountId as GenericAccountId32, GenericAccountId33 } from "./AccountId.js";
 export { GenericAccountIndex } from "./AccountIndex.js";

@@ -4,11 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.substrate = void 0;
-
 var _emptyCheck = require("./emptyCheck");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const CheckMortality = {
   extrinsic: {
     era: 'ExtrinsicEra'

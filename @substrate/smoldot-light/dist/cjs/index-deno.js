@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.start = exports.JsonRpcDisabledError = exports.CrashError = exports.AlreadyDestroyedError = exports.AddChainError = void 0;
+exports.start = exports.JsonRpcDisabledError = exports.QueueFullError = exports.MalformedJsonRpcError = exports.CrashError = exports.AlreadyDestroyedError = exports.AddChainError = void 0;
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -29,6 +29,8 @@ var client_js_2 = require("./client.js");
 Object.defineProperty(exports, "AddChainError", { enumerable: true, get: function () { return client_js_2.AddChainError; } });
 Object.defineProperty(exports, "AlreadyDestroyedError", { enumerable: true, get: function () { return client_js_2.AlreadyDestroyedError; } });
 Object.defineProperty(exports, "CrashError", { enumerable: true, get: function () { return client_js_2.CrashError; } });
+Object.defineProperty(exports, "MalformedJsonRpcError", { enumerable: true, get: function () { return client_js_2.MalformedJsonRpcError; } });
+Object.defineProperty(exports, "QueueFullError", { enumerable: true, get: function () { return client_js_2.QueueFullError; } });
 Object.defineProperty(exports, "JsonRpcDisabledError", { enumerable: true, get: function () { return client_js_2.JsonRpcDisabledError; } });
 /**
  * Initializes a new client. This is a pre-requisite to connecting to a blockchain.
@@ -101,7 +103,7 @@ function trustedBase64Decode(base64) {
  * Tries to open a new connection using the given configuration.
  *
  * @see Connection
- * @throws ConnectionError If the multiaddress couldn't be parsed or contains an invalid protocol.
+ * @throws {@link ConnectionError} If the multiaddress couldn't be parsed or contains an invalid protocol.
  */
 function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
     let connection;
@@ -129,7 +131,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         };
         connection.socket.onclose = (event) => {
             const message = "Error code " + event.code + (!!event.reason ? (": " + event.reason) : "");
-            config.onConnectionClose(message);
+            config.onConnectionReset(message);
         };
         connection.socket.onmessage = (msg) => {
             config.onMessage(new Uint8Array(msg.data));
@@ -175,7 +177,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
                     // The socket is reported closed, but `socket.destroyed` is still `false` (see
                     // check above). As such, we must inform the inner layers.
                     socket.destroyed = true;
-                    config.onConnectionClose(outcome === null ? "EOF when reading socket" : outcome);
+                    config.onConnectionReset(outcome === null ? "EOF when reading socket" : outcome);
                     return;
                 }
                 console.assert(outcome !== 0); // `read` guarantees to return a non-zero value.
@@ -190,7 +192,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         throw new instance_js_1.ConnectionError('Unrecognized multiaddr format');
     }
     return {
-        close: () => {
+        reset: () => {
             if (connection.ty == 'websocket') {
                 // WebSocket
                 // We can't set these fields to null because the TypeScript definitions don't
@@ -210,7 +212,15 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         send: (data) => {
             if (connection.ty == 'websocket') {
                 // WebSocket
-                connection.socket.send(data);
+                // The WebSocket library that we use seems to spontaneously transition connections
+                // to the "closed" state but not call the `onclosed` callback immediately. Calling
+                // `send` on that object throws an exception. In order to avoid panicking smoldot,
+                // we thus absorb any exception thrown here.
+                // See also <https://github.com/paritytech/smoldot/issues/2937>.
+                try {
+                    connection.socket.send(data);
+                }
+                catch (_error) { }
             }
             else {
                 // TCP
@@ -233,7 +243,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
                             // The socket is reported closed, but `socket.destroyed` is still
                             // `false` (see check above). As such, we must inform the inner layers.
                             socket.destroyed = true;
-                            config.onConnectionClose(outcome);
+                            config.onConnectionReset(outcome);
                             return c;
                         }
                         // Note that, contrary to `read`, it is possible for `outcome` to be 0.

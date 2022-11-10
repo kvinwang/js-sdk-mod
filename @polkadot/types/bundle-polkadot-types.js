@@ -752,7 +752,12 @@
       },
       ValidatorId: 'AccountId',
       ValidatorIdOf: 'ValidatorId',
-      Weight: 'u64',
+      WeightV1: 'u64',
+      WeightV2: {
+        refTime: 'Compact<u64>',
+        proofSize: 'Compact<u64>'
+      },
+      Weight: 'WeightV1',
       WeightMultiplier: 'Fixed64',
       PreRuntime: '(ConsensusEngineId, Bytes)',
       SealV0: '(u64, Signature)',
@@ -1450,6 +1455,7 @@
 
   const rpc$e = {
     call: {
+      deprecated: 'Use the runtime interface `api.call.contractsApi.call` instead',
       description: 'Executes a call to a contract',
       params: [{
         name: 'callRequest',
@@ -1463,6 +1469,7 @@
       type: 'ContractExecResult'
     },
     getStorage: {
+      deprecated: 'Use the runtime interface `api.call.contractsApi.getStorage` instead',
       description: 'Returns the value under a specified storage key in a contract',
       params: [{
         name: 'address',
@@ -1479,6 +1486,7 @@
       type: 'Option<Bytes>'
     },
     instantiate: {
+      deprecated: 'Use the runtime interface `api.call.contractsApi.instantiate` instead',
       description: 'Instantiate a new contract',
       params: [{
         name: 'request',
@@ -1492,6 +1500,7 @@
       type: 'ContractInstantiateResult'
     },
     rentProjection: {
+      deprecated: 'Not available in newer versions of the contracts interfaces',
       description: 'Returns the projected time a given contract will be able to sustain paying its rent',
       params: [{
         name: 'address',
@@ -1505,6 +1514,7 @@
       type: 'Option<BlockNumber>'
     },
     uploadCode: {
+      deprecated: 'Use the runtime interface `api.call.contractsApi.uploadCode` instead',
       description: 'Upload new code without instantiating a contract from it',
       endpoint: 'contracts_upload_code',
       params: [{
@@ -1573,7 +1583,7 @@
             type: 'Option<Balance>'
           }, {
             name: 'code',
-            type: 'Bytes'
+            type: 'CodeSource'
           }, {
             name: 'data',
             type: 'Bytes'
@@ -3581,7 +3591,10 @@
           TooManyConsumers: 'Null',
           Token: 'TokenError',
           Arithmetic: 'ArithmeticError',
-          Transactional: 'TransactionalError'
+          Transactional: 'TransactionalError',
+          Exhausted: 'Null',
+          Corruption: 'Null',
+          Unavailable: 'Null'
         }
       },
       DispatchErrorPre6: {
@@ -4365,45 +4378,55 @@
       type: 'Vec<ValidatorId>'
     }
   };
+  const PH_V2_TO_V3 = {
+    pvfs_require_precheck: {
+      description: 'Returns code hashes of PVFs that require pre-checking by validators in the active set.',
+      params: [],
+      type: 'Vec<ValidationCodeHash>'
+    },
+    session_info: {
+      description: 'Get the session info for the given session, if stored.',
+      params: [{
+        name: 'index',
+        type: 'SessionIndex'
+      }],
+      type: 'Option<SessionInfo>'
+    },
+    submit_pvf_check_statement: {
+      description: 'Submits a PVF pre-checking statement into the transaction pool.',
+      params: [{
+        name: 'stmt',
+        type: 'PvfCheckStatement'
+      }, {
+        name: 'signature',
+        type: 'ValidatorSignature'
+      }],
+      type: 'Null'
+    },
+    validation_code_hash: {
+      description: 'Fetch the hash of the validation code used by a para, making the given `OccupiedCoreAssumption`.',
+      params: [{
+        name: 'paraId',
+        type: 'ParaId'
+      }, {
+        name: 'assumption',
+        type: 'OccupiedCoreAssumption'
+      }],
+      type: 'Option<ValidationCodeHash>'
+    }
+  };
   const runtime$6 = {
     ParachainHost: [{
       methods: util.objectSpread({
-        pvfs_require_precheck: {
-          description: 'Returns code hashes of PVFs that require pre-checking by validators in the active set.',
+        disputes: {
+          description: 'Returns all onchain disputes.',
           params: [],
-          type: 'Vec<ValidationCodeHash>'
-        },
-        session_info: {
-          description: 'Get the session info for the given session, if stored.',
-          params: [{
-            name: 'index',
-            type: 'SessionIndex'
-          }],
-          type: 'Option<SessionInfo>'
-        },
-        submit_pvf_check_statement: {
-          description: 'Submits a PVF pre-checking statement into the transaction pool.',
-          params: [{
-            name: 'stmt',
-            type: 'PvfCheckStatement'
-          }, {
-            name: 'signature',
-            type: 'ValidatorSignature'
-          }],
-          type: 'Null'
-        },
-        validation_code_hash: {
-          description: 'Fetch the hash of the validation code used by a para, making the given `OccupiedCoreAssumption`.',
-          params: [{
-            name: 'paraId',
-            type: 'ParaId'
-          }, {
-            name: 'assumption',
-            type: 'OccupiedCoreAssumption'
-          }],
-          type: 'Option<ValidationCodeHash>'
+          type: 'Vec<(SessionIndex, CandidateHash, DisputeState)>'
         }
-      }, PH_V1_TO_V2),
+      }, PH_V1_TO_V2, PH_V2_TO_V3),
+      version: 3
+    }, {
+      methods: util.objectSpread({}, PH_V1_TO_V2, PH_V2_TO_V3),
       version: 2
     }, {
       methods: util.objectSpread({
@@ -5312,7 +5335,7 @@
     return false;
   }
 
-  function formatFailure(registry, result, {
+  function formatFailure(registry, fn, result, {
     message
   }, u8a, i, count, Type, key) {
     let type = '';
@@ -5320,7 +5343,7 @@
       type = `: ${new Type(registry).toRawType()}`;
     } catch {
     }
-    return `decodeU8a: failed at ${util.u8aToHex(u8a.subarray(0, 16))}…${key ? ` on ${key}` : ''} (index ${i}/${count})${type}:: ${message}`;
+    return `${fn}: failed at ${util.u8aToHex(u8a.subarray(0, 16))}…${key ? ` on ${key}` : ''} (index ${i + 1}/${count})${type}:: ${message}`;
   }
   function decodeU8a$6(registry, result, u8a, [Types, keys]) {
     const count = result.length;
@@ -5334,7 +5357,7 @@
         i++;
       }
     } catch (error) {
-      throw new Error(formatFailure(registry, result, error, u8a.subarray(offset), i, count, Types[i], keys[i]));
+      throw new Error(formatFailure(registry, 'decodeU8a', result, error, u8a.subarray(offset), i, count, Types[i], keys[i]));
     }
     return [result, offset];
   }
@@ -5350,7 +5373,7 @@
         i++;
       }
     } catch (error) {
-      throw new Error(formatFailure(registry, result, error, u8a.subarray(offset), i, count, Types[i], keys[i]));
+      throw new Error(formatFailure(registry, 'decodeU8aStruct', result, error, u8a.subarray(offset), i, count, Types[i], keys[i]));
     }
     return [result, offset];
   }
@@ -5366,7 +5389,7 @@
         i++;
       }
     } catch (error) {
-      throw new Error(formatFailure(registry, result, error, u8a.subarray(offset), i, count, Type));
+      throw new Error(formatFailure(registry, 'decodeU8aVec', result, error, u8a.subarray(offset), i, count, Type));
     }
     return [offset, offset - startAt];
   }
@@ -6298,7 +6321,7 @@
     const Types = Classes[0];
     for (let i = 0; i < Types.length; i++) {
       try {
-        const entry = value === null || value === void 0 ? void 0 : value[i];
+        const entry = value == null ? void 0 : value[i];
         result[i] = entry instanceof Types[i] ? entry : new Types[i](registry, entry);
       } catch (error) {
         throw new Error(`Tuple: failed on ${i}:: ${error.message}`);
@@ -6733,7 +6756,8 @@
     inspect(isBare) {
       const inner = new Array();
       for (const [k, v] of this.entries()) {
-        inner.push({ ...v.inspect(!isBare || util.isBoolean(isBare) ? isBare : isBare[k]),
+        inner.push({
+          ...v.inspect(!isBare || util.isBoolean(isBare) ? isBare : isBare[k]),
           name: util.stringCamelCase(k)
         });
       }
@@ -11003,6 +11027,7 @@
       type: 'u64'
     },
     getKeys: {
+      deprecated: 'Use `api.rpc.state.getKeysPaged` to retrieve keys',
       description: 'Retrieves the keys with a certain prefix',
       params: [{
         name: 'key',
@@ -11047,6 +11072,7 @@
       type: 'Metadata'
     },
     getPairs: {
+      deprecated: 'Use `api.rpc.state.getKeysPaged` to retrieve keys',
       description: 'Returns the keys with prefix, leave empty to get all the keys (deprecated: Use getKeysPaged)',
       params: [{
         name: 'prefix',
@@ -11506,7 +11532,7 @@
     #section;
     #typeDef;
     constructor(registry, value, meta, section = '<unknown>', method = '<unknown>') {
-      const fields = (meta === null || meta === void 0 ? void 0 : meta.fields) || [];
+      const fields = (meta == null ? void 0 : meta.fields) || [];
       super(registry, fields.map(({
         type
       }) => registry.createLookupType(type)), value);
@@ -12634,8 +12660,8 @@
         args: this.argsEntries.reduce((args, [n, a]) => util.objectSpread(args, {
           [n]: a.toHuman(isExpanded)
         }), {}),
-        method: (_call = call) === null || _call === void 0 ? void 0 : _call.method,
-        section: (_call2 = call) === null || _call2 === void 0 ? void 0 : _call2.section
+        method: (_call = call) == null ? void 0 : _call.method,
+        section: (_call2 = call) == null ? void 0 : _call2.section
       }, isExpanded && call ? {
         docs: call.meta.docs.map(d => d.toString())
       } : null);
@@ -12713,7 +12739,7 @@
       return this.eq(CID_POW);
     }
     extractAuthor(bytes, sessionValidators) {
-      if (sessionValidators !== null && sessionValidators !== void 0 && sessionValidators.length) {
+      if (sessionValidators != null && sessionValidators.length) {
         if (this.isAura) {
           return getAuraAuthor(this.registry, bytes, sessionValidators);
         } else if (this.isBabe) {
@@ -13557,7 +13583,7 @@
     knownTypes
   }, section) {
     var _knownTypes$typesAlia;
-    return util.objectSpread({}, typesAlias[section], (_knownTypes$typesAlia = knownTypes.typesAlias) === null || _knownTypes$typesAlia === void 0 ? void 0 : _knownTypes$typesAlia[section]);
+    return util.objectSpread({}, typesAlias[section], (_knownTypes$typesAlia = knownTypes.typesAlias) == null ? void 0 : _knownTypes$typesAlia[section]);
   }
 
   const BOXES = [['<', '>'], ['<', ','], [',', '>'], ['(', ')'], ['(', ','], [',', ','], [',', ')']];
@@ -14114,6 +14140,9 @@
     hashers: [],
     keys: []
   };
+  function filterDefined(a) {
+    return !util.isUndefined(a);
+  }
   function assertArgs({
     method,
     section
@@ -14163,9 +14192,6 @@
   function createKeyRaw(registry, itemFn, args) {
     const [prefix, extra] = createKeyRawParts(registry, itemFn, args);
     return util.u8aConcat(...prefix, ...extra);
-  }
-  function filterDefined(a) {
-    return !util.isUndefined(a);
   }
   function createKey(registry, itemFn, args) {
     assertArgs(itemFn, args);
@@ -14354,7 +14380,7 @@
           name: registry.createTypeUnsafe('Text', [method]),
           toJSON: () => key,
           type: registry.createTypeUnsafe('StorageEntryTypeLatest', [{
-            Plain: ((_findSiType = findSiType(registry, type)) === null || _findSiType === void 0 ? void 0 : _findSiType.id) || 0
+            Plain: ((_findSiType = findSiType(registry, type)) == null ? void 0 : _findSiType.id) || 0
           }])
         }]),
         method,
@@ -14495,7 +14521,7 @@
   '*_democracy::vote::Vote', '*_conviction_voting::vote::Vote', '*_identity::types::Data',
   'sp_core::OpaqueMetadata', 'sp_core::OpaquePeerId', 'sp_core::offchain::OpaqueMultiaddr',
   'primitive_types::*', 'sp_arithmetic::per_things::*',
-  'ink_env::types::*']);
+  'ink_env::types::*', 'ink_primitives::types::*']);
   const PATHS_SET = splitNamespace(['pallet_identity::types::BitFlags']);
   const BITVEC_NS_LSB = ['bitvec::order::Lsb0', 'BitOrderLsb0'];
   const BITVEC_NS_MSB = ['bitvec::order::Msb0', 'BitOrderMsb0'];
@@ -14541,7 +14567,13 @@
       return false;
     });
   }
-  function getAliasPath(path) {
+  function getAliasPath({
+    def,
+    path
+  }) {
+    if (path.join('::') === 'sp_weights::weight_v2::Weight' && def.isComposite && def.asComposite.fields.length !== 1) {
+      return null;
+    }
     return path.length && PATHS_ALIAS.some(a => matchParts(a, path)) ? path[path.length - 1].toString() : null;
   }
   function extractNameFlat(portable, lookupIndex, params, path, isInternal = false) {
@@ -14714,6 +14746,18 @@
         AccountId: ['sp_core::crypto::AccountId32'].includes(nsAccountId) ? 'AccountId32' : ['account::AccountId20', 'primitive_types::H160'].includes(nsAccountId) ? 'AccountId20' : 'AccountId32',
         Address: isMultiAddress ? 'MultiAddress' : 'AccountId',
         ExtrinsicSignature: ['sp_runtime::MultiSignature'].includes(nsSignature) ? 'MultiSignature' : names[sigParam.type.unwrap().toNumber()] || 'MultiSignature'
+      });
+    }
+    if (params.SpWeightsWeightV2Weight) {
+      const weight = Object.entries(names).find(([, n]) => n === 'SpWeightsWeightV2Weight');
+      if (!weight) {
+        throw new Error('Unable to extract weight type from SpWeightsWeightV2Weight');
+      }
+      const weightDef = lookup.getTypeDef(`Lookup${weight[0]}`);
+      lookup.registry.register({
+        Weight: Array.isArray(weightDef.sub) && weightDef.sub.length !== 1
+        ? 'SpWeightsWeightV2Weight'
+        : 'WeightV1'
       });
     }
   }
@@ -14977,7 +15021,7 @@
   function _extract2(type, lookupIndex) {
     const namespace = type.path.join('::');
     let typeDef;
-    const aliasType = _classPrivateFieldBase(this, _alias)[_alias][lookupIndex] || getAliasPath(type.path);
+    const aliasType = _classPrivateFieldBase(this, _alias)[_alias][lookupIndex] || getAliasPath(type);
     try {
       if (aliasType) {
         typeDef = _classPrivateFieldBase(this, _extractAliasPath)[_extractAliasPath](lookupIndex, aliasType);
@@ -15624,7 +15668,7 @@
     }
     get chainDecimals() {
       var _this$chainProperties;
-      if ((_this$chainProperties = this.#chainProperties) !== null && _this$chainProperties !== void 0 && _this$chainProperties.tokenDecimals.isSome) {
+      if ((_this$chainProperties = this.#chainProperties) != null && _this$chainProperties.tokenDecimals.isSome) {
         const allDecimals = this.#chainProperties.tokenDecimals.unwrap();
         if (allDecimals.length) {
           return allDecimals.map(b => b.toNumber());
@@ -15634,11 +15678,11 @@
     }
     get chainSS58() {
       var _this$chainProperties2;
-      return (_this$chainProperties2 = this.#chainProperties) !== null && _this$chainProperties2 !== void 0 && _this$chainProperties2.ss58Format.isSome ? this.#chainProperties.ss58Format.unwrap().toNumber() : undefined;
+      return (_this$chainProperties2 = this.#chainProperties) != null && _this$chainProperties2.ss58Format.isSome ? this.#chainProperties.ss58Format.unwrap().toNumber() : undefined;
     }
     get chainTokens() {
       var _this$chainProperties3;
-      if ((_this$chainProperties3 = this.#chainProperties) !== null && _this$chainProperties3 !== void 0 && _this$chainProperties3.tokenSymbol.isSome) {
+      if ((_this$chainProperties3 = this.#chainProperties) != null && _this$chainProperties3.tokenSymbol.isSome) {
         const allTokens = this.#chainProperties.tokenSymbol.unwrap();
         if (allTokens.length) {
           return allTokens.map(valueToString);
@@ -15747,7 +15791,7 @@
     }
     getModuleInstances(specName, moduleName) {
       var _this$knownTypes, _this$knownTypes$type, _this$knownTypes$type2, _this$knownTypes$type3, _this$knownTypes$type4;
-      return ((_this$knownTypes = this.#knownTypes) === null || _this$knownTypes === void 0 ? void 0 : (_this$knownTypes$type = _this$knownTypes.typesBundle) === null || _this$knownTypes$type === void 0 ? void 0 : (_this$knownTypes$type2 = _this$knownTypes$type.spec) === null || _this$knownTypes$type2 === void 0 ? void 0 : (_this$knownTypes$type3 = _this$knownTypes$type2[specName.toString()]) === null || _this$knownTypes$type3 === void 0 ? void 0 : (_this$knownTypes$type4 = _this$knownTypes$type3.instances) === null || _this$knownTypes$type4 === void 0 ? void 0 : _this$knownTypes$type4[moduleName]) || this.#moduleMap[moduleName];
+      return ((_this$knownTypes = this.#knownTypes) == null ? void 0 : (_this$knownTypes$type = _this$knownTypes.typesBundle) == null ? void 0 : (_this$knownTypes$type2 = _this$knownTypes$type.spec) == null ? void 0 : (_this$knownTypes$type3 = _this$knownTypes$type2[specName.toString()]) == null ? void 0 : (_this$knownTypes$type4 = _this$knownTypes$type3.instances) == null ? void 0 : _this$knownTypes$type4[moduleName]) || this.#moduleMap[moduleName];
     }
     getOrThrow(name, msg) {
       const Clazz = this.get(name);
@@ -15859,7 +15903,7 @@
     name: '@polkadot/types',
     path: (({ url: (typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-types.js', document.baseURI).href)) }) && (typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-types.js', document.baseURI).href))) ? new URL((typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-types.js', document.baseURI).href))).pathname.substring(0, new URL((typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-types.js', document.baseURI).href))).pathname.lastIndexOf('/') + 1) : 'auto',
     type: 'esm',
-    version: '9.4.2'
+    version: '9.7.1'
   };
 
   exports.BTreeMap = BTreeMap;
@@ -15981,7 +16025,5 @@
   exports.unwrapStorageType = unwrapStorageType;
   exports.usize = usize;
   exports.withTypeString = withTypeString;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));

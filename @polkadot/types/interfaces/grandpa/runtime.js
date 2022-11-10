@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { objectSpread } from '@polkadot/util';
 const GRANDPA_V2_V3 = {
   generate_key_ownership_proof: {

@@ -1,8 +1,8 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
-
 /* eslint-disable */
 
 /* eslint-disable sort-keys */
+
 export default {
   /**
    * Lookup81: kusama_runtime::ProxyType
@@ -10,9 +10,8 @@ export default {
   KusamaRuntimeProxyType: {
     _enum: ['Any', 'NonTransfer', 'Governance', 'Staking', 'IdentityJudgement', 'CancelProxy', 'Auction', 'Society']
   },
-
   /**
-   * Lookup264: kusama_runtime::SessionKeys
+   * Lookup265: kusama_runtime::SessionKeys
    **/
   KusamaRuntimeSessionKeys: {
     grandpa: 'SpFinalityGrandpaAppPublic',
@@ -22,9 +21,8 @@ export default {
     paraAssignment: 'PolkadotPrimitivesV2AssignmentAppPublic',
     authorityDiscovery: 'SpAuthorityDiscoveryAppPublic'
   },
-
   /**
-   * Lookup339: kusama_runtime::OriginCaller
+   * Lookup340: kusama_runtime::OriginCaller
    **/
   KusamaRuntimeOriginCaller: {
     _enum: {
@@ -130,9 +128,8 @@ export default {
       XcmPallet: 'PalletXcmOrigin'
     }
   },
-
   /**
-   * Lookup405: kusama_runtime::NposCompactSolution24
+   * Lookup406: kusama_runtime::NposCompactSolution24
    **/
   KusamaRuntimeNposCompactSolution24: {
     votes1: 'Vec<(Compact<u32>,Compact<u16>)>',
@@ -160,9 +157,8 @@ export default {
     votes23: 'Vec<(Compact<u32>,[(Compact<u16>,Compact<PerU16>);22],Compact<u16>)>',
     votes24: 'Vec<(Compact<u32>,[(Compact<u16>,Compact<PerU16>);23],Compact<u16>)>'
   },
-
   /**
-   * Lookup780: kusama_runtime::Runtime
+   * Lookup786: kusama_runtime::Runtime
    **/
   KusamaRuntimeRuntime: 'Null'
 };

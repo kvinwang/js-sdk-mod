@@ -61,21 +61,13 @@ Object.defineProperty(exports, "GenericSignerPayload", {
     return _SignerPayload.GenericSignerPayload;
   }
 });
-
 var _Extrinsic = require("./Extrinsic");
-
 var _ExtrinsicEra = require("./ExtrinsicEra");
-
 var _ExtrinsicPayload = require("./ExtrinsicPayload");
-
 var _ExtrinsicPayloadUnknown = require("./ExtrinsicPayloadUnknown");
-
 var _ExtrinsicUnknown = require("./ExtrinsicUnknown");
-
 var _SignerPayload = require("./SignerPayload");
-
 var _v = require("./v4");
-
 Object.keys(_v).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;

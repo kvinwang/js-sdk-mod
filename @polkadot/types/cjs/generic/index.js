@@ -103,9 +103,7 @@ Object.defineProperty(exports, "GenericVote", {
     return _Vote.GenericVote;
   }
 });
-
 var _ethereum = require("../ethereum");
-
 Object.keys(_ethereum).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -117,23 +115,13 @@ Object.keys(_ethereum).forEach(function (key) {
     }
   });
 });
-
 var _AccountId = require("./AccountId");
-
 var _AccountIndex = require("./AccountIndex");
-
 var _Block = require("./Block");
-
 var _Call = require("./Call");
-
 var _ChainProperties = require("./ChainProperties");
-
 var _ConsensusEngineId = require("./ConsensusEngineId");
-
 var _Event = require("./Event");
-
 var _LookupSource = require("./LookupSource");
-
 var _MultiAddress = require("./MultiAddress");
-
 var _Vote = require("./Vote");

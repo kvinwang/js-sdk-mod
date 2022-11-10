@@ -4,11 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.runtime = void 0;
-
 var _util = require("@polkadot/util");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const BB_V2_TO_V4 = {
   // this was removed after V4
   random_seed: {
@@ -70,15 +69,18 @@ const runtime = {
     }, BB_V2_TO_V6, BB_V3_TO_V6),
     version: 6
   }, {
-    methods: (0, _util.objectSpread)({// apply_extrinsic result changed in 6
+    methods: (0, _util.objectSpread)({
+      // apply_extrinsic result changed in 6
     }, BB_V2_TO_V5, BB_V2_TO_V6, BB_V3_TO_V6),
     version: 5
   }, {
-    methods: (0, _util.objectSpread)({// random_seed removed
+    methods: (0, _util.objectSpread)({
+      // random_seed removed
     }, BB_V2_TO_V4, BB_V2_TO_V5, BB_V2_TO_V6, BB_V3_TO_V6),
     version: 4
   }, {
-    methods: (0, _util.objectSpread)({// finalize_block renamed
+    methods: (0, _util.objectSpread)({
+      // finalize_block renamed
     }, BB_V2_TO_V4, BB_V2_TO_V6, BB_V3_TO_V6),
     version: 3
   }, {

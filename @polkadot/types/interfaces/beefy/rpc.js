@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 export const rpc = {
   getFinalizedHead: {
     description: 'Returns hash of the latest BEEFY finalized block as seen by this client.',

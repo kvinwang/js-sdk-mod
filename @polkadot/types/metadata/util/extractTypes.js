@@ -1,7 +1,7 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import { getTypeDef, TypeDefInfo } from '@polkadot/types-create';
 
+import { getTypeDef, TypeDefInfo } from '@polkadot/types-create';
 function extractSubSingle(_, {
   sub
 }) {
@@ -11,7 +11,6 @@ function extractSubSingle(_, {
   } = sub;
   return extractTypes([lookupName || type]);
 }
-
 function extractSubArray(_, {
   sub
 }) {
@@ -20,14 +19,13 @@ function extractSubArray(_, {
     type
   }) => lookupName || type));
 }
-
 function unhandled(type, {
   info
 }) {
   throw new Error(`Unhandled: Unable to create and validate type from ${type} (info=${TypeDefInfo[info]})`);
-} // we only handle the types with params here
+}
 
-
+// we only handle the types with params here
 const mapping = {
   [TypeDefInfo.BTreeMap]: extractSubArray,
   [TypeDefInfo.BTreeSet]: extractSubSingle,
@@ -53,17 +51,15 @@ const mapping = {
   [TypeDefInfo.WrapperKeepOpaque]: extractSubSingle,
   [TypeDefInfo.WrapperOpaque]: extractSubSingle
 };
-/** @internal */
 
+/** @internal */
 export function extractTypes(types) {
   const count = types.length;
   const result = new Array(count);
-
   for (let i = 0; i < count; i++) {
     const type = types[i];
     const typeDef = getTypeDef(type);
     result[i] = mapping[typeDef.info](type, typeDef);
   }
-
   return result;
 }

@@ -4,15 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _typesCreate = require("@polkadot/types-create");
-
 var _util = require("@polkadot/util");
-
 // Copyright 2017-2022 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable sort-keys */
+
 const sharedTypes = {
   CompactAssignments: 'CompactAssignmentsWith24',
   DispatchErrorModule: 'DispatchErrorModuleU8',
@@ -21,7 +19,7 @@ const sharedTypes = {
   ProxyType: {
     _enum: ['Any', 'NonTransfer', 'Governance', 'Staking', 'IdentityJudgement', 'CancelProxy', 'Auction']
   },
-  Weight: 'u64'
+  Weight: 'WeightV1'
 };
 const addrIndicesTypes = {
   AccountInfo: 'AccountInfoWithRefCount',
@@ -188,7 +186,18 @@ const versioned = [{
 }, {
   // metadata v14
   minmax: [9106, undefined],
-  types: {}
-}];
+  types: {
+    Weight: 'WeightV1'
+  }
+}
+// ,
+// {
+//   // weight v2 introduction
+//   minmax: [9300, undefined],
+//   types: {
+//     Weight: 'WeightV2'
+//   }
+// }
+];
 var _default = versioned;
 exports.default = _default;

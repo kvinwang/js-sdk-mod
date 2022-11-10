@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 export const rpc = {
   createBlock: {
     description: 'Instructs the manual-seal authorship task to create a new block',

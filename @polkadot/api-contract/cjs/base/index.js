@@ -51,9 +51,6 @@ Object.defineProperty(exports, "extendContract", {
     return _Contract.extendContract;
   }
 });
-
 var _Blueprint = require("./Blueprint");
-
 var _Code = require("./Code");
-
 var _Contract = require("./Contract");

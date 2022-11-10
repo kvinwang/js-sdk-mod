@@ -1,7 +1,9 @@
 // Copyright 2017-2022 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import { objectSpread } from '@polkadot/util'; // type overrides for modules (where duplication between modules exist)
 
+import { objectSpread } from '@polkadot/util';
+
+// type overrides for modules (where duplication between modules exist)
 const typesAlias = {
   assets: {
     Approval: 'AssetApproval',
@@ -102,14 +104,13 @@ const typesAlias = {
     AssetId: 'XcmAssetId'
   }
 };
+
 /**
  * @description Get types for specific modules (metadata override)
  */
-
 export function getAliasTypes({
   knownTypes
 }, section) {
   var _knownTypes$typesAlia;
-
-  return objectSpread({}, typesAlias[section], (_knownTypes$typesAlia = knownTypes.typesAlias) === null || _knownTypes$typesAlia === void 0 ? void 0 : _knownTypes$typesAlia[section]);
+  return objectSpread({}, typesAlias[section], (_knownTypes$typesAlia = knownTypes.typesAlias) == null ? void 0 : _knownTypes$typesAlia[section]);
 }

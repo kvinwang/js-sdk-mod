@@ -3,7 +3,7 @@ import type { ApiTypes, AugmentedEvent } from '@polkadot/api-base/types';
 import type { Bytes, Null, Option, Result, U8aFixed, Vec, bool, u128, u16, u32, u64, u8 } from '@polkadot/types-codec';
 import type { ITuple } from '@polkadot/types-codec/types';
 import type { AccountId32, H256 } from '@polkadot/types/interfaces/runtime';
-import type { FrameSupportDispatchDispatchInfo, FrameSupportDispatchPostDispatchInfo, FrameSupportScheduleLookupError, FrameSupportTokensMiscBalanceStatus, KitchensinkRuntimeProxyType, PalletAllianceCid, PalletAllianceUnscrupulousItem, PalletConvictionVotingTally, PalletDemocracyVoteAccountVote, PalletDemocracyVoteThreshold, PalletElectionProviderMultiPhaseElectionCompute, PalletImOnlineSr25519AppSr25519Public, PalletMultisigTimepoint, PalletNominationPoolsPoolState, PalletRankedCollectiveTally, PalletRankedCollectiveVoteRecord, PalletStakingExposure, PalletStakingValidatorPrefs, PalletStateTrieMigrationError, PalletStateTrieMigrationMigrationCompute, SpFinalityGrandpaAppPublic, SpNposElectionsElectionScore, SpRuntimeDispatchError, SpRuntimeDispatchErrorWithPostInfo } from '@polkadot/types/lookup';
+import type { FrameSupportDispatchDispatchInfo, FrameSupportDispatchPostDispatchInfo, FrameSupportPreimagesBounded, FrameSupportTokensMiscBalanceStatus, KitchensinkRuntimeProxyType, PalletAllianceCid, PalletAllianceUnscrupulousItem, PalletConvictionVotingTally, PalletDemocracyVoteAccountVote, PalletDemocracyVoteThreshold, PalletElectionProviderMultiPhaseElectionCompute, PalletImOnlineSr25519AppSr25519Public, PalletMultisigTimepoint, PalletNominationPoolsPoolState, PalletRankedCollectiveTally, PalletRankedCollectiveVoteRecord, PalletStakingExposure, PalletStakingValidatorPrefs, PalletStateTrieMigrationError, PalletStateTrieMigrationMigrationCompute, SpFinalityGrandpaAppPublic, SpNposElectionsElectionScore, SpRuntimeDispatchError, SpRuntimeDispatchErrorWithPostInfo } from '@polkadot/types/lookup';
 export declare type __AugmentedEvent<ApiType extends ApiTypes> = AugmentedEvent<ApiType>;
 declare module '@polkadot/api-base/types/events' {
     interface AugmentedEvents<ApiType extends ApiTypes> {
@@ -659,13 +659,6 @@ declare module '@polkadot/api-base/types/events' {
                 target: AccountId32;
             }>;
             /**
-             * A proposal has been enacted.
-             **/
-            Executed: AugmentedEvent<ApiType, [refIndex: u32, result: Result<Null, SpRuntimeDispatchError>], {
-                refIndex: u32;
-                result: Result<Null, SpRuntimeDispatchError>;
-            }>;
-            /**
              * An external proposal has been tabled.
              **/
             ExternalTabled: AugmentedEvent<ApiType, []>;
@@ -680,45 +673,6 @@ declare module '@polkadot/api-base/types/events' {
              **/
             Passed: AugmentedEvent<ApiType, [refIndex: u32], {
                 refIndex: u32;
-            }>;
-            /**
-             * A proposal could not be executed because its preimage was invalid.
-             **/
-            PreimageInvalid: AugmentedEvent<ApiType, [proposalHash: H256, refIndex: u32], {
-                proposalHash: H256;
-                refIndex: u32;
-            }>;
-            /**
-             * A proposal could not be executed because its preimage was missing.
-             **/
-            PreimageMissing: AugmentedEvent<ApiType, [proposalHash: H256, refIndex: u32], {
-                proposalHash: H256;
-                refIndex: u32;
-            }>;
-            /**
-             * A proposal's preimage was noted, and the deposit taken.
-             **/
-            PreimageNoted: AugmentedEvent<ApiType, [proposalHash: H256, who: AccountId32, deposit: u128], {
-                proposalHash: H256;
-                who: AccountId32;
-                deposit: u128;
-            }>;
-            /**
-             * A registered preimage was removed and the deposit collected by the reaper.
-             **/
-            PreimageReaped: AugmentedEvent<ApiType, [proposalHash: H256, provider: AccountId32, deposit: u128, reaper: AccountId32], {
-                proposalHash: H256;
-                provider: AccountId32;
-                deposit: u128;
-                reaper: AccountId32;
-            }>;
-            /**
-             * A proposal preimage was removed and used (the deposit was returned).
-             **/
-            PreimageUsed: AugmentedEvent<ApiType, [proposalHash: H256, provider: AccountId32, deposit: u128], {
-                proposalHash: H256;
-                provider: AccountId32;
-                deposit: u128;
             }>;
             /**
              * A proposal got canceled.
@@ -750,10 +704,9 @@ declare module '@polkadot/api-base/types/events' {
             /**
              * A public proposal has been tabled for referendum vote.
              **/
-            Tabled: AugmentedEvent<ApiType, [proposalIndex: u32, deposit: u128, depositors: Vec<AccountId32>], {
+            Tabled: AugmentedEvent<ApiType, [proposalIndex: u32, deposit: u128], {
                 proposalIndex: u32;
                 deposit: u128;
-                depositors: Vec<AccountId32>;
             }>;
             /**
              * An account has cancelled a previous delegation operation.
@@ -923,9 +876,8 @@ declare module '@polkadot/api-base/types/events' {
             /**
              * A staker was unstaked.
              **/
-            Unstaked: AugmentedEvent<ApiType, [stash: AccountId32, maybePoolId: Option<u32>, result: Result<Null, SpRuntimeDispatchError>], {
+            Unstaked: AugmentedEvent<ApiType, [stash: AccountId32, result: Result<Null, SpRuntimeDispatchError>], {
                 stash: AccountId32;
-                maybePoolId: Option<u32>;
                 result: Result<Null, SpRuntimeDispatchError>;
             }>;
             /**
@@ -1401,7 +1353,7 @@ declare module '@polkadot/api-base/types/events' {
                 rank: u16;
             }>;
             /**
-             * The member `who`'s rank has been changed to the given `rank`.
+             * The member `who`se rank has been changed to the given `rank`.
              **/
             RankChanged: AugmentedEvent<ApiType, [who: AccountId32, rank: u16], {
                 who: AccountId32;
@@ -1468,10 +1420,10 @@ declare module '@polkadot/api-base/types/events' {
             /**
              * A referendum has moved into the deciding phase.
              **/
-            DecisionStarted: AugmentedEvent<ApiType, [index: u32, track: u16, proposalHash: H256, tally: PalletRankedCollectiveTally], {
+            DecisionStarted: AugmentedEvent<ApiType, [index: u32, track: u16, proposal: FrameSupportPreimagesBounded, tally: PalletRankedCollectiveTally], {
                 index: u32;
                 track: u16;
-                proposalHash: H256;
+                proposal: FrameSupportPreimagesBounded;
                 tally: PalletRankedCollectiveTally;
             }>;
             /**
@@ -1496,12 +1448,12 @@ declare module '@polkadot/api-base/types/events' {
                 tally: PalletRankedCollectiveTally;
             }>;
             /**
-             * A referendum has being submitted.
+             * A referendum has been submitted.
              **/
-            Submitted: AugmentedEvent<ApiType, [index: u32, track: u16, proposalHash: H256], {
+            Submitted: AugmentedEvent<ApiType, [index: u32, track: u16, proposal: FrameSupportPreimagesBounded], {
                 index: u32;
                 track: u16;
-                proposalHash: H256;
+                proposal: FrameSupportPreimagesBounded;
             }>;
             /**
              * A referendum has been timed out without being decided.
@@ -1608,10 +1560,10 @@ declare module '@polkadot/api-base/types/events' {
             /**
              * A referendum has moved into the deciding phase.
              **/
-            DecisionStarted: AugmentedEvent<ApiType, [index: u32, track: u16, proposalHash: H256, tally: PalletConvictionVotingTally], {
+            DecisionStarted: AugmentedEvent<ApiType, [index: u32, track: u16, proposal: FrameSupportPreimagesBounded, tally: PalletConvictionVotingTally], {
                 index: u32;
                 track: u16;
-                proposalHash: H256;
+                proposal: FrameSupportPreimagesBounded;
                 tally: PalletConvictionVotingTally;
             }>;
             /**
@@ -1636,12 +1588,12 @@ declare module '@polkadot/api-base/types/events' {
                 tally: PalletConvictionVotingTally;
             }>;
             /**
-             * A referendum has being submitted.
+             * A referendum has been submitted.
              **/
-            Submitted: AugmentedEvent<ApiType, [index: u32, track: u16, proposalHash: H256], {
+            Submitted: AugmentedEvent<ApiType, [index: u32, track: u16, proposal: FrameSupportPreimagesBounded], {
                 index: u32;
                 track: u16;
-                proposalHash: H256;
+                proposal: FrameSupportPreimagesBounded;
             }>;
             /**
              * A referendum has been timed out without being decided.
@@ -1672,10 +1624,9 @@ declare module '@polkadot/api-base/types/events' {
             /**
              * The call for the provided hash was not found so the task has been aborted.
              **/
-            CallLookupFailed: AugmentedEvent<ApiType, [task: ITuple<[u32, u32]>, id: Option<Bytes>, error: FrameSupportScheduleLookupError], {
+            CallUnavailable: AugmentedEvent<ApiType, [task: ITuple<[u32, u32]>, id: Option<U8aFixed>], {
                 task: ITuple<[u32, u32]>;
-                id: Option<Bytes>;
-                error: FrameSupportScheduleLookupError;
+                id: Option<U8aFixed>;
             }>;
             /**
              * Canceled some task.
@@ -1687,10 +1638,24 @@ declare module '@polkadot/api-base/types/events' {
             /**
              * Dispatched some task.
              **/
-            Dispatched: AugmentedEvent<ApiType, [task: ITuple<[u32, u32]>, id: Option<Bytes>, result: Result<Null, SpRuntimeDispatchError>], {
+            Dispatched: AugmentedEvent<ApiType, [task: ITuple<[u32, u32]>, id: Option<U8aFixed>, result: Result<Null, SpRuntimeDispatchError>], {
                 task: ITuple<[u32, u32]>;
-                id: Option<Bytes>;
+                id: Option<U8aFixed>;
                 result: Result<Null, SpRuntimeDispatchError>;
+            }>;
+            /**
+             * The given task was unable to be renewed since the agenda is full at that block.
+             **/
+            PeriodicFailed: AugmentedEvent<ApiType, [task: ITuple<[u32, u32]>, id: Option<U8aFixed>], {
+                task: ITuple<[u32, u32]>;
+                id: Option<U8aFixed>;
+            }>;
+            /**
+             * The given task can never be executed since it is overweight.
+             **/
+            PermanentlyOverweight: AugmentedEvent<ApiType, [task: ITuple<[u32, u32]>, id: Option<U8aFixed>], {
+                task: ITuple<[u32, u32]>;
+                id: Option<U8aFixed>;
             }>;
             /**
              * Scheduled some task.
@@ -1837,40 +1802,60 @@ declare module '@polkadot/api-base/types/events' {
              * NOTE: This event is only emitted when funds are bonded via a dispatchable. Notably,
              * it will not be emitted for staking rewards when they are added to stake.
              **/
-            Bonded: AugmentedEvent<ApiType, [AccountId32, u128]>;
+            Bonded: AugmentedEvent<ApiType, [stash: AccountId32, amount: u128], {
+                stash: AccountId32;
+                amount: u128;
+            }>;
             /**
              * An account has stopped participating as either a validator or nominator.
-             * \[stash\]
              **/
-            Chilled: AugmentedEvent<ApiType, [AccountId32]>;
+            Chilled: AugmentedEvent<ApiType, [stash: AccountId32], {
+                stash: AccountId32;
+            }>;
             /**
              * The era payout has been set; the first balance is the validator-payout; the second is
              * the remainder from the maximum amount of reward.
-             * \[era_index, validator_payout, remainder\]
              **/
-            EraPaid: AugmentedEvent<ApiType, [u32, u128, u128]>;
+            EraPaid: AugmentedEvent<ApiType, [eraIndex: u32, validatorPayout: u128, remainder: u128], {
+                eraIndex: u32;
+                validatorPayout: u128;
+                remainder: u128;
+            }>;
             /**
-             * A nominator has been kicked from a validator. \[nominator, stash\]
+             * A nominator has been kicked from a validator.
              **/
-            Kicked: AugmentedEvent<ApiType, [AccountId32, AccountId32]>;
+            Kicked: AugmentedEvent<ApiType, [nominator: AccountId32, stash: AccountId32], {
+                nominator: AccountId32;
+                stash: AccountId32;
+            }>;
             /**
              * An old slashing report from a prior era was discarded because it could
-             * not be processed. \[session_index\]
+             * not be processed.
              **/
-            OldSlashingReportDiscarded: AugmentedEvent<ApiType, [u32]>;
+            OldSlashingReportDiscarded: AugmentedEvent<ApiType, [sessionIndex: u32], {
+                sessionIndex: u32;
+            }>;
             /**
-             * The stakers' rewards are getting paid. \[era_index, validator_stash\]
+             * The stakers' rewards are getting paid.
              **/
-            PayoutStarted: AugmentedEvent<ApiType, [u32, AccountId32]>;
+            PayoutStarted: AugmentedEvent<ApiType, [eraIndex: u32, validatorStash: AccountId32], {
+                eraIndex: u32;
+                validatorStash: AccountId32;
+            }>;
             /**
-             * The nominator has been rewarded by this amount. \[stash, amount\]
+             * The nominator has been rewarded by this amount.
              **/
-            Rewarded: AugmentedEvent<ApiType, [AccountId32, u128]>;
+            Rewarded: AugmentedEvent<ApiType, [stash: AccountId32, amount: u128], {
+                stash: AccountId32;
+                amount: u128;
+            }>;
             /**
              * One staker (and potentially its nominators) has been slashed by the given amount.
-             * \[staker, amount\]
              **/
-            Slashed: AugmentedEvent<ApiType, [AccountId32, u128]>;
+            Slashed: AugmentedEvent<ApiType, [staker: AccountId32, amount: u128], {
+                staker: AccountId32;
+                amount: u128;
+            }>;
             /**
              * A new set of stakers was elected.
              **/
@@ -1880,18 +1865,27 @@ declare module '@polkadot/api-base/types/events' {
              **/
             StakingElectionFailed: AugmentedEvent<ApiType, []>;
             /**
-             * An account has unbonded this amount. \[stash, amount\]
+             * An account has unbonded this amount.
              **/
-            Unbonded: AugmentedEvent<ApiType, [AccountId32, u128]>;
+            Unbonded: AugmentedEvent<ApiType, [stash: AccountId32, amount: u128], {
+                stash: AccountId32;
+                amount: u128;
+            }>;
             /**
              * A validator has set their preferences.
              **/
-            ValidatorPrefsSet: AugmentedEvent<ApiType, [AccountId32, PalletStakingValidatorPrefs]>;
+            ValidatorPrefsSet: AugmentedEvent<ApiType, [stash: AccountId32, prefs: PalletStakingValidatorPrefs], {
+                stash: AccountId32;
+                prefs: PalletStakingValidatorPrefs;
+            }>;
             /**
              * An account has called `withdraw_unbonded` and removed unbonding chunks worth `Balance`
-             * from the unlocking queue. \[stash, amount\]
+             * from the unlocking queue.
              **/
-            Withdrawn: AugmentedEvent<ApiType, [AccountId32, u128]>;
+            Withdrawn: AugmentedEvent<ApiType, [stash: AccountId32, amount: u128], {
+                stash: AccountId32;
+                amount: u128;
+            }>;
             /**
              * Generic event
              **/
@@ -2494,7 +2488,7 @@ declare module '@polkadot/api-base/types/events' {
              **/
             [key: string]: AugmentedEvent<ApiType>;
         };
-        voterBagsList: {
+        voterList: {
             /**
              * Moved an account from one bag to another.
              **/

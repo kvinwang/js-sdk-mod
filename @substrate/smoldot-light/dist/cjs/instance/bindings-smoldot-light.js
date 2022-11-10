@@ -41,7 +41,7 @@ function default_1(config) {
         killedTracked.killed = true;
         // TODO: kill timers as well?
         for (const connection in connections) {
-            connections[connection].close();
+            connections[connection].reset();
             delete connections[connection];
         }
     };
@@ -55,29 +55,12 @@ function default_1(config) {
             const message = buffer.utf8BytesToString(new Uint8Array(instance.exports.memory.buffer), ptr, len);
             config.onPanic(message);
         },
-        // Used by the Rust side to emit a JSON-RPC response or subscription notification.
-        json_rpc_respond: (ptr, len, chainId) => {
+        // Used by the Rust side to notify that a JSON-RPC response or subscription notification
+        // is available in the queue of JSON-RPC responses.
+        json_rpc_responses_non_empty: (chainId) => {
             if (killedTracked.killed)
                 return;
-            const instance = config.instance;
-            ptr >>>= 0;
-            len >>>= 0;
-            let message = buffer.utf8BytesToString(new Uint8Array(instance.exports.memory.buffer), ptr, len);
-            if (config.jsonRpcCallback) {
-                config.jsonRpcCallback(message, chainId);
-            }
-        },
-        // Used by the Rust side in response to asking for the database content of a chain.
-        database_content_ready: (ptr, len, chainId) => {
-            if (killedTracked.killed)
-                return;
-            const instance = config.instance;
-            ptr >>>= 0;
-            len >>>= 0;
-            let content = buffer.utf8BytesToString(new Uint8Array(instance.exports.memory.buffer), ptr, len);
-            if (config.databaseContentCallback) {
-                config.databaseContentCallback(content, chainId);
-            }
+            config.jsonRpcResponsesNonEmptyCallback(chainId);
         },
         // Used by the Rust side to emit a log entry.
         // See also the `max_log_level` parameter in the configuration.
@@ -174,14 +157,14 @@ function default_1(config) {
                         }
                         catch (_error) { }
                     },
-                    onConnectionClose: (message) => {
+                    onConnectionReset: (message) => {
                         if (killedTracked.killed)
                             return;
                         try {
                             const encoded = new TextEncoder().encode(message);
                             const ptr = instance.exports.alloc(encoded.length) >>> 0;
                             new Uint8Array(instance.exports.memory.buffer).set(encoded, ptr);
-                            instance.exports.connection_closed(connectionId, ptr, encoded.length);
+                            instance.exports.connection_reset(connectionId, ptr, encoded.length);
                         }
                         catch (_error) { }
                     },
@@ -203,11 +186,11 @@ function default_1(config) {
                         }
                         catch (_error) { }
                     },
-                    onStreamClose: (streamId) => {
+                    onStreamReset: (streamId) => {
                         if (killedTracked.killed)
                             return;
                         try {
-                            instance.exports.stream_closed(connectionId, streamId);
+                            instance.exports.stream_reset(connectionId, streamId);
                         }
                         catch (_error) { }
                     }
@@ -232,11 +215,11 @@ function default_1(config) {
             }
         },
         // Must close and destroy the connection object.
-        connection_close: (connectionId) => {
+        reset_connection: (connectionId) => {
             if (killedTracked.killed)
                 return;
             const connection = connections[connectionId];
-            connection.close();
+            connection.reset();
             delete connections[connectionId];
         },
         // Opens a new substream on a multi-stream connection.
@@ -245,9 +228,9 @@ function default_1(config) {
             connection.openOutSubstream();
         },
         // Closes a substream on a multi-stream connection.
-        connection_stream_close: (connectionId, streamId) => {
+        connection_stream_reset: (connectionId, streamId) => {
             const connection = connections[connectionId];
-            connection.close(streamId);
+            connection.reset(streamId);
         },
         // Must queue the data found in the WebAssembly memory at the given pointer. It is assumed
         // that this function is called only when the connection is in an open state.

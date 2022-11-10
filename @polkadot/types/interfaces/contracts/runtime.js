@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 export const runtime = {
   ContractsApi: [{
     methods: {
@@ -53,7 +54,7 @@ export const runtime = {
           type: 'Option<Balance>'
         }, {
           name: 'code',
-          type: 'Bytes'
+          type: 'CodeSource'
         }, {
           name: 'data',
           type: 'Bytes'

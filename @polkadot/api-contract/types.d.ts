@@ -2,7 +2,7 @@
 import type { ApiBase } from '@polkadot/api/base';
 import type { ApiTypes } from '@polkadot/api/types';
 import type { Text, u64 } from '@polkadot/types';
-import type { ContractExecResultResult, ContractSelector, StorageDeposit } from '@polkadot/types/interfaces';
+import type { ContractExecResultResult, ContractSelector, StorageDeposit, WeightV2 } from '@polkadot/types/interfaces';
 import type { Codec, TypeDef } from '@polkadot/types/types';
 import type { BN } from '@polkadot/util';
 import type { Abi } from '.';
@@ -59,10 +59,16 @@ export interface DecodedMessage {
     message: AbiMessage;
 }
 export interface ContractOptions {
-    gasLimit?: bigint | string | number | BN;
+    gasLimit?: bigint | string | number | BN | WeightV2;
     storageDepositLimit?: bigint | string | number | BN | null;
     value?: bigint | BN | string | number;
 }
 export interface BlueprintOptions extends ContractOptions {
     salt?: Uint8Array | string | null;
+}
+export interface WeightAll {
+    v1Weight: BN;
+    v2Weight: {
+        refTime: BN;
+    };
 }

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.versionedKhala = exports.khalaDev = exports.khala = exports.phalaDev = exports.typesChain = void 0;
+exports.typesBundle = exports.versionedKhala = exports.khalaDev = exports.khala = exports.phalaDev = exports.typesChain = void 0;
 var phala_dev_1 = __importDefault(require("./phala-dev"));
 exports.phalaDev = phala_dev_1.default;
 var khala_1 = __importDefault(require("./khala"));
@@ -25,4 +25,5 @@ exports.typesChain = {
     'Phala Staging Testnet': phala_dev_1.default,
     'Phala Development': phala_dev_1.default,
 };
+exports.typesBundle = { alias: {}, rpc: {}, types: versioned_khala_1.default };
 //# sourceMappingURL=index.js.map

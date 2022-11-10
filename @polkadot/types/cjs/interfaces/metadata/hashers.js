@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.AllHashers = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 const AllHashers = {
   Blake2_128: null,
   // eslint-disable-line camelcase

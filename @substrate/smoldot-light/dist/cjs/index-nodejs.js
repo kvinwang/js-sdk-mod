@@ -3,7 +3,7 @@
 // Copyright (C) 2019-2022  Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.start = exports.JsonRpcDisabledError = exports.CrashError = exports.AlreadyDestroyedError = exports.AddChainError = void 0;
+exports.start = exports.JsonRpcDisabledError = exports.QueueFullError = exports.MalformedJsonRpcError = exports.CrashError = exports.AlreadyDestroyedError = exports.AddChainError = void 0;
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -28,6 +28,8 @@ var client_js_2 = require("./client.js");
 Object.defineProperty(exports, "AddChainError", { enumerable: true, get: function () { return client_js_2.AddChainError; } });
 Object.defineProperty(exports, "AlreadyDestroyedError", { enumerable: true, get: function () { return client_js_2.AlreadyDestroyedError; } });
 Object.defineProperty(exports, "CrashError", { enumerable: true, get: function () { return client_js_2.CrashError; } });
+Object.defineProperty(exports, "MalformedJsonRpcError", { enumerable: true, get: function () { return client_js_2.MalformedJsonRpcError; } });
+Object.defineProperty(exports, "QueueFullError", { enumerable: true, get: function () { return client_js_2.QueueFullError; } });
 Object.defineProperty(exports, "JsonRpcDisabledError", { enumerable: true, get: function () { return client_js_2.JsonRpcDisabledError; } });
 /**
  * Initializes a new client. This is a pre-requisite to connecting to a blockchain.
@@ -61,7 +63,7 @@ exports.start = start;
  * Tries to open a new connection using the given configuration.
  *
  * @see Connection
- * @throws ConnectionError If the multiaddress couldn't be parsed or contains an invalid protocol.
+ * @throws {@link ConnectionError} If the multiaddress couldn't be parsed or contains an invalid protocol.
  */
 function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
     let connection;
@@ -86,14 +88,14 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         };
         socket.onclose = (event) => {
             const message = "Error code " + event.code + (!!event.reason ? (": " + event.reason) : "");
-            config.onConnectionClose(message);
+            config.onConnectionReset(message);
             socket.onopen = () => { };
             socket.onclose = () => { };
             socket.onmessage = () => { };
             socket.onerror = () => { };
         };
         socket.onerror = (event) => {
-            config.onConnectionClose(event.message);
+            config.onConnectionReset(event.message);
             socket.onopen = () => { };
             socket.onclose = () => { };
             socket.onmessage = () => { };
@@ -126,7 +128,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
             // NodeJS doesn't provide a reason why the closing happened, but only
             // whether it was caused by an error.
             const message = hasError ? "Error" : "Closed gracefully";
-            config.onConnectionClose(message);
+            config.onConnectionReset(message);
         });
         connection.socket.on('error', () => { });
         connection.socket.on('data', (message) => {
@@ -139,7 +141,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         throw new instance_js_1.ConnectionError('Unrecognized multiaddr format');
     }
     return {
-        close: () => {
+        reset: () => {
             if (connection.ty == 'websocket') {
                 // WebSocket
                 // We can't set these fields to null because the TypeScript definitions don't

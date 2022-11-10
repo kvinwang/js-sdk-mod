@@ -21,7 +21,7 @@ import { inflate } from 'pako';
 import { hrtime } from 'node:process';
 import { createConnection as nodeCreateConnection } from 'node:net';
 import { randomFillSync } from 'node:crypto';
-export { AddChainError, AlreadyDestroyedError, CrashError, JsonRpcDisabledError } from './client.js';
+export { AddChainError, AlreadyDestroyedError, CrashError, MalformedJsonRpcError, QueueFullError, JsonRpcDisabledError } from './client.js';
 /**
  * Initializes a new client. This is a pre-requisite to connecting to a blockchain.
  *
@@ -53,7 +53,7 @@ export function start(options) {
  * Tries to open a new connection using the given configuration.
  *
  * @see Connection
- * @throws ConnectionError If the multiaddress couldn't be parsed or contains an invalid protocol.
+ * @throws {@link ConnectionError} If the multiaddress couldn't be parsed or contains an invalid protocol.
  */
 function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
     let connection;
@@ -78,14 +78,14 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         };
         socket.onclose = (event) => {
             const message = "Error code " + event.code + (!!event.reason ? (": " + event.reason) : "");
-            config.onConnectionClose(message);
+            config.onConnectionReset(message);
             socket.onopen = () => { };
             socket.onclose = () => { };
             socket.onmessage = () => { };
             socket.onerror = () => { };
         };
         socket.onerror = (event) => {
-            config.onConnectionClose(event.message);
+            config.onConnectionReset(event.message);
             socket.onopen = () => { };
             socket.onclose = () => { };
             socket.onmessage = () => { };
@@ -118,7 +118,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
             // NodeJS doesn't provide a reason why the closing happened, but only
             // whether it was caused by an error.
             const message = hasError ? "Error" : "Closed gracefully";
-            config.onConnectionClose(message);
+            config.onConnectionReset(message);
         });
         connection.socket.on('error', () => { });
         connection.socket.on('data', (message) => {
@@ -131,7 +131,7 @@ function connect(config, forbidTcp, forbidWs, forbidNonLocalWs, forbidWss) {
         throw new ConnectionError('Unrecognized multiaddr format');
     }
     return {
-        close: () => {
+        reset: () => {
             if (connection.ty == 'websocket') {
                 // WebSocket
                 // We can't set these fields to null because the TypeScript definitions don't

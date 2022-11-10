@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { objectSpread } from '@polkadot/util';
 const PH_V1_TO_V2 = {
   assumed_validation_data: {
@@ -109,45 +110,55 @@ const PH_V1_TO_V2 = {
     type: 'Vec<ValidatorId>'
   }
 };
+const PH_V2_TO_V3 = {
+  pvfs_require_precheck: {
+    description: 'Returns code hashes of PVFs that require pre-checking by validators in the active set.',
+    params: [],
+    type: 'Vec<ValidationCodeHash>'
+  },
+  session_info: {
+    description: 'Get the session info for the given session, if stored.',
+    params: [{
+      name: 'index',
+      type: 'SessionIndex'
+    }],
+    type: 'Option<SessionInfo>'
+  },
+  submit_pvf_check_statement: {
+    description: 'Submits a PVF pre-checking statement into the transaction pool.',
+    params: [{
+      name: 'stmt',
+      type: 'PvfCheckStatement'
+    }, {
+      name: 'signature',
+      type: 'ValidatorSignature'
+    }],
+    type: 'Null'
+  },
+  validation_code_hash: {
+    description: 'Fetch the hash of the validation code used by a para, making the given `OccupiedCoreAssumption`.',
+    params: [{
+      name: 'paraId',
+      type: 'ParaId'
+    }, {
+      name: 'assumption',
+      type: 'OccupiedCoreAssumption'
+    }],
+    type: 'Option<ValidationCodeHash>'
+  }
+};
 export const runtime = {
   ParachainHost: [{
     methods: objectSpread({
-      pvfs_require_precheck: {
-        description: 'Returns code hashes of PVFs that require pre-checking by validators in the active set.',
+      disputes: {
+        description: 'Returns all onchain disputes.',
         params: [],
-        type: 'Vec<ValidationCodeHash>'
-      },
-      session_info: {
-        description: 'Get the session info for the given session, if stored.',
-        params: [{
-          name: 'index',
-          type: 'SessionIndex'
-        }],
-        type: 'Option<SessionInfo>'
-      },
-      submit_pvf_check_statement: {
-        description: 'Submits a PVF pre-checking statement into the transaction pool.',
-        params: [{
-          name: 'stmt',
-          type: 'PvfCheckStatement'
-        }, {
-          name: 'signature',
-          type: 'ValidatorSignature'
-        }],
-        type: 'Null'
-      },
-      validation_code_hash: {
-        description: 'Fetch the hash of the validation code used by a para, making the given `OccupiedCoreAssumption`.',
-        params: [{
-          name: 'paraId',
-          type: 'ParaId'
-        }, {
-          name: 'assumption',
-          type: 'OccupiedCoreAssumption'
-        }],
-        type: 'Option<ValidationCodeHash>'
+        type: 'Vec<(SessionIndex, CandidateHash, DisputeState)>'
       }
-    }, PH_V1_TO_V2),
+    }, PH_V1_TO_V2, PH_V2_TO_V3),
+    version: 3
+  }, {
+    methods: objectSpread({}, PH_V1_TO_V2, PH_V2_TO_V3),
     version: 2
   }, {
     methods: objectSpread({

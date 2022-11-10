@@ -3,6 +3,7 @@ declare const versioned: ({
     types: {
         Address: string;
         LookupSource: string;
+        DispatchErrorModule: string;
         Keys: string;
         BridgeChainId: string;
         BridgeEvent: {
@@ -233,6 +234,7 @@ declare const versioned: ({
     types: {
         Address: string;
         LookupSource: string;
+        DispatchErrorModule: string;
         Keys: string;
         BridgeChainId: string;
         BridgeEvent: {

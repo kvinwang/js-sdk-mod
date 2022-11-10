@@ -1,8 +1,8 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { Null, Struct, Tuple } from '@polkadot/types-codec';
 import { objectProperties, objectSpread } from '@polkadot/util';
-
 /** @internal */
 function decodeEvent(registry, value) {
   if (!value || !value.length) {
@@ -10,7 +10,6 @@ function decodeEvent(registry, value) {
       DataType: Null
     };
   }
-
   const index = value.subarray(0, 2);
   return {
     DataType: registry.findMetaEvent(index),
@@ -20,22 +19,20 @@ function decodeEvent(registry, value) {
     }
   };
 }
+
 /**
  * @name GenericEventData
  * @description
  * Wrapper for the actual data that forms part of an [[Event]]
  */
-
-
 export class GenericEventData extends Tuple {
   #meta;
   #method;
   #names = null;
   #section;
   #typeDef;
-
   constructor(registry, value, meta, section = '<unknown>', method = '<unknown>') {
-    const fields = (meta === null || meta === void 0 ? void 0 : meta.fields) || [];
+    const fields = (meta == null ? void 0 : meta.fields) || [];
     super(registry, fields.map(({
       type
     }) => registry.createLookupType(type)), value);
@@ -48,79 +45,68 @@ export class GenericEventData extends Tuple {
     const names = fields.map(({
       name
     }) => registry.lookup.sanitizeField(name)[0]).filter(n => !!n);
-
     if (names.length === fields.length) {
       this.#names = names;
       objectProperties(this, names, (_, i) => this[i]);
     }
   }
+
   /**
    * @description The wrapped [[EventMetadata]]
    */
-
-
   get meta() {
     return this.#meta;
   }
+
   /**
    * @description The method as a string
    */
-
-
   get method() {
     return this.#method;
   }
+
   /**
    * @description The field names (as available)
    */
-
-
   get names() {
     return this.#names;
   }
+
   /**
    * @description The section as a string
    */
-
-
   get section() {
     return this.#section;
   }
+
   /**
    * @description The [[TypeDef]] for this event
    */
-
-
   get typeDef() {
     return this.#typeDef;
   }
+
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
    */
-
-
   toHuman(isExtended) {
     if (this.#names !== null) {
       const json = {};
-
       for (let i = 0; i < this.#names.length; i++) {
         json[this.#names[i]] = this[i].toHuman(isExtended);
       }
-
       return json;
     }
-
     return super.toHuman(isExtended);
   }
-
 }
+
 /**
  * @name GenericEvent
  * @description
  * A representation of a system event. These are generated via the [[Metadata]] interfaces and
  * specific to a specific Substrate runtime
  */
-
 export class GenericEvent extends Struct {
   // Currently we _only_ decode from Uint8Array, since we expect it to
   // be used via EventRecord
@@ -135,59 +121,52 @@ export class GenericEvent extends Struct {
       data: DataType
     }, value);
   }
+
   /**
    * @description The wrapped [[EventData]]
    */
-
-
   get data() {
     return this.getT('data');
   }
+
   /**
    * @description The [[EventId]], identifying the raw event
    */
-
-
   get index() {
     return this.getT('index');
   }
+
   /**
    * @description The [[EventMetadata]] with the documentation
    */
-
-
   get meta() {
     return this.data.meta;
   }
+
   /**
    * @description The method string identifying the event
    */
-
-
   get method() {
     return this.data.method;
   }
+
   /**
    * @description The section string identifying the event
    */
-
-
   get section() {
     return this.data.section;
   }
+
   /**
    * @description The [[TypeDef]] for the event
    */
-
-
   get typeDef() {
     return this.data.typeDef;
   }
+
   /**
    * @description Converts the Object to to a human-friendly JSON, with additional fields, expansion and formatting of information
    */
-
-
   toHuman(isExpanded) {
     return objectSpread({
       method: this.method,
@@ -196,5 +175,4 @@ export class GenericEvent extends Struct {
       docs: this.meta.docs.map(d => d.toString())
     } : null, super.toHuman(isExpanded));
   }
-
 }

@@ -451,6 +451,10 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             DuplicateTopics: AugmentedError<ApiType>;
             /**
+             * An indetermistic code was used in a context where this is not permitted.
+             **/
+            Indeterministic: AugmentedError<ApiType>;
+            /**
              * `seal_call` forwarded this contracts input. It therefore is no longer available.
              **/
             InputForwarded: AugmentedError<ApiType>;
@@ -645,17 +649,9 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             AlreadyVetoed: AugmentedError<ApiType>;
             /**
-             * Preimage already noted
-             **/
-            DuplicatePreimage: AugmentedError<ApiType>;
-            /**
              * Proposal already made
              **/
             DuplicateProposal: AugmentedError<ApiType>;
-            /**
-             * Imminent
-             **/
-            Imminent: AugmentedError<ApiType>;
             /**
              * The instant referendum origin is currently disallowed.
              **/
@@ -693,10 +689,6 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             NotDelegating: AugmentedError<ApiType>;
             /**
-             * Not imminent
-             **/
-            NotImminent: AugmentedError<ApiType>;
-            /**
              * Next external proposal not simple majority
              **/
             NotSimpleMajority: AugmentedError<ApiType>;
@@ -704,14 +696,6 @@ declare module '@polkadot/api-base/types/errors' {
              * The given account did not vote on the referendum.
              **/
             NotVoter: AugmentedError<ApiType>;
-            /**
-             * Invalid preimage
-             **/
-            PreimageInvalid: AugmentedError<ApiType>;
-            /**
-             * Preimage not found
-             **/
-            PreimageMissing: AugmentedError<ApiType>;
             /**
              * Proposal still blacklisted
              **/
@@ -725,13 +709,9 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             ReferendumInvalid: AugmentedError<ApiType>;
             /**
-             * Too early
+             * Maximum number of items reached.
              **/
-            TooEarly: AugmentedError<ApiType>;
-            /**
-             * Maximum number of proposals reached.
-             **/
-            TooManyProposals: AugmentedError<ApiType>;
+            TooMany: AugmentedError<ApiType>;
             /**
              * Value too low
              **/
@@ -892,6 +872,10 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             AlreadyQueued: AugmentedError<ApiType>;
             /**
+             * The call is not allowed at this point because the pallet is not active.
+             **/
+            CallNotAllowed: AugmentedError<ApiType>;
+            /**
              * The provided Controller account was not found.
              *
              * This means that the given account is not bonded.
@@ -1018,6 +1002,10 @@ declare module '@polkadot/api-base/types/errors' {
              * Judgement given.
              **/
             JudgementGiven: AugmentedError<ApiType>;
+            /**
+             * Error that occurs when there is an issue paying for judgement.
+             **/
+            JudgementPaymentFailed: AugmentedError<ApiType>;
             /**
              * No identity found.
              **/
@@ -1224,6 +1212,10 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             FullyUnbonding: AugmentedError<ApiType>;
             /**
+             * Pool id provided is not correct/usable.
+             **/
+            InvalidPoolId: AugmentedError<ApiType>;
+            /**
              * Too many members in the pool or system.
              **/
             MaxPoolMembers: AugmentedError<ApiType>;
@@ -1273,6 +1265,10 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             PartialUnbondNotAllowedPermissionlessly: AugmentedError<ApiType>;
             /**
+             * Pool id currently in use.
+             **/
+            PoolIdInUse: AugmentedError<ApiType>;
+            /**
              * An account is not a member.
              **/
             PoolMemberNotFound: AugmentedError<ApiType>;
@@ -1317,7 +1313,7 @@ declare module '@polkadot/api-base/types/errors' {
             /**
              * Preimage is too large to store on-chain.
              **/
-            TooLarge: AugmentedError<ApiType>;
+            TooBig: AugmentedError<ApiType>;
             /**
              * Generic error
              **/
@@ -1413,7 +1409,7 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             BadTrack: AugmentedError<ApiType>;
             /**
-             * There are already a full complement of referendums in progress for this track.
+             * There are already a full complement of referenda in progress for this track.
              **/
             Full: AugmentedError<ApiType>;
             /**
@@ -1533,7 +1529,7 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             BadTrack: AugmentedError<ApiType>;
             /**
-             * There are already a full complement of referendums in progress for this track.
+             * There are already a full complement of referenda in progress for this track.
              **/
             Full: AugmentedError<ApiType>;
             /**
@@ -1592,6 +1588,10 @@ declare module '@polkadot/api-base/types/errors' {
              * Failed to schedule a call
              **/
             FailedToSchedule: AugmentedError<ApiType>;
+            /**
+             * Attempt to use a non-named function on a named task.
+             **/
+            Named: AugmentedError<ApiType>;
             /**
              * Cannot find the scheduled call.
              **/
@@ -2197,7 +2197,7 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             [key: string]: AugmentedError<ApiType>;
         };
-        voterBagsList: {
+        voterList: {
             /**
              * A error in the list interface implementation.
              **/

@@ -25,7 +25,7 @@ import { start as innerStart } from './client.js';
 import { ConnectionError } from './instance/instance.js';
 import { classicDecode, multibaseBase64Decode } from './base64.js';
 import { inflate } from 'pako';
-export { AddChainError, AlreadyDestroyedError, CrashError, JsonRpcDisabledError } from './client.js';
+export { AddChainError, AlreadyDestroyedError, CrashError, JsonRpcDisabledError, MalformedJsonRpcError, QueueFullError } from './client.js';
 /**
  * Initializes a new client. This is a pre-requisite to connecting to a blockchain.
  *
@@ -57,7 +57,7 @@ export function start(options) {
  * Tries to open a new connection using the given configuration.
  *
  * @see Connection
- * @throws ConnectionError If the multiaddress couldn't be parsed or contains an invalid protocol.
+ * @throws {@link ConnectionError} If the multiaddress couldn't be parsed or contains an invalid protocol.
  */
 function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
     // Attempt to parse the multiaddress.
@@ -82,13 +82,13 @@ function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
         };
         connection.onclose = (event) => {
             const message = "Error code " + event.code + (!!event.reason ? (": " + event.reason) : "");
-            config.onConnectionClose(message);
+            config.onConnectionReset(message);
         };
         connection.onmessage = (msg) => {
             config.onMessage(new Uint8Array(msg.data));
         };
         return {
-            close: () => {
+            reset: () => {
                 connection.onopen = null;
                 connection.onclose = null;
                 connection.onmessage = null;
@@ -115,58 +115,170 @@ function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
         // is performed as part of the parsing of the multiaddr.
         const remoteCertMultihash = multibaseBase64Decode(remoteCertMultibase);
         const remoteCertSha256Hash = multihashToSha256(remoteCertMultihash);
-        let pc = null;
+        // TODO: detect localhost for Firefox? https://bugzilla.mozilla.org/show_bug.cgi?id=1659672
+        // Note that `pc` can be the connection, but also null or undefined.
+        // `undefined` means "certificate generation in progress", while `null` means "opening must
+        // be cancelled".
+        // While it would be better to use for example a string instead of `null`, using `null` lets
+        // us use the `!` operator more easily and leads to more readable code.
+        let pc = undefined;
+        // Contains the data channels that are open and have been reported to smoldot.
         const dataChannels = new Map();
-        // TODO: this system is a complete hack
-        let isFirstSubstream = true;
-        // The opening of the connection is asynchronous. If smoldot calls `close` in the meanwhile,
-        // this variable is set to `true`, and we interrupt the opening.
-        let cancelOpening = false;
+        // For various reasons explained below, we open a data channel in advance without reporting it
+        // to smoldot. This data channel is stored in this variable. Once it is reported to smoldot,
+        // it is inserted in `dataChannels`.
+        let handshakeDataChannel;
+        // Multihash-encoded DTLS certificate of the local node. Unknown as long as it hasn't been
+        // generated.
+        // TODO: could be merged with `pc` in one variable, and maybe even the other fields as well
+        let localTlsCertificateMultihash;
+        // Kills all the JavaScript objects (the connection and all its substreams), ensuring that no
+        // callback will be called again. Doesn't report anything to smoldot, as this should be done
+        // by the caller.
+        const killAllJs = () => {
+            // The `RTCPeerConnection` is created pretty quickly. It is however still possible for
+            // smoldot to cancel the opening, in which case `pc` will still be undefined.
+            if (!pc) {
+                console.assert(dataChannels.size === 0 && !handshakeDataChannel, "substreams exist while pc is undef");
+                pc = null;
+                return;
+            }
+            pc.onconnectionstatechange = null;
+            pc.onnegotiationneeded = null;
+            pc.ondatachannel = null;
+            for (const channel of Array.from(dataChannels.values())) {
+                channel.onopen = null;
+                channel.onerror = null;
+                channel.onclose = null;
+                channel.onmessage = null;
+            }
+            dataChannels.clear();
+            if (handshakeDataChannel) {
+                handshakeDataChannel.onopen = null;
+                handshakeDataChannel.onerror = null;
+                handshakeDataChannel.onclose = null;
+                handshakeDataChannel.onmessage = null;
+            }
+            handshakeDataChannel = undefined;
+            pc.close(); // Not necessarily necessary, but it doesn't hurt to do so.
+        };
         // Function that configures a newly-opened channel and adds it to the map. Used for both
         // inbound and outbound substreams.
         const addChannel = (dataChannel, direction) => {
             const dataChannelId = dataChannel.id;
+            dataChannel.binaryType = 'arraybuffer';
+            let isOpen = false;
             dataChannel.onopen = () => {
-                config.onStreamOpened(dataChannelId, direction);
+                console.assert(!isOpen, "substream opened twice");
+                isOpen = true;
+                if (direction === 'first-outbound') {
+                    console.assert(dataChannels.size === 0, "dataChannels not empty when opening");
+                    console.assert(handshakeDataChannel === dataChannel, "handshake substream mismatch");
+                    config.onOpen({
+                        type: 'multi-stream',
+                        handshake: 'webrtc',
+                        // `addChannel` can never be called before the local certificate is generated, so this
+                        // value is always defined.
+                        localTlsCertificateMultihash: localTlsCertificateMultihash,
+                        remoteTlsCertificateMultihash: remoteCertMultihash
+                    });
+                }
+                else {
+                    console.assert(direction !== 'outbound' || !handshakeDataChannel, "handshakeDataChannel still defined");
+                    config.onStreamOpened(dataChannelId, direction);
+                }
             };
-            dataChannel.onerror = (_error) => {
-                config.onStreamClose(dataChannelId);
-            };
-            dataChannel.onclose = () => {
-                config.onStreamClose(dataChannelId);
+            dataChannel.onerror = dataChannel.onclose = (error) => {
+                // A couple of different things could be happening here.
+                if (handshakeDataChannel === dataChannel && !isOpen) {
+                    // The handshake data channel that we have opened ahead of time failed to open. As this
+                    // happens before we have reported the WebRTC connection as a whole as being open, we
+                    // need to report that the connection has failed to open.
+                    killAllJs();
+                    config.onConnectionReset("handshake data channel failed to open" + error ? " " + error.toString() : "");
+                }
+                else if (handshakeDataChannel === dataChannel) {
+                    // The handshake data channel has been closed before we reported it to smoldot. This
+                    // isn't really a problem. We just update the state and continue running. If smoldot
+                    // requests a substream, another one will be opened. It could be a valid implementation
+                    // to also just kill the entire connection, however doing so is a bit too intrusive and
+                    // punches through abstraction layers.
+                    handshakeDataChannel.onopen = null;
+                    handshakeDataChannel.onerror = null;
+                    handshakeDataChannel.onclose = null;
+                    handshakeDataChannel.onmessage = null;
+                    handshakeDataChannel = undefined;
+                }
+                else if (!isOpen) {
+                    // Substream wasn't opened yet and thus has failed to open. The API has no mechanism to
+                    // report substream openings failures. We could try opening it again, but given that
+                    // it's unlikely to succeed, we simply opt to kill the entire connection.
+                    killAllJs();
+                    config.onConnectionReset("data channel failed to open" + error ? " " + error.toString() : "");
+                }
+                else {
+                    // Substream was open and is now closed. Normal situation.
+                    config.onStreamReset(dataChannelId);
+                }
             };
             dataChannel.onmessage = (m) => {
                 // The `data` field is an `ArrayBuffer`.
                 config.onMessage(new Uint8Array(m.data), dataChannelId);
             };
-            dataChannels.set(dataChannelId, dataChannel);
+            if (direction !== 'first-outbound')
+                dataChannels.set(dataChannelId, dataChannel);
+            else
+                handshakeDataChannel = dataChannel;
         };
         // It is possible for the browser to use multiple different certificates.
         // In order for our local certificate to be deterministic, we need to generate it manually and
         // set it explicitly as part of the configuration.
         // According to <https://w3c.github.io/webrtc-pc/#dom-rtcpeerconnection-generatecertificate>,
         // browsers are guaranteed to support `{ name: "ECDSA", namedCurve: "P-256" }`.
-        RTCPeerConnection.generateCertificate({ name: "ECDSA", namedCurve: "P-256", hash: "SHA-256" }).then((localCertificate) => {
-            if (cancelOpening)
+        RTCPeerConnection.generateCertificate({ name: "ECDSA", namedCurve: "P-256", hash: "SHA-256" }).then((localCertificate) => __awaiter(this, void 0, void 0, function* () {
+            if (pc === null)
                 return;
-            // We need to build the multihash corresponding to the local certificate.
-            let localTlsCertificateMultihash = null;
-            for (const { algorithm, value } of localCertificate.getFingerprints()) {
-                if (algorithm === 'sha-256') {
-                    localTlsCertificateMultihash = new Uint8Array(34);
-                    localTlsCertificateMultihash.set([0x12, 32], 0);
-                    localTlsCertificateMultihash.set(value.split(':').map((s) => parseInt(s, 16)), 2);
-                    break;
-                }
-            }
-            if (localTlsCertificateMultihash === null) {
-                // Because we've already returned from the `connect` function at this point, we pretend
-                // that the connection has failed to open.
-                config.onConnectionClose('Failed to obtain the browser certificate fingerprint');
-                return;
-            }
             // Create a new WebRTC connection.
             pc = new RTCPeerConnection({ certificates: [localCertificate] });
+            // We need to build the multihash corresponding to the local certificate.
+            // While there exists a `RTCPeerConnection.getFingerprints` function, Firefox notably
+            // doesn't support it.
+            // See <https://developer.mozilla.org/en-US/docs/Web/API/RTCCertificate#browser_compatibility>
+            // An alternative to `getFingerprints` is to ask the browser to generate an SDP offer and
+            // extract from fingerprint from it. Because we explicitly provide a certificate, we have
+            // the guarantee that the list of certificates will always be the same whenever an SDP offer
+            // is generated by the browser. However, while this alternative does work on Firefox, it
+            // doesn't on Chrome, as the SDP offer is for some reason missing the fingerprints.
+            // Therefore, our strategy is to use `getFingerprints` when it is available (i.e. every
+            // browser except Firefox), and parse the SDP offer when it is not (i.e. Firefox). In the
+            // future, only `getFingerprints` would be used.
+            let localTlsCertificateHex;
+            if (localCertificate.getFingerprints) {
+                for (const { algorithm, value } of localCertificate.getFingerprints()) {
+                    if (algorithm === 'sha-256') {
+                        localTlsCertificateHex = value;
+                        break;
+                    }
+                }
+            }
+            else {
+                const localSdpOffer = yield pc.createOffer();
+                // Note that this regex is not strict. The browser isn't a malicious actor, and the
+                // objective of this regex is not to detect invalid input.
+                const localSdpOfferFingerprintMatch = localSdpOffer.sdp.match(/a(\s*)=(\s*)fingerprint:(\s*)(sha|SHA)-256(\s*)(([a-fA-F0-9]{2}(:)*){32})/);
+                if (localSdpOfferFingerprintMatch) {
+                    localTlsCertificateHex = localSdpOfferFingerprintMatch[6];
+                }
+            }
+            if (localTlsCertificateHex === undefined) {
+                // Because we've already returned from the `connect` function at this point, we pretend
+                // that the connection has failed to open.
+                config.onConnectionReset('Failed to obtain the browser certificate fingerprint');
+                return;
+            }
+            localTlsCertificateMultihash = new Uint8Array(34);
+            localTlsCertificateMultihash.set([0x12, 32], 0);
+            localTlsCertificateMultihash.set(localTlsCertificateHex.split(':').map((s) => parseInt(s, 16)), 2);
             // `onconnectionstatechange` is used to detect when the connection has closed or has failed
             // to open.
             // Note that smoldot will think that the connection is open even when it is still opening.
@@ -174,32 +286,32 @@ function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
             // open.
             pc.onconnectionstatechange = (_event) => {
                 if (pc.connectionState == "closed" || pc.connectionState == "disconnected" || pc.connectionState == "failed") {
-                    config.onConnectionClose("WebRTC state transitioned to " + pc.connectionState);
-                    pc.onconnectionstatechange = null;
-                    pc.onnegotiationneeded = null;
-                    pc.ondatachannel = null;
-                    for (const channel of Array.from(dataChannels.values())) {
-                        channel.onopen = null;
-                        channel.onerror = null;
-                        channel.onclose = null;
-                        channel.onmessage = null;
-                    }
-                    pc.close(); // Not necessarily necessary, but it doesn't hurt to do so.
-                    dataChannels.clear();
+                    killAllJs();
+                    config.onConnectionReset("WebRTC state transitioned to " + pc.connectionState);
                 }
             };
             pc.onnegotiationneeded = (_event) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
                 // Create a new offer and set it as local description.
                 let sdpOffer = (yield pc.createOffer()).sdp;
+                // We check that the locally-generated SDP offer has a data channel with the UDP
+                // protocol. If that isn't the case, the connection will likely fail.
+                if (sdpOffer.match(/^m=application(\s+)(\d+)(\s+)UDP\/DTLS\/SCTP(\s+)webrtc-datachannel$/m) === null) {
+                    console.error("Local offer doesn't contain UDP data channel. WebRTC connections will likely fail. Please report this issue.");
+                }
                 // According to the libp2p WebRTC spec, the ufrag and pwd are the same
-                // randomly-generated string. We modify the local description to ensure that.
-                const pwd = sdpOffer.match(/^a=ice-pwd:(.+)$/m);
-                if (pwd != null) {
-                    sdpOffer = sdpOffer.replace(/^a=ice-ufrag.*$/m, 'a=ice-ufrag:' + pwd[1]);
+                // randomly-generated string on both sides, and must be prefixed with
+                // `libp2p-webrtc-v1:`. We modify the local description to ensure that.
+                // While we could randomly generate a new string, we just grab the one that the
+                // browser has generated, in order to make sure that it respects the constraints
+                // of the ICE protocol.
+                const browserGeneratedPwd = (_a = sdpOffer.match(/^a=ice-pwd:(.+)$/m)) === null || _a === void 0 ? void 0 : _a.at(1);
+                if (browserGeneratedPwd === undefined) {
+                    console.error("Failed to set ufrag to pwd. WebRTC connections will likely fail. Please report this issue.");
                 }
-                else {
-                    console.error("Failed to set ufrag to pwd. WebRTC connections will likely fail. Please report this issues.");
-                }
+                const ufragPwd = "libp2p+webrtc+v1/" + browserGeneratedPwd;
+                sdpOffer = sdpOffer.replace(/^a=ice-ufrag.*$/m, 'a=ice-ufrag:' + ufragPwd);
+                sdpOffer = sdpOffer.replace(/^a=ice-pwd.*$/m, 'a=ice-pwd:' + ufragPwd);
                 yield pc.setLocalDescription({ type: 'offer', sdp: sdpOffer });
                 // Transform certificate hash into fingerprint (upper-hex; each byte separated by ":").
                 const fingerprint = Array.from(remoteCertSha256Hash).map((n) => ("0" + n.toString(16)).slice(-2).toUpperCase()).join(':');
@@ -210,7 +322,7 @@ function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
                 "v=0" + "\n" +
                     // Identifies the creator of the SDP document. We are allowed to use dummy values
                     // (`-` and `0.0.0.0`) to remain anonymous, which we do. Note that "IN" means
-                    // "Internet". (RFC8866)
+                    // "Internet" (and not "input"). (RFC8866)
                     "o=- 0 0 IN IP" + ipVersion + " " + targetIp + "\n" +
                     // Name for the session. We are allowed to pass a dummy `-`. (RFC8866)
                     "s=-" + "\n" +
@@ -218,21 +330,20 @@ function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
                     // expires. (RFC8866)
                     "t=0 0" + "\n" +
                     // A lite implementation is only appropriate for devices that will
-                    // *always* be connected to the public Internet and have a public
+                    // always be connected to the public Internet and have a public
                     // IP address at which it can receive packets from any
                     // correspondent.  ICE will not function when a lite implementation
                     // is placed behind a NAT (RFC8445).
                     "a=ice-lite" + "\n" +
                     // A `m=` line describes a request to establish a certain protocol.
                     // The protocol in this line (i.e. `TCP/DTLS/SCTP` or `UDP/DTLS/SCTP`) must always be
-                    // the same as the one in the offer. We know that this is true because we tweak the
-                    // offer to match the protocol.
-                    // The `<fmt>` component must always be `pc-datachannel` for WebRTC.
+                    // the same as the one in the offer. We know that this is true because checked above.
+                    // The `<fmt>` component must always be `webrtc-datachannel` for WebRTC.
                     // The rest of the SDP payload adds attributes to this specific media stream.
                     // RFCs: 8839, 8866, 8841
                     "m=application " + targetPort + " " + "UDP/DTLS/SCTP webrtc-datachannel" + "\n" +
                     // Indicates the IP address of the remote.
-                    // Note that "IN" means "Internet".
+                    // Note that "IN" means "Internet" (and not "input").
                     "c=IN IP" + ipVersion + " " + targetIp + "\n" +
                     // Media ID - uniquely identifies this media stream (RFC9143).
                     "a=mid:0" + "\n" +
@@ -240,9 +351,9 @@ function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
                     "a=ice-options:ice2" + "\n" +
                     // ICE username and password, which are used for establishing and
                     // maintaining the ICE connection. (RFC8839)
-                    // MUST match ones used by the answerer (server).
-                    "a=ice-ufrag:" + remoteCertMultibase + "\n" +
-                    "a=ice-pwd:" + remoteCertMultibase + "\n" +
+                    // These values are set according to the libp2p WebRTC specification.
+                    "a=ice-ufrag:" + ufragPwd + "\n" +
+                    "a=ice-pwd:" + ufragPwd + "\n" +
                     // Fingerprint of the certificate that the server will use during the TLS
                     // handshake. (RFC8122)
                     // MUST be derived from the certificate used by the answerer (server).
@@ -257,50 +368,32 @@ function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
                     // (UDP or TCP)
                     "a=sctp-port:5000" + "\n" +
                     // The maximum SCTP user message size (in bytes) (RFC8841)
-                    "a=max-message-size:100000" + "\n" +
-                    // A transport address for a candidate that can be used for connectivity checks (RFC8839).
+                    "a=max-message-size:16384" + "\n" + // TODO: should this be part of the spec?
+                    // A transport address for a candidate that can be used for connectivity
+                    // checks (RFC8839).
                     "a=candidate:1 1 UDP 1 " + targetIp + " " + targetPort + " typ host" + "\n";
                 yield pc.setRemoteDescription({ type: "answer", sdp: remoteSdp });
             });
             pc.ondatachannel = ({ channel }) => {
+                // TODO: is the substream maybe already open? according to the Internet it seems that no but it's unclear
                 addChannel(channel, 'inbound');
             };
-            // Creating a `RTCPeerConnection` doesn't actually do anything before a channel is created.
-            // The connection is therefore immediately reported as opened to smoldot so that it starts
-            // opening substreams.
-            // One concern might be that smoldot will think that the remote is reachable at this address
-            // (because we report the connection as being open) even when it might not be the case.
-            // However, WebRTC has a handshake to perform, and smoldot will only consider a connection
-            // as "actually open" once the handshake has finished.
-            config.onOpen({
-                type: 'multi-stream',
-                handshake: 'webrtc',
-                localTlsCertificateMultihash,
-                remoteTlsCertificateMultihash: remoteCertMultihash
-            });
-        });
+            // Creating a `RTCPeerConnection` doesn't actually do anything before `createDataChannel` is
+            // called. Smoldot's API, however, requires you to treat entire connections as open or
+            // closed. We know, according to the libp2p WebRTC specification, that every connection
+            // always starts with a substream where a handshake is performed. After we've reported that
+            // the connection is open, smoldot will open a substream in order to perform the handshake.
+            // Instead of following this API, we open this substream in advance, and will notify smoldot
+            // that the connection is open when the substream is open.
+            // Note that the label passed to `createDataChannel` is required to be empty as per the
+            // libp2p WebRTC specification.
+            addChannel(pc.createDataChannel("", { id: 0, negotiated: true }), 'first-outbound');
+        }));
         return {
-            close: (streamId) => {
+            reset: (streamId) => {
                 // If `streamId` is undefined, then the whole connection must be destroyed.
                 if (streamId === undefined) {
-                    // The `RTCPeerConnection` is created at the same time as we report the connection as
-                    // being open. It is however possible for smoldot to cancel the opening, in which case
-                    // `pc` will still be undefined.
-                    if (!pc) {
-                        cancelOpening = true;
-                        return;
-                    }
-                    pc.onconnectionstatechange = null;
-                    pc.onnegotiationneeded = null;
-                    pc.ondatachannel = null;
-                    for (const channel of Array.from(dataChannels.values())) {
-                        channel.onopen = null;
-                        channel.onerror = null;
-                        channel.onclose = null;
-                        channel.onmessage = null;
-                    }
-                    pc.close();
-                    dataChannels.clear();
+                    killAllJs();
                 }
                 else {
                     const channel = dataChannels.get(streamId);
@@ -318,12 +411,24 @@ function connect(config, forbidWs, forbidNonLocalWs, forbidWss, forbidWebRTC) {
             openOutSubstream: () => {
                 // `openOutSubstream` can only be called after we have called `config.onOpen`, therefore
                 // `pc` is guaranteed to be non-null.
-                if (isFirstSubstream) {
-                    isFirstSubstream = false;
-                    addChannel(pc.createDataChannel("data", { id: 1, negotiated: true }), 'outbound');
+                // As explained above, we open a data channel ahead of time. If this data channel is still
+                // there, we report it.
+                if (handshakeDataChannel) {
+                    // Do this asynchronously because calling callbacks within callbacks is error-prone.
+                    (() => __awaiter(this, void 0, void 0, function* () {
+                        // We need to check again if `handshakeDataChannel` is still defined, as the
+                        // connection might have been closed.
+                        if (handshakeDataChannel) {
+                            config.onStreamOpened(handshakeDataChannel.id, 'outbound');
+                            dataChannels.set(handshakeDataChannel.id, handshakeDataChannel);
+                            handshakeDataChannel = undefined;
+                        }
+                    }))();
                 }
                 else {
-                    addChannel(pc.createDataChannel("data"), 'outbound');
+                    // Note that the label passed to `createDataChannel` is required to be empty as per the
+                    // libp2p WebRTC specification.
+                    addChannel(pc.createDataChannel(""), 'outbound');
                 }
             }
         };

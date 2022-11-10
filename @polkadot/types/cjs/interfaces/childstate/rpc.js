@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.rpc = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const rpc = {
   getKeys: {
     description: 'Returns the keys with prefix from a child storage, leave empty to get all the keys',

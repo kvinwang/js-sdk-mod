@@ -1,7 +1,6 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -462,9 +461,7 @@ Object.defineProperty(exports, "xcm", {
     return _definitions53.default;
   }
 });
-
 var _essentials = require("./essentials");
-
 Object.keys(_essentials).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -476,133 +473,68 @@ Object.keys(_essentials).forEach(function (key) {
     }
   });
 });
-
 var _definitions = _interopRequireDefault(require("./assets/definitions"));
-
 var _definitions2 = _interopRequireDefault(require("./authorship/definitions"));
-
 var _definitions3 = _interopRequireDefault(require("./aura/definitions"));
-
 var _definitions4 = _interopRequireDefault(require("./babe/definitions"));
-
 var _definitions5 = _interopRequireDefault(require("./balances/definitions"));
-
 var _definitions6 = _interopRequireDefault(require("./beefy/definitions"));
-
 var _definitions7 = _interopRequireDefault(require("./benchmark/definitions"));
-
 var _definitions8 = _interopRequireDefault(require("./blockbuilder/definitions"));
-
 var _definitions9 = _interopRequireDefault(require("./collective/definitions"));
-
 var _definitions10 = _interopRequireDefault(require("./consensus/definitions"));
-
 var _definitions11 = _interopRequireDefault(require("./contracts/definitions"));
-
 var _definitions12 = _interopRequireDefault(require("./democracy/definitions"));
-
 var _definitions13 = _interopRequireDefault(require("./dev/definitions"));
-
 var _definitions14 = _interopRequireDefault(require("./discovery/definitions"));
-
 var _definitions15 = _interopRequireDefault(require("./elections/definitions"));
-
 var _definitions16 = _interopRequireDefault(require("./engine/definitions"));
-
 var _definitions17 = _interopRequireDefault(require("./evm/definitions"));
-
 var _definitions18 = _interopRequireDefault(require("./extrinsics/definitions"));
-
 var _definitions19 = _interopRequireDefault(require("./genericAsset/definitions"));
-
 var _definitions20 = _interopRequireDefault(require("./gilt/definitions"));
-
 var _definitions21 = _interopRequireDefault(require("./grandpa/definitions"));
-
 var _definitions22 = _interopRequireDefault(require("./identity/definitions"));
-
 var _definitions23 = _interopRequireDefault(require("./imOnline/definitions"));
-
 var _definitions24 = _interopRequireDefault(require("./lottery/definitions"));
-
 var _definitions25 = _interopRequireDefault(require("./mmr/definitions"));
-
 var _definitions26 = _interopRequireDefault(require("./nompools/definitions"));
-
 var _definitions27 = _interopRequireDefault(require("./offences/definitions"));
-
 var _definitions28 = _interopRequireDefault(require("./pow/definitions"));
-
 var _definitions29 = _interopRequireDefault(require("./proxy/definitions"));
-
 var _definitions30 = _interopRequireDefault(require("./recovery/definitions"));
-
 var _definitions31 = _interopRequireDefault(require("./scheduler/definitions"));
-
 var _definitions32 = _interopRequireDefault(require("./session/definitions"));
-
 var _definitions33 = _interopRequireDefault(require("./society/definitions"));
-
 var _definitions34 = _interopRequireDefault(require("./staking/definitions"));
-
 var _definitions35 = _interopRequireDefault(require("./support/definitions"));
-
 var _definitions36 = _interopRequireDefault(require("./syncstate/definitions"));
-
 var _definitions37 = _interopRequireDefault(require("./system/definitions"));
-
 var _definitions38 = _interopRequireDefault(require("./treasury/definitions"));
-
 var _definitions39 = _interopRequireDefault(require("./txpayment/definitions"));
-
 var _definitions40 = _interopRequireDefault(require("./txqueue/definitions"));
-
 var _definitions41 = _interopRequireDefault(require("./uniques/definitions"));
-
 var _definitions42 = _interopRequireDefault(require("./utility/definitions"));
-
 var _definitions43 = _interopRequireDefault(require("./vesting/definitions"));
-
 var _definitions44 = _interopRequireDefault(require("./attestations/definitions"));
-
 var _definitions45 = _interopRequireDefault(require("./bridges/definitions"));
-
 var _definitions46 = _interopRequireDefault(require("./claims/definitions"));
-
 var _definitions47 = _interopRequireDefault(require("./crowdloan/definitions"));
-
 var _definitions48 = _interopRequireDefault(require("./cumulus/definitions"));
-
 var _definitions49 = _interopRequireDefault(require("./finality/definitions"));
-
 var _definitions50 = _interopRequireDefault(require("./parachains/definitions"));
-
 var _definitions51 = _interopRequireDefault(require("./poll/definitions"));
-
 var _definitions52 = _interopRequireDefault(require("./purchase/definitions"));
-
 var _definitions53 = _interopRequireDefault(require("./xcm/definitions"));
-
 var _definitions54 = _interopRequireDefault(require("./contractsAbi/definitions"));
-
 var _definitions55 = _interopRequireDefault(require("./eth/definitions"));
-
 var _definitions56 = _interopRequireDefault(require("./nimbus/definitions"));
-
 var _definitions57 = _interopRequireDefault(require("./ormlOracle/definitions"));
-
 var _definitions58 = _interopRequireDefault(require("./ormlTokens/definitions"));
-
 var _definitions59 = _interopRequireDefault(require("./rpc/definitions"));
-
 var _definitions60 = _interopRequireDefault(require("./author/definitions"));
-
 var _definitions61 = _interopRequireDefault(require("./chain/definitions"));
-
 var _definitions62 = _interopRequireDefault(require("./childstate/definitions"));
-
 var _definitions63 = _interopRequireDefault(require("./offchain/definitions"));
-
 var _definitions64 = _interopRequireDefault(require("./payment/definitions"));
-
 var _definitions65 = _interopRequireDefault(require("./state/definitions"));

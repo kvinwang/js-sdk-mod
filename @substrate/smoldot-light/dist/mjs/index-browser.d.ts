@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 import { Client, ClientOptions } from './client.js';
-export { AddChainError, AddChainOptions, AlreadyDestroyedError, Chain, Client, ClientOptions, CrashError, JsonRpcCallback, JsonRpcDisabledError, LogCallback } from './client.js';
+export { AddChainError, AddChainOptions, AlreadyDestroyedError, Chain, Client, ClientOptions, CrashError, JsonRpcDisabledError, MalformedJsonRpcError, QueueFullError, LogCallback } from './client.js';
 /**
  * Initializes a new client. This is a pre-requisite to connecting to a blockchain.
  *

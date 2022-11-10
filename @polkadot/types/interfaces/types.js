@@ -1,6 +1,6 @@
 // Auto-generated via `yarn polkadot-types-from-defs`, do not edit
-
 /* eslint-disable */
+
 export * from "./assets/types.js";
 export * from "./attestations/types.js";
 export * from "./aura/types.js";

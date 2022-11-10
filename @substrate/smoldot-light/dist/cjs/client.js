@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.start = exports.JsonRpcDisabledError = exports.AlreadyDestroyedError = exports.AddChainError = exports.CrashError = void 0;
+exports.start = exports.JsonRpcDisabledError = exports.AlreadyDestroyedError = exports.AddChainError = exports.CrashError = exports.QueueFullError = exports.MalformedJsonRpcError = void 0;
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -25,6 +25,8 @@ exports.start = exports.JsonRpcDisabledError = exports.AlreadyDestroyedError = e
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 const instance_js_1 = require("./instance/instance.js");
 var instance_js_2 = require("./instance/instance.js");
+Object.defineProperty(exports, "MalformedJsonRpcError", { enumerable: true, get: function () { return instance_js_2.MalformedJsonRpcError; } });
+Object.defineProperty(exports, "QueueFullError", { enumerable: true, get: function () { return instance_js_2.QueueFullError; } });
 Object.defineProperty(exports, "CrashError", { enumerable: true, get: function () { return instance_js_2.CrashError; } });
 /**
  * Thrown in case of a problem when initializing the chain.
@@ -118,19 +120,7 @@ function start(options, platformBindings) {
                     potentialRelayChainsIds.push(id);
                 }
             }
-            // We need to tweak the JSON-RPC callback to absorb exceptions that the user might throw.
-            if (options.jsonRpcCallback) {
-                const cb = options.jsonRpcCallback;
-                options.jsonRpcCallback = (response) => {
-                    try {
-                        cb(response);
-                    }
-                    catch (error) {
-                        console.warn("Uncaught exception in JSON-RPC callback:", error);
-                    }
-                };
-            }
-            const outcome = yield instance.addChain(options.chainSpec, typeof options.databaseContent === 'string' ? options.databaseContent : "", potentialRelayChainsIds, options.jsonRpcCallback);
+            const outcome = yield instance.addChain(options.chainSpec, typeof options.databaseContent === 'string' ? options.databaseContent : "", potentialRelayChainsIds, !!options.disableJsonRpc);
             if (!outcome.success)
                 throw new AddChainError(outcome.error);
             const chainId = outcome.chainId;
@@ -143,21 +133,24 @@ function start(options, platformBindings) {
                         throw alreadyDestroyedError;
                     if (wasDestroyed.destroyed)
                         throw new AlreadyDestroyedError();
-                    if (!options.jsonRpcCallback)
+                    if (options.disableJsonRpc)
                         throw new JsonRpcDisabledError();
                     if (request.length >= 64 * 1024 * 1024) {
-                        console.error("Client.sendJsonRpc ignored a JSON-RPC request because it was too large (" + request.length + " bytes)");
-                        return;
+                        throw new instance_js_1.MalformedJsonRpcError();
                     }
                     ;
                     instance.request(request, chainId);
                 },
-                databaseContent: (maxUtf8BytesSize) => {
+                nextJsonRpcResponse: () => {
                     if (alreadyDestroyedError)
                         return Promise.reject(alreadyDestroyedError);
                     if (wasDestroyed.destroyed)
-                        throw new AlreadyDestroyedError();
-                    return instance.databaseContent(chainId, maxUtf8BytesSize);
+                        return Promise.reject(new AlreadyDestroyedError());
+                    if (options.disableJsonRpc)
+                        return Promise.reject(new JsonRpcDisabledError());
+                    return new Promise((resolve, reject) => {
+                        instance.nextJsonRpcResponse(chainId, resolve, reject);
+                    });
                 },
                 remove: () => {
                     if (alreadyDestroyedError)

@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 export const rpc = {
   call: {
     alias: ['state_callAt'],
@@ -123,6 +124,7 @@ export const rpc = {
     type: 'u64'
   },
   getKeys: {
+    deprecated: 'Use `api.rpc.state.getKeysPaged` to retrieve keys',
     description: 'Retrieves the keys with a certain prefix',
     params: [{
       name: 'key',
@@ -167,6 +169,7 @@ export const rpc = {
     type: 'Metadata'
   },
   getPairs: {
+    deprecated: 'Use `api.rpc.state.getKeysPaged` to retrieve keys',
     description: 'Returns the keys with prefix, leave empty to get all the keys (deprecated: Use getKeysPaged)',
     params: [{
       name: 'prefix',

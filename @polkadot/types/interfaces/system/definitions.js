@@ -1,8 +1,9 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 import { rpc } from "./rpc.js";
 import { runtime } from "./runtime.js";
 export default {
@@ -76,7 +77,10 @@ export default {
         TooManyConsumers: 'Null',
         Token: 'TokenError',
         Arithmetic: 'ArithmeticError',
-        Transactional: 'TransactionalError'
+        Transactional: 'TransactionalError',
+        Exhausted: 'Null',
+        Corruption: 'Null',
+        Unavailable: 'Null'
       }
     },
     DispatchErrorPre6: {
@@ -273,7 +277,8 @@ export default {
     },
     SystemOrigin: 'RawOrigin',
     TokenError: {
-      _enum: ['NoFunds', 'WouldDie', 'BelowMinimum', 'CannotCreate', 'UnknownAsset', 'Frozen', 'Unsupported', // these are dropped, but still in older versions
+      _enum: ['NoFunds', 'WouldDie', 'BelowMinimum', 'CannotCreate', 'UnknownAsset', 'Frozen', 'Unsupported',
+      // these are dropped, but still in older versions
       // (if this adjusts, will need to take a re-look)
       'Underflow', 'Overflow']
     },

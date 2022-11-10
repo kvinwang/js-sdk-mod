@@ -10,7 +10,7 @@
     name: '@polkadot/x-global',
     path: (({ url: (typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-util-crypto.js', document.baseURI).href)) }) && (typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-util-crypto.js', document.baseURI).href))) ? new URL((typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-util-crypto.js', document.baseURI).href))).pathname.substring(0, new URL((typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-util-crypto.js', document.baseURI).href))).pathname.lastIndexOf('/') + 1) : 'auto',
     type: 'esm',
-    version: '10.1.9'
+    version: '10.1.11'
   };
 
   function evaluateThis(fn) {
@@ -42,7 +42,7 @@
 
   const crypto$2 = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    'default': crypto$1
+    default: crypto$1
   });
 
   /*! noble-secp256k1 - MIT License (c) 2019 Paul Miller (paulmillr.com) */
@@ -909,12 +909,9 @@
           if (crypto.web) {
               return crypto.web.getRandomValues(new Uint8Array(bytesLength));
           }
-          else if (crypto.node) {
+          else {
               const { randomBytes } = crypto.node;
               return Uint8Array.from(randomBytes(bytesLength));
-          }
-          else {
-              throw new Error("The environment doesn't have randomBytes function");
           }
       },
       randomPrivateKey: () => {
@@ -925,14 +922,11 @@
               const buffer = await crypto.web.subtle.digest('SHA-256', concatBytes(...messages));
               return new Uint8Array(buffer);
           }
-          else if (crypto.node) {
+          else {
               const { createHash } = crypto.node;
               const hash = createHash('sha256');
               messages.forEach((m) => hash.update(m));
               return Uint8Array.from(hash.digest());
-          }
-          else {
-              throw new Error("The environment doesn't have sha256 function");
           }
       },
       hmacSha256: async (key, ...messages) => {
@@ -942,14 +936,11 @@
               const buffer = await crypto.web.subtle.sign('HMAC', ckey, message);
               return new Uint8Array(buffer);
           }
-          else if (crypto.node) {
+          else {
               const { createHmac } = crypto.node;
               const hash = createHmac('sha256', key);
               messages.forEach((m) => hash.update(m));
               return Uint8Array.from(hash.digest());
-          }
-          else {
-              throw new Error("The environment doesn't have hmac-sha256 function");
           }
       },
       sha256Sync: undefined,
@@ -1045,7 +1036,7 @@
     name: '@polkadot/x-randomvalues',
     path: typeof __dirname === 'string' ? __dirname : 'auto',
     type: 'cjs',
-    version: '10.1.9'
+    version: '10.1.11'
   };
   packageInfo$2.packageInfo = packageInfo$1;
 
@@ -1767,12 +1758,13 @@
           assert.hash(hash);
           const key = toBytes(_key);
           this.iHash = hash.create();
-          if (!(this.iHash instanceof Hash))
+          if (typeof this.iHash.update !== 'function')
               throw new TypeError('Expected instance of class which extends utils.Hash');
-          const blockLen = (this.blockLen = this.iHash.blockLen);
+          this.blockLen = this.iHash.blockLen;
           this.outputLen = this.iHash.outputLen;
+          const blockLen = this.blockLen;
           const pad = new Uint8Array(blockLen);
-          pad.set(key.length > this.iHash.blockLen ? hash.create().update(key).digest() : key);
+          pad.set(key.length > blockLen ? hash.create().update(key).digest() : key);
           for (let i = 0; i < pad.length; i++)
               pad[i] ^= 0x36;
           this.iHash.update(pad);
@@ -2256,7 +2248,7 @@
     name: '@polkadot/util-crypto',
     path: (({ url: (typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-util-crypto.js', document.baseURI).href)) }) && (typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-util-crypto.js', document.baseURI).href))) ? new URL((typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-util-crypto.js', document.baseURI).href))).pathname.substring(0, new URL((typeof document === 'undefined' && typeof location === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : typeof document === 'undefined' ? location.href : (document.currentScript && document.currentScript.src || new URL('bundle-polkadot-util-crypto.js', document.baseURI).href))).pathname.lastIndexOf('/') + 1) : 'auto',
     type: 'esm',
-    version: '10.1.9'
+    version: '10.1.11'
   };
 
   /*! scure-base - MIT License (c) 2022 Paul Miller (paulmillr.com) */
@@ -4057,6 +4049,19 @@
   		"website": "https://centrifuge.io/"
   	},
   	{
+  		"prefix": 137,
+  		"network": "vara",
+  		"displayName": "Vara Network",
+  		"symbols": [
+  			"VARA"
+  		],
+  		"decimals": [
+  			12
+  		],
+  		"standardAccount": "*25519",
+  		"website": "https://vara-network.io/"
+  	},
+  	{
   		"prefix": 172,
   		"network": "parallel",
   		"displayName": "Parallel",
@@ -4252,6 +4257,19 @@
   		"website": "https://totemaccounting.com"
   	},
   	{
+  		"prefix": 2009,
+  		"network": "cloudwalk_mainnet",
+  		"displayName": "CloudWalk Network Mainnet",
+  		"symbols": [
+  			"CWN"
+  		],
+  		"decimals": [
+  			18
+  		],
+  		"standardAccount": "*25519",
+  		"website": "https://explorer.mainnet.cloudwalk.io"
+  	},
+  	{
   		"prefix": 2032,
   		"network": "interlay",
   		"displayName": "Interlay",
@@ -4276,6 +4294,19 @@
   		],
   		"standardAccount": "*25519",
   		"website": "https://interlay.io/"
+  	},
+  	{
+  		"prefix": 2106,
+  		"network": "bitgreen",
+  		"displayName": "Bitgreen",
+  		"symbols": [
+  			"BBB"
+  		],
+  		"decimals": [
+  			18
+  		],
+  		"standardAccount": "*25519",
+  		"website": "https://bitgreen.org/"
   	},
   	{
   		"prefix": 2112,
@@ -4488,6 +4519,19 @@
   		],
   		"standardAccount": "*25519",
   		"website": "https://www.dentnet.io"
+  	},
+  	{
+  		"prefix": 9935,
+  		"network": "t3rn",
+  		"displayName": "t3rn",
+  		"symbols": [
+  			"TRN"
+  		],
+  		"decimals": [
+  			12
+  		],
+  		"standardAccount": "*25519",
+  		"website": "https://t3rn.io/"
   	},
   	{
   		"prefix": 10041,
@@ -8714,7 +8758,5 @@
   exports.validateAddress = validateAddress;
   exports.xxhashAsHex = xxhashAsHex;
   exports.xxhashAsU8a = xxhashAsU8a;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));

@@ -4,25 +4,22 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _rpc = require("./rpc");
-
 var _runtime = require("./runtime");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 // order important in structs... :)
-
 /* eslint-disable sort-keys */
 var _default = {
   rpc: _rpc.rpc,
   runtime: _runtime.runtime,
   types: {
     FeeDetails: {
-      inclusionFee: 'Option<InclusionFee>' // skipped in serde
+      inclusionFee: 'Option<InclusionFee>'
+      // skipped in serde
       // tip: 'Balance'
-
     },
+
     InclusionFee: {
       baseFee: 'Balance',
       lenFee: 'Balance',

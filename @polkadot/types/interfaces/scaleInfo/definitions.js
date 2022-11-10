@@ -1,9 +1,11 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { objectSpread } from '@polkadot/util';
 import { v0 } from "./v0.js";
-import { v1 } from "./v1.js"; // order important in structs... :)
+import { v1 } from "./v1.js";
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
 
 export default {

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.runtime = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const runtime = {
   // https://github.com/open-web3-stack/open-runtime-module-library/blob/b57f88b39cd547e2fb51727d8bb9bcc64fddf8b5/oracle/rpc/runtime-api/src/lib.rs#L12-L21
   OracleApi: [{

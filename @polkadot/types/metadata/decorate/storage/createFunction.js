@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { Raw } from '@polkadot/types-codec';
 import { compactAddLength, compactStripLength, isUndefined, objectSpread, stringCamelCase, u8aConcat, u8aToU8a } from '@polkadot/util';
 import { xxhashAsU8a } from '@polkadot/util-crypto';
@@ -10,8 +11,13 @@ export const NO_RAW_ARGS = {
   hashers: [],
   keys: []
 };
-/** @internal */
 
+/** @internal */
+function filterDefined(a) {
+  return !isUndefined(a);
+}
+
+/** @internal */
 function assertArgs({
   method,
   section
@@ -25,24 +31,21 @@ function assertArgs({
     throw new Error(`Call to ${stringCamelCase(section || 'unknown')}.${stringCamelCase(method || 'unknown')} needs ${keys.length} arguments, found [${args.join(', ')}]`);
   }
 }
+
 /** @internal */
-
-
 export function createKeyRawParts(registry, itemFn, {
   args,
   hashers,
   keys
 }) {
   const extra = new Array(keys.length);
-
   for (let i = 0; i < keys.length; i++) {
     extra[i] = getHasher(hashers[i])(registry.createTypeUnsafe(registry.createLookupType(keys[i]), [args[i]]).toU8a());
   }
-
   return [[xxhashAsU8a(itemFn.prefix, 128), xxhashAsU8a(itemFn.method, 128)], extra];
 }
-/** @internal */
 
+/** @internal */
 export function createKeyInspect(registry, itemFn, args) {
   assertArgs(itemFn, args);
   const {
@@ -50,7 +53,6 @@ export function createKeyInspect(registry, itemFn, args) {
   } = itemFn;
   const [prefix, extra] = createKeyRawParts(registry, itemFn, args);
   let types = [];
-
   if (meta.type.isMap) {
     const {
       hashers,
@@ -58,7 +60,6 @@ export function createKeyInspect(registry, itemFn, args) {
     } = meta.type.asMap;
     types = hashers.length === 1 ? [`${hashers[0].type}(${getSiName(registry.lookup, key)})`] : registry.lookup.getSiType(key).def.asTuple.map((k, i) => `${hashers[i].type}(${getSiName(registry.lookup, k)})`);
   }
-
   const names = ['module', 'method'].concat(...args.args.map((_, i) => types[i]));
   return {
     inner: prefix.concat(...extra).map((v, i) => ({
@@ -67,28 +68,22 @@ export function createKeyInspect(registry, itemFn, args) {
     }))
   };
 }
-/** @internal */
 
+/** @internal */
 export function createKeyRaw(registry, itemFn, args) {
   const [prefix, extra] = createKeyRawParts(registry, itemFn, args);
   return u8aConcat(...prefix, ...extra);
 }
+
 /** @internal */
-
-function filterDefined(a) {
-  return !isUndefined(a);
-}
-/** @internal */
-
-
 function createKey(registry, itemFn, args) {
-  assertArgs(itemFn, args); // always add the length prefix (underlying it is Bytes)
+  assertArgs(itemFn, args);
 
+  // always add the length prefix (underlying it is Bytes)
   return compactAddLength(createKeyRaw(registry, itemFn, args));
 }
+
 /** @internal */
-
-
 function createStorageInspect(registry, itemFn, options) {
   const {
     meta: {
@@ -103,7 +98,6 @@ function createStorageInspect(registry, itemFn, options) {
         outer: [u8aToU8a(options.key)]
       } : createKeyInspect(registry, itemFn, NO_RAW_ARGS);
     }
-
     const {
       hashers,
       key
@@ -119,29 +113,27 @@ function createStorageInspect(registry, itemFn, options) {
     });
   };
 }
+
 /** @internal */
-
-
 function createStorageFn(registry, itemFn, options) {
   const {
     meta: {
       type
     }
   } = itemFn;
-  let cacheKey = null; // Can only have zero or one argument:
+  let cacheKey = null;
+
+  // Can only have zero or one argument:
   //   - storage.system.account(address)
   //   - storage.timestamp.blockPeriod()
   // For higher-map queries the params are passed in as an tuple, [key1, key2]
-
   return (...args) => {
     if (type.isPlain) {
       if (!cacheKey) {
         cacheKey = options.skipHashing ? compactAddLength(u8aToU8a(options.key)) : createKey(registry, itemFn, NO_RAW_ARGS);
       }
-
       return cacheKey;
     }
-
     const {
       hashers,
       key
@@ -157,9 +149,8 @@ function createStorageFn(registry, itemFn, options) {
     });
   };
 }
+
 /** @internal */
-
-
 function createWithMeta(registry, itemFn, options) {
   const {
     meta,
@@ -172,9 +163,10 @@ function createWithMeta(registry, itemFn, options) {
   storageFn.meta = meta;
   storageFn.method = stringCamelCase(method);
   storageFn.prefix = prefix;
-  storageFn.section = section; // explicitly add the actual method in the toJSON, this gets used to determine caching and without it
-  // instances (e.g. collective) will not work since it is only matched on param meta
+  storageFn.section = section;
 
+  // explicitly add the actual method in the toJSON, this gets used to determine caching and without it
+  // instances (e.g. collective) will not work since it is only matched on param meta
   storageFn.toJSON = () => objectSpread({
     storage: {
       method,
@@ -182,12 +174,10 @@ function createWithMeta(registry, itemFn, options) {
       section
     }
   }, meta.toJSON());
-
   return storageFn;
 }
+
 /** @internal */
-
-
 function extendHeadMeta(registry, {
   meta: {
     docs,
@@ -209,18 +199,15 @@ function extendHeadMeta(registry, {
     type: registry.createTypeUnsafe('StorageEntryTypeLatest', [type.asMap.key, 0])
   }]);
   iterFn.meta = meta;
-
   const fn = (...args) => registry.createTypeUnsafe('StorageKey', [iterFn(...args), {
     method,
     section
   }]);
-
   fn.meta = meta;
   return fn;
 }
+
 /** @internal */
-
-
 function extendPrefixedMap(registry, itemFn, storageFn) {
   const {
     meta: {
@@ -233,7 +220,6 @@ function extendPrefixedMap(registry, itemFn, storageFn) {
     if (args.length && (type.isPlain || args.length >= type.asMap.hashers.length)) {
       throw new Error(`Iteration of ${stringCamelCase(section || 'unknown')}.${stringCamelCase(method || 'unknown')} needs arguments to be at least one less than the full arguments, found [${args.join(', ')}]`);
     }
-
     if (args.length) {
       if (type.isMap) {
         const {
@@ -248,14 +234,12 @@ function extendPrefixedMap(registry, itemFn, storageFn) {
         }));
       }
     }
-
     return new Raw(registry, createKeyRaw(registry, itemFn, NO_RAW_ARGS));
   });
   return storageFn;
 }
+
 /** @internal */
-
-
 export function createFunction(registry, itemFn, options) {
   const {
     meta: {
@@ -263,12 +247,9 @@ export function createFunction(registry, itemFn, options) {
     }
   } = itemFn;
   const storageFn = createWithMeta(registry, itemFn, options);
-
   if (type.isMap) {
     extendPrefixedMap(registry, itemFn, storageFn);
   }
-
   storageFn.keyPrefix = (...args) => storageFn.iterKey && storageFn.iterKey(...args) || compactStripLength(storageFn())[1];
-
   return storageFn;
 }

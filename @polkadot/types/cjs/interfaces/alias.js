@@ -4,11 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getAliasTypes = getAliasTypes;
-
 var _util = require("@polkadot/util");
-
 // Copyright 2017-2022 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 // type overrides for modules (where duplication between modules exist)
 const typesAlias = {
   assets: {
@@ -110,15 +109,14 @@ const typesAlias = {
     AssetId: 'XcmAssetId'
   }
 };
+
 /**
  * @description Get types for specific modules (metadata override)
  */
-
 function getAliasTypes(_ref, section) {
   var _knownTypes$typesAlia;
-
   let {
     knownTypes
   } = _ref;
-  return (0, _util.objectSpread)({}, typesAlias[section], (_knownTypes$typesAlia = knownTypes.typesAlias) === null || _knownTypes$typesAlia === void 0 ? void 0 : _knownTypes$typesAlia[section]);
+  return (0, _util.objectSpread)({}, typesAlias[section], (_knownTypes$typesAlia = knownTypes.typesAlias) == null ? void 0 : _knownTypes$typesAlia[section]);
 }

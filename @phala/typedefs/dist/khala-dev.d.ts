@@ -1,6 +1,7 @@
 declare const _default: {
     Address: string;
     LookupSource: string;
+    DispatchErrorModule: string;
     Keys: string;
     BridgeChainId: string;
     BridgeEvent: {

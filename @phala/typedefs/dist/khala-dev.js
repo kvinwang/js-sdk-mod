@@ -4,6 +4,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     "Address": "MultiAddress",
     "LookupSource": "MultiAddress",
+    "DispatchErrorModule": "DispatchErrorModuleU8",
     "Keys": "AccountId",
     "BridgeChainId": "u8",
     "BridgeEvent": {

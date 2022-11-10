@@ -4,22 +4,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _typesCreate = require("@polkadot/types-create");
-
 var _util = require("@polkadot/util");
-
 var _v = require("./v0");
-
 var _v2 = require("./v1");
-
 var _v3 = require("./v2");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 const XCM_LATEST = 'V2';
 const xcm = {
   XcmOrigin: {

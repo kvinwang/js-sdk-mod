@@ -4,14 +4,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.substrate = void 0;
-
 var _util = require("./util");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const prefix = 'Substrate';
 const section = 'substrate';
-
 function createSubstrateFn(method, key, meta) {
   return (0, _util.createRuntimeFunction)({
     method,
@@ -19,7 +17,6 @@ function createSubstrateFn(method, key, meta) {
     section
   }, key, meta);
 }
-
 const substrate = {
   changesTrieConfig: createSubstrateFn('changesTrieConfig', ':changes_trie', {
     docs: 'Changes trie configuration is stored under this key.',

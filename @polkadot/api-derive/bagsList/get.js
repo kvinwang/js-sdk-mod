@@ -1,10 +1,10 @@
 // Copyright 2017-2022 @polkadot/api-derive authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { map, of, switchMap } from 'rxjs';
 import { BN_ZERO, bnToBn, objectSpread } from '@polkadot/util';
 import { memo } from "../util/index.js";
 import { getQueryInterface } from "./util.js";
-
 function orderBags(ids, bags) {
   const sorted = ids.map((id, index) => ({
     bag: bags[index].unwrapOr(null),
@@ -18,12 +18,10 @@ function orderBags(ids, bags) {
     index
   }));
 }
-
 export function _getIds(instanceId, api) {
   const query = getQueryInterface(api);
   return memo(instanceId, _ids => {
     const ids = _ids.map(id => bnToBn(id));
-
     return ids.length ? query.listBags.multi(ids).pipe(map(bags => orderBags(ids, bags))) : of([]);
   });
 }

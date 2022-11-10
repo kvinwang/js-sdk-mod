@@ -26,6 +26,7 @@ export interface DefinitionRpcParam {
 export interface DefinitionRpc {
     alias?: string[];
     aliasSection?: string;
+    deprecated?: string;
     description: string;
     endpoint?: string;
     isSigned?: boolean;

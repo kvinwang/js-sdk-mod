@@ -4,19 +4,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.toCallsOnly = toCallsOnly;
-
 var _util = require("@polkadot/util");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 function trimDocs(docs) {
   const strings = docs.map(d => d.toString().trim());
   const firstEmpty = strings.findIndex(d => !d.length);
   return firstEmpty === -1 ? strings : strings.slice(0, firstEmpty);
 }
+
 /** @internal */
-
-
 function toCallsOnly(registry, _ref) {
   let {
     extrinsic,

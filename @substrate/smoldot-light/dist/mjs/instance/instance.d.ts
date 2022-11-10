@@ -9,6 +9,18 @@ export declare class CrashError extends Error {
     constructor(message: string);
 }
 /**
+ * Thrown in case a malformed JSON-RPC request is sent.
+ */
+export declare class MalformedJsonRpcError extends Error {
+    constructor();
+}
+/**
+ * Thrown in case the buffer of JSON-RPC requests is full and cannot accept any more request.
+ */
+export declare class QueueFullError extends Error {
+    constructor();
+}
+/**
  * Contains the configuration of the instance.
  */
 export interface Config {
@@ -19,7 +31,8 @@ export interface Config {
 }
 export interface Instance {
     request: (request: string, chainId: number) => void;
-    addChain: (chainSpec: string, databaseContent: string, potentialRelayChains: number[], jsonRpcCallback?: (response: string) => void) => Promise<{
+    nextJsonRpcResponse: (chainId: number, resolve: (response: string) => void, reject: (error: Error) => void) => void;
+    addChain: (chainSpec: string, databaseContent: string, potentialRelayChains: number[], disableJsonRpc: boolean) => Promise<{
         success: true;
         chainId: number;
     } | {
@@ -27,7 +40,6 @@ export interface Instance {
         error: string;
     }>;
     removeChain: (chainId: number) => void;
-    databaseContent: (chainId: number, maxUtf8BytesSize?: number) => Promise<string>;
     startShutdown: () => void;
 }
 export declare function start(configMessage: Config, platformBindings: instance.PlatformBindings): Instance;

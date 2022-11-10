@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.v1 = exports.Si1Variant = void 0;
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 const Si1Variant = {
   name: 'Text',
   fields: 'Vec<Si1Field>',

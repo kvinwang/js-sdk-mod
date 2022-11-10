@@ -9,7 +9,7 @@ export interface Config {
      * Tries to open a new connection using the given configuration.
      *
      * @see Connection
-     * @throws ConnectionError If the multiaddress couldn't be parsed or contains an invalid protocol.
+     * @throws {@link ConnectionError} If the multiaddress couldn't be parsed or contains an invalid protocol.
      */
     connect(config: ConnectionConfig): Connection;
     /**
@@ -19,8 +19,7 @@ export interface Config {
      */
     onPanic: (message: string) => never;
     logCallback: (level: number, target: string, message: string) => void;
-    jsonRpcCallback: (response: string, chainId: number) => void;
-    databaseContentCallback: (data: string, chainId: number) => void;
+    jsonRpcResponsesNonEmptyCallback: (chainId: number) => void;
     currentTaskCallback?: (taskName: string | null) => void;
 }
 /**
@@ -30,11 +29,11 @@ export interface Config {
  *
  * - `Opening` (initial state)
  * - `Open`
- * - `Closed`
+ * - `Reset`
  *
- * When in the `Opening` or `Open` state, the connection can transition to the `Closed` state
+ * When in the `Opening` or `Open` state, the connection can transition to the `Reset` state
  * if the remote closes the connection or refuses the connection altogether. When that
- * happens, `config.onClosed` is called. Once in the `Closed` state, the connection cannot
+ * happens, `config.onReset` is called. Once in the `Reset` state, the connection cannot
  * transition back to another state.
  *
  * Initially in the `Opening` state, the connection can transition to the `Open` state if the
@@ -47,20 +46,20 @@ export interface Config {
  */
 export interface Connection {
     /**
-     * Transitions the connection or one of its substreams to the `Closed` state.
+     * Transitions the connection or one of its substreams to the `Reset` state.
      *
      * If the connection is of type "single-stream", the whole connection must be shut down.
      * If the connection is of type "multi-stream", a `streamId` can be provided, in which case
      * only the given substream is shut down.
      *
-     * The `config.onClose` or `config.onStreamClose` callbacks are **not** called.
+     * The `config.onReset` or `config.onStreamReset` callbacks are **not** called.
      *
      * The transition is performed in the background.
      * If the whole connection is to be shut down, none of the callbacks passed to the `Config`
-     * must be called again. If only a substream is shut down, the `onStreamClose` and `onMessage`
+     * must be called again. If only a substream is shut down, the `onStreamReset` and `onMessage`
      * callbacks must not be called again with that substream.
      */
-    close(streamId?: number): void;
+    reset(streamId?: number): void;
     /**
      * Queues data to be sent on the given connection.
      *
@@ -77,6 +76,10 @@ export interface Connection {
      * connections of type "multi-stream".
      *
      * The `onStreamOpened` callback must later be called with an outbound direction.
+     *
+     * Note that no mechanism exists in this API to handle the situation where a substream fails
+     * to open, as this is not supposed to happen. If you need to handle such a situation, either
+     * try again opening a substream again or reset the entire connection.
      */
     openOutSubstream(): void;
 }
@@ -108,11 +111,11 @@ export interface ConnectionConfig {
         remoteTlsCertificateMultihash: Uint8Array;
     }) => void;
     /**
-     * Callback called when the connection transitions to the `Closed` state.
+     * Callback called when the connection transitions to the `Reset` state.
      *
-     * It it **not** called if `Connection.close` is manually called by the API user.
+     * It it **not** called if `Connection.reset` is manually called by the API user.
      */
-    onConnectionClose: (message: string) => void;
+    onConnectionReset: (message: string) => void;
     /**
      * Callback called when a new substream has been opened.
      *
@@ -120,13 +123,13 @@ export interface ConnectionConfig {
      */
     onStreamOpened: (streamId: number, direction: 'inbound' | 'outbound') => void;
     /**
-     * Callback called when a stream transitions to the `Closed` state.
+     * Callback called when a stream transitions to the `Reset` state.
      *
-     * It it **not** called if `Connection.closeStream` is manually called by the API user.
+     * It it **not** called if `Connection.resetStream` is manually called by the API user.
      *
      * This function must only be called for connections of type "multi-stream".
      */
-    onStreamClose: (streamId: number) => void;
+    onStreamReset: (streamId: number) => void;
     /**
      * Callback called when a message sent by the remote has been received.
      *

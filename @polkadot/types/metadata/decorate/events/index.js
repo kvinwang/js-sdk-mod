@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { isCodec, isU8a, lazyMethod, stringCamelCase } from '@polkadot/util';
 import { lazyVariants } from "../../../create/lazy.js";
 import { variantToMeta } from "../errors/index.js";
@@ -9,15 +10,14 @@ export function filterEventsSome({
 }) {
   return events.isSome;
 }
-/** @internal */
 
+/** @internal */
 export function decorateEvents(registry, {
   lookup,
   pallets
 }, version) {
   const result = {};
   const filtered = pallets.filter(filterEventsSome);
-
   for (let i = 0; i < filtered.length; i++) {
     const {
       events,
@@ -31,6 +31,5 @@ export function decorateEvents(registry, {
       meta: registry.createTypeUnsafe('EventMetadataLatest', [variantToMeta(lookup, variant)])
     })));
   }
-
   return result;
 }

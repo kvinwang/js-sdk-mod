@@ -4,14 +4,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
 var _util = require("@polkadot/util");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-// order important in structs... :)
 
+// order important in structs... :)
 /* eslint-disable sort-keys */
+
 const SlotRange10 = {
   _enum: ['ZeroZero', 'ZeroOne', 'ZeroTwo', 'ZeroThree', 'OneOne', 'OneTwo', 'OneThree', 'TwoTwo', 'TwoThree', 'ThreeThree']
 };
@@ -47,7 +46,6 @@ const oldTypes = {
   },
   SubId: 'u32'
 };
-
 var _default = (0, _util.objectSpread)({}, oldTypes, {
   AuctionIndex: 'u32',
   LeasePeriod: 'BlockNumber',
@@ -62,5 +60,4 @@ var _default = (0, _util.objectSpread)({}, oldTypes, {
   WinnersDataTuple10: '(AccountId, ParaId, BalanceOf, SlotRange10)',
   WinnersDataTuple: '(AccountId, ParaId, BalanceOf, SlotRange)'
 });
-
 exports.default = _default;

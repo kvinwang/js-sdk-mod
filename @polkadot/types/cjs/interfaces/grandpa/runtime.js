@@ -4,11 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.runtime = void 0;
-
 var _util = require("@polkadot/util");
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const GRANDPA_V2_V3 = {
   generate_key_ownership_proof: {
     description: 'Generates a proof of key ownership for the given authority in the given set.',

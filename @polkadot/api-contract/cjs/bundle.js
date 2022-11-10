@@ -19,13 +19,9 @@ Object.defineProperty(exports, "packageInfo", {
     return _packageInfo.packageInfo;
   }
 });
-
 var _Abi = require("./Abi");
-
 var _packageInfo = require("./packageInfo");
-
 var _promise = require("./promise");
-
 Object.keys(_promise).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -37,9 +33,7 @@ Object.keys(_promise).forEach(function (key) {
     }
   });
 });
-
 var _rx = require("./rx");
-
 Object.keys(_rx).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;

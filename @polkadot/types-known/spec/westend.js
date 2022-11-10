@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable sort-keys */
+
 import { mapXcmTypes } from '@polkadot/types-create';
 import { objectSpread } from '@polkadot/util';
 const sharedTypes = {
@@ -14,7 +15,7 @@ const sharedTypes = {
   ProxyType: {
     _enum: ['Any', 'NonTransfer', 'Staking', 'SudoBalances', 'IdentityJudgement', 'CancelProxy']
   },
-  Weight: 'u64'
+  Weight: 'WeightV1'
 };
 const addrAccountIdTypes = {
   AccountInfo: 'AccountInfoWithRefCount',
@@ -78,6 +79,18 @@ const versioned = [{
 }, {
   // metadata v14
   minmax: [9106, undefined],
-  types: {}
-}];
+  types: {
+    Weight: 'WeightV1'
+  }
+}
+// ,
+// {
+//   // weight v2 introduction
+//   minmax: [9300, undefined],
+//   types: {
+//     Weight: 'WeightV2'
+//   }
+// }
+];
+
 export default versioned;

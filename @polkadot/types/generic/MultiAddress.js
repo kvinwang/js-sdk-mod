@@ -1,11 +1,11 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { Enum } from '@polkadot/types-codec';
 import { isBn, isNumber, isString, isU8a } from '@polkadot/util';
 import { decodeAddress } from '@polkadot/util-crypto';
 import { GenericAccountId } from "./AccountId.js";
 import { GenericAccountIndex } from "./AccountIndex.js";
-
 function decodeU8a(registry, u8a) {
   if ([0, 32].includes(u8a.length)) {
     return {
@@ -20,10 +20,8 @@ function decodeU8a(registry, u8a) {
       Index: registry.createTypeUnsafe('AccountIndex', [u8a]).toNumber()
     };
   }
-
   return u8a;
 }
-
 function decodeMultiAny(registry, value) {
   if (value instanceof GenericAccountId) {
     return {
@@ -41,10 +39,8 @@ function decodeMultiAny(registry, value) {
   } else if (isString(value)) {
     return decodeU8a(registry, decodeAddress(value.toString()));
   }
-
   return value;
 }
-
 export class GenericMultiAddress extends Enum {
   constructor(registry, value) {
     super(registry, {
@@ -57,11 +53,10 @@ export class GenericMultiAddress extends Enum {
       Address20: 'H160'
     }, decodeMultiAny(registry, value));
   }
+
   /**
    * @description Returns a breakdown of the hex encoding for this Codec
    */
-
-
   inspect() {
     const {
       inner,
@@ -72,13 +67,11 @@ export class GenericMultiAddress extends Enum {
       outer: [new Uint8Array([this.index]), ...outer]
     };
   }
+
   /**
    * @description Returns the string representation of the value
    */
-
-
   toString() {
     return this.value.toString();
   }
-
 }

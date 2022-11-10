@@ -1,34 +1,27 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import { createFunction } from "./createFunction.js";
 
+import { createFunction } from "./createFunction.js";
 function findSiPrimitive(registry, _prim) {
   const prim = _prim.toLowerCase();
-
   return registry.lookup.types.find(t => t.type.def.isPrimitive && t.type.def.asPrimitive.toString().toLowerCase() === prim || t.type.def.isHistoricMetaCompat && t.type.def.asHistoricMetaCompat.toString().toLowerCase() === prim);
 }
-
 function findSiType(registry, orig) {
   let portable = findSiPrimitive(registry, orig);
-
   if (!portable && orig === 'Bytes') {
     const u8 = findSiPrimitive(registry, 'u8');
-
     if (u8) {
       portable = registry.lookup.types.find(t => t.type.def.isSequence && t.type.def.asSequence.type.eq(u8.id) || t.type.def.isHistoricMetaCompat && t.type.def.asHistoricMetaCompat.eq(orig));
     }
   }
-
   if (!portable) {
     console.warn(`Unable to map ${orig} to a lookup index`);
   }
-
   return portable;
-} // Small helper function to factorize code on this page.
+}
 
+// Small helper function to factorize code on this page.
 /** @internal */
-
-
 export function createRuntimeFunction({
   method,
   prefix,
@@ -39,7 +32,6 @@ export function createRuntimeFunction({
 }) {
   return registry => {
     var _findSiType;
-
     return createFunction(registry, {
       meta: registry.createTypeUnsafe('StorageEntryMetadataLatest', [{
         docs: registry.createTypeUnsafe('Vec<Text>', [[docs]]),
@@ -47,7 +39,7 @@ export function createRuntimeFunction({
         name: registry.createTypeUnsafe('Text', [method]),
         toJSON: () => key,
         type: registry.createTypeUnsafe('StorageEntryTypeLatest', [{
-          Plain: ((_findSiType = findSiType(registry, type)) === null || _findSiType === void 0 ? void 0 : _findSiType.id) || 0
+          Plain: ((_findSiType = findSiType(registry, type)) == null ? void 0 : _findSiType.id) || 0
         }])
       }]),
       method,

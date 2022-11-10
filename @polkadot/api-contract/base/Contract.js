@@ -1,37 +1,34 @@
 // Copyright 2017-2022 @polkadot/api-contract authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { map } from 'rxjs';
 import { SubmittableResult } from '@polkadot/api';
-import { BN, BN_HUNDRED, BN_ONE, BN_ZERO, bnToBn, isUndefined, logger } from '@polkadot/util';
+import { BN, BN_HUNDRED, BN_ONE, BN_ZERO, isUndefined, logger } from '@polkadot/util';
 import { applyOnEvent } from "../util.js";
 import { Base } from "./Base.js";
-import { withMeta } from "./util.js";
+import { convertWeight, withMeta } from "./util.js";
 // As per Rust, 5 * GAS_PER_SEC
 const MAX_CALL_GAS = new BN(5000000000000).isub(BN_ONE);
 const l = logger('Contract');
-
 function createQuery(meta, fn) {
   return withMeta(meta, (origin, options, ...params) => fn(origin, options, params));
 }
-
 function createTx(meta, fn) {
   return withMeta(meta, (options, ...params) => fn(options, params));
 }
-
 export class ContractSubmittableResult extends SubmittableResult {
   constructor(result, contractEvents) {
     super(result);
     this.contractEvents = contractEvents;
   }
-
 }
 export class Contract extends Base {
   /**
    * @description The on-chain address for this contract
    */
+
   #query = {};
   #tx = {};
-
   constructor(api, abi, address, decorateMethod) {
     super(api, abi, decorateMethod);
     this.address = this.registry.createType('AccountId', address);
@@ -39,33 +36,33 @@ export class Contract extends Base {
       if (isUndefined(this.#tx[m.method])) {
         this.#tx[m.method] = createTx(m, (o, p) => this.#exec(m, o, p));
       }
-
       if (isUndefined(this.#query[m.method])) {
         this.#query[m.method] = createQuery(m, (f, o, p) => this.#read(m, o, p).send(f));
       }
     });
   }
-
   get query() {
     return this.#query;
   }
-
   get tx() {
     return this.#tx;
   }
-
   #getGas = (_gasLimit, isCall = false) => {
-    const gasLimit = bnToBn(_gasLimit);
-    return gasLimit.lte(BN_ZERO) ? isCall ? MAX_CALL_GAS : (this.api.consts.system.blockWeights ? this.api.consts.system.blockWeights.maxBlock : this.api.consts.system.maximumBlockWeight).muln(64).div(BN_HUNDRED) : gasLimit;
+    const weight = convertWeight(_gasLimit);
+    if (weight.v1Weight.gt(BN_ZERO)) {
+      return weight;
+    }
+    return convertWeight(isCall ? MAX_CALL_GAS : convertWeight(this.api.consts.system.blockWeights ? this.api.consts.system.blockWeights.maxBlock : this.api.consts.system.maximumBlockWeight).v1Weight.muln(64).div(BN_HUNDRED));
   };
   #exec = (messageOrId, {
     gasLimit = BN_ZERO,
     storageDepositLimit = null,
     value = BN_ZERO
   }, params) => {
-    const gas = this.#getGas(gasLimit);
-    const encParams = this.abi.findMessage(messageOrId).toU8a(params);
-    return this.api.tx.contracts.call(this.address, value, gas, storageDepositLimit, encParams).withResultTransform(result => // ContractEmitted is the current generation, ContractExecution is the previous generation
+    return this.api.tx.contracts.call(this.address, value, this._isOldWeight
+    // jiggle v1 weights, metadata points to latest
+    ? convertWeight(gasLimit).v1Weight : convertWeight(gasLimit).v2Weight, storageDepositLimit, this.abi.findMessage(messageOrId).toU8a(params)).withResultTransform(result =>
+    // ContractEmitted is the current generation, ContractExecution is the previous generation
     new ContractSubmittableResult(result, applyOnEvent(result, ['ContractEmitted', 'ContractExecution'], records => records.map(({
       event: {
         data: [, data]
@@ -87,7 +84,9 @@ export class Contract extends Base {
     const message = this.abi.findMessage(messageOrId);
     return {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      send: this._decorateMethod(origin => this.api.rx.call.contractsApi.call(origin, this.address, value, this.#getGas(gasLimit, true), storageDepositLimit, message.toU8a(params)).pipe(map(({
+      send: this._decorateMethod(origin => this.api.rx.call.contractsApi.call(origin, this.address, value,
+      // the runtime interface still used u64 inputs
+      this.#getGas(gasLimit, true).v1Weight, storageDepositLimit, message.toU8a(params)).pipe(map(({
         debugMessage,
         gasConsumed,
         gasRequired,
@@ -109,10 +108,8 @@ export class Contract extends Base {
 export function extendContract(type, decorateMethod) {
   return class extends Contract {
     static __ContractType = type;
-
     constructor(api, abi, address) {
       super(api, abi, address, decorateMethod);
     }
-
   };
 }

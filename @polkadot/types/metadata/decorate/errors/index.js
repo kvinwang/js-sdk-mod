@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { isCodec, isU8a, lazyMethod, objectSpread, stringCamelCase } from '@polkadot/util';
 import { lazyVariants } from "../../../create/lazy.js";
 import { objectNameToString } from "../util.js";
@@ -10,21 +11,19 @@ export function variantToMeta(lookup, variant) {
     }) => lookup.getTypeDef(type).type)
   }, variant);
 }
-/** @internal */
 
+/** @internal */
 export function decorateErrors(registry, {
   lookup,
   pallets
 }, version) {
   const result = {};
-
   for (let i = 0; i < pallets.length; i++) {
     const {
       errors,
       index,
       name
     } = pallets[i];
-
     if (errors.isSome) {
       const sectionIndex = version >= 12 ? index.toNumber() : i;
       lazyMethod(result, stringCamelCase(name), () => lazyVariants(lookup, errors.unwrap(), objectNameToString, variant => ({
@@ -34,6 +33,5 @@ export function decorateErrors(registry, {
       })));
     }
   }
-
   return result;
 }

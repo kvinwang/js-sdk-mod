@@ -1,7 +1,9 @@
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-export * from "./essentials.js"; // substrate types
 
+export * from "./essentials.js";
+
+// substrate types
 export { default as assets } from "./assets/definitions.js";
 export { default as authorship } from "./authorship/definitions.js";
 export { default as aura } from "./aura/definitions.js";
@@ -44,8 +46,9 @@ export { default as txpayment } from "./txpayment/definitions.js";
 export { default as txqueue } from "./txqueue/definitions.js";
 export { default as uniques } from "./uniques/definitions.js";
 export { default as utility } from "./utility/definitions.js";
-export { default as vesting } from "./vesting/definitions.js"; // polkadot-specific types
+export { default as vesting } from "./vesting/definitions.js";
 
+// polkadot-specific types
 export { default as attestations } from "./attestations/definitions.js";
 export { default as bridges } from "./bridges/definitions.js";
 export { default as claims } from "./claims/definitions.js";
@@ -55,17 +58,21 @@ export { default as finality } from "./finality/definitions.js";
 export { default as parachains } from "./parachains/definitions.js";
 export { default as poll } from "./poll/definitions.js";
 export { default as purchase } from "./purchase/definitions.js";
-export { default as xcm } from "./xcm/definitions.js"; // other useful types
+export { default as xcm } from "./xcm/definitions.js";
 
+// other useful types
 export { default as contractsAbi } from "./contractsAbi/definitions.js";
-export { default as eth } from "./eth/definitions.js"; // additional known/community definitions
+export { default as eth } from "./eth/definitions.js";
 
+// additional known/community definitions
 export { default as nimbus } from "./nimbus/definitions.js";
 export { default as ormlOracle } from "./ormlOracle/definitions.js";
-export { default as ormlTokens } from "./ormlTokens/definitions.js"; // pull in rpc last, assuming that is uses info from above
+export { default as ormlTokens } from "./ormlTokens/definitions.js";
 
-export { default as rpc } from "./rpc/definitions.js"; // rpc-only definitions
+// pull in rpc last, assuming that is uses info from above
+export { default as rpc } from "./rpc/definitions.js";
 
+// rpc-only definitions
 export { default as author } from "./author/definitions.js";
 export { default as chain } from "./chain/definitions.js";
 export { default as childstate } from "./childstate/definitions.js";
