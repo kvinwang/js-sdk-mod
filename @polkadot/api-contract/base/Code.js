@@ -38,9 +38,10 @@ export class Code extends Base {
     storageDepositLimit = null,
     value = BN_ZERO
   }, params) => {
-    return this.api.tx.contracts.instantiateWithCode(value, this._isOldWeight
-    // jiggle v1 weights, metadata points to latest
-    ? convertWeight(gasLimit).v1Weight : convertWeight(gasLimit).v2Weight, storageDepositLimit, compactAddLength(this.code), this.abi.findConstructor(constructorOrId).toU8a(params), encodeSalt(salt)).withResultTransform(result => new CodeSubmittableResult(result, ...(applyOnEvent(result, ['CodeStored', 'Instantiated'], records => records.reduce(([blueprint, contract], {
+    return this.api.tx.contracts.instantiateWithCode(value,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore jiggle v1 weights, metadata points to latest
+    this._isWeightV1 ? convertWeight(gasLimit).v1Weight : convertWeight(gasLimit).v2Weight, storageDepositLimit, compactAddLength(this.code), this.abi.findConstructor(constructorOrId).toU8a(params), encodeSalt(salt)).withResultTransform(result => new CodeSubmittableResult(result, ...(applyOnEvent(result, ['CodeStored', 'Instantiated'], records => records.reduce(([blueprint, contract], {
       event
     }) => this.api.events.contracts.Instantiated.is(event) ? [blueprint, new Contract(this.api, this.abi, event.data[1], this._decorateMethod)] : this.api.events.contracts.CodeStored.is(event) ? [new Blueprint(this.api, this.abi, event.data[0], this._decorateMethod), contract] : [blueprint, contract], [])) || [])));
   };

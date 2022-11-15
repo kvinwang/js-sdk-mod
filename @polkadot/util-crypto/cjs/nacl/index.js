@@ -33,13 +33,8 @@ Object.defineProperty(exports, "naclSeal", {
     return _seal.naclSeal;
   }
 });
-
 var _decrypt = require("./decrypt");
-
 var _encrypt = require("./encrypt");
-
 var _fromSecret = require("./box/fromSecret");
-
 var _open = require("./open");
-
 var _seal = require("./seal");

@@ -19,13 +19,11 @@
  */
 export function u8aFixLength(value, bitLength = -1, atStart = false) {
   const byteLength = Math.ceil(bitLength / 8);
-
   if (bitLength === -1 || value.length === byteLength) {
     return value;
   } else if (value.length > byteLength) {
     return value.subarray(0, byteLength);
   }
-
   const result = new Uint8Array(byteLength);
   result.set(value, atStart ? 0 : byteLength - value.length);
   return result;

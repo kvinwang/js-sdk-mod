@@ -1,7 +1,7 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import { stringify } from "../stringify.js";
 
+import { stringify } from "../stringify.js";
 /**
  * @name isJsonObject
  * @summary Tests for a valid JSON `object`.
@@ -28,7 +28,6 @@ import { stringify } from "../stringify.js";
  */
 export function isJsonObject(value) {
   const str = typeof value !== 'string' ? stringify(value) : value;
-
   try {
     const obj = JSON.parse(str);
     return typeof obj === 'object' && obj !== null;

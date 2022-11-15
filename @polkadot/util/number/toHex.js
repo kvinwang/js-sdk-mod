@@ -1,6 +1,8 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { hexFixLength } from "../hex/fixLength.js";
+
 /**
  * @name numberToHex
  * @summary Creates a hex value from a number.
@@ -16,7 +18,6 @@ import { hexFixLength } from "../hex/fixLength.js";
  * numberToHex(0x1234, 32); // => 0x00001234
  * ```
  */
-
 export function numberToHex(value, bitLength = -1) {
   const hex = (!value || Number.isNaN(value) ? 0 : value).toString(16);
   return hexFixLength(hex.length % 2 ? `0${hex}` : hex, bitLength, true);

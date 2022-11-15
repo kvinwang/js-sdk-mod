@@ -4,11 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.numberToU8a = numberToU8a;
-
 var _toU8a = require("../hex/toU8a");
-
 var _toHex = require("./toHex");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

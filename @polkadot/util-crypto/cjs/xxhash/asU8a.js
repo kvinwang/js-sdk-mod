@@ -5,15 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.xxhashAsHex = void 0;
 exports.xxhashAsU8a = xxhashAsU8a;
-
 var _util = require("@polkadot/util");
-
 var _wasmCrypto = require("@polkadot/wasm-crypto");
-
 var _helpers = require("../helpers");
-
 var _xxhash = require("./xxhash64");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,24 +31,19 @@ function xxhashAsU8a(data) {
   let onlyJs = arguments.length > 2 ? arguments[2] : undefined;
   const rounds = Math.ceil(bitLength / 64);
   const u8a = (0, _util.u8aToU8a)(data);
-
   if (!_util.hasBigInt || !onlyJs && (0, _wasmCrypto.isReady)()) {
     return (0, _wasmCrypto.twox)(u8a, rounds);
   }
-
   const result = new Uint8Array(rounds * 8);
-
   for (let seed = 0; seed < rounds; seed++) {
     result.set((0, _xxhash.xxhash64)(u8a, seed).reverse(), seed * 8);
   }
-
   return result;
 }
+
 /**
  * @name xxhashAsHex
  * @description Creates a xxhash64 hex from the input.
  */
-
-
 const xxhashAsHex = (0, _helpers.createAsHex)(xxhashAsU8a);
 exports.xxhashAsHex = xxhashAsHex;

@@ -4,6 +4,7 @@
 /**
  * @summary Utility methods to convert to and from `BN` objects
  */
+
 export * from "./consts.js";
 export { BN } from "./bn.js";
 export { bnFromHex } from "./fromHex.js";

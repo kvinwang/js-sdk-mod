@@ -33,13 +33,8 @@ Object.defineProperty(exports, "mnemonicValidate", {
     return _validate.mnemonicValidate;
   }
 });
-
 var _generate = require("./generate");
-
 var _toEntropy = require("./toEntropy");
-
 var _toLegacySeed = require("./toLegacySeed");
-
 var _toMiniSecret = require("./toMiniSecret");
-
 var _validate = require("./validate");

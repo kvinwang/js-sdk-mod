@@ -1,9 +1,11 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { hasBigInt, u8aToU8a } from '@polkadot/util';
 import { isReady, twox } from '@polkadot/wasm-crypto';
 import { createAsHex } from "../helpers.js";
 import { xxhash64 } from "./xxhash64.js";
+
 /**
  * @name xxhashAsU8a
  * @summary Creates a xxhash64 u8a from the input.
@@ -18,26 +20,21 @@ import { xxhash64 } from "./xxhash64.js";
  * xxhashAsU8a('abc'); // => 0x44bc2cf5ad770999
  * ```
  */
-
 export function xxhashAsU8a(data, bitLength = 64, onlyJs) {
   const rounds = Math.ceil(bitLength / 64);
   const u8a = u8aToU8a(data);
-
   if (!hasBigInt || !onlyJs && isReady()) {
     return twox(u8a, rounds);
   }
-
   const result = new Uint8Array(rounds * 8);
-
   for (let seed = 0; seed < rounds; seed++) {
     result.set(xxhash64(u8a, seed).reverse(), seed * 8);
   }
-
   return result;
 }
+
 /**
  * @name xxhashAsHex
  * @description Creates a xxhash64 hex from the input.
  */
-
 export const xxhashAsHex = createAsHex(xxhashAsU8a);

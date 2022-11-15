@@ -4,9 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.arrayFlatten = arrayFlatten;
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 // This is supposed to be a faster concat...
 // https://dev.to/uilicious/javascript-array-push-is-945x-faster-than-array-concat-1oki
 
@@ -30,25 +30,22 @@ function arrayFlatten(arrays) {
     return [];
   } else if (arrays.length === 1) {
     return arrays[0];
-  } // pre-allocate based on the combined size
+  }
 
-
+  // pre-allocate based on the combined size
   let size = 0;
-
   for (let i = 0; i < arrays.length; i++) {
     size += arrays[i].length;
   }
-
   const output = new Array(size);
   let i = -1;
-
   for (let j = 0; j < arrays.length; j++) {
-    const a = arrays[j]; // instead of pushing, we just set the entries
+    const a = arrays[j];
 
+    // instead of pushing, we just set the entries
     for (let e = 0; e < a.length; e++) {
       output[++i] = a[e];
     }
   }
-
   return output;
 }

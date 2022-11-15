@@ -4,11 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ed25519PairFromRandom = ed25519PairFromRandom;
-
 var _random = require("../../random");
-
 var _fromSeed = require("./fromSeed");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

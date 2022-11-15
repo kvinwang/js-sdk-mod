@@ -399,17 +399,9 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             AlreadyVetoed: AugmentedError<ApiType>;
             /**
-             * Preimage already noted
-             **/
-            DuplicatePreimage: AugmentedError<ApiType>;
-            /**
              * Proposal already made
              **/
             DuplicateProposal: AugmentedError<ApiType>;
-            /**
-             * Imminent
-             **/
-            Imminent: AugmentedError<ApiType>;
             /**
              * The instant referendum origin is currently disallowed.
              **/
@@ -447,10 +439,6 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             NotDelegating: AugmentedError<ApiType>;
             /**
-             * Not imminent
-             **/
-            NotImminent: AugmentedError<ApiType>;
-            /**
              * Next external proposal not simple majority
              **/
             NotSimpleMajority: AugmentedError<ApiType>;
@@ -458,14 +446,6 @@ declare module '@polkadot/api-base/types/errors' {
              * The given account did not vote on the referendum.
              **/
             NotVoter: AugmentedError<ApiType>;
-            /**
-             * Invalid preimage
-             **/
-            PreimageInvalid: AugmentedError<ApiType>;
-            /**
-             * Preimage not found
-             **/
-            PreimageMissing: AugmentedError<ApiType>;
             /**
              * Proposal still blacklisted
              **/
@@ -479,13 +459,9 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             ReferendumInvalid: AugmentedError<ApiType>;
             /**
-             * Too early
+             * Maximum number of items reached.
              **/
-            TooEarly: AugmentedError<ApiType>;
-            /**
-             * Maximum number of proposals reached.
-             **/
-            TooManyProposals: AugmentedError<ApiType>;
+            TooMany: AugmentedError<ApiType>;
             /**
              * Value too low
              **/
@@ -509,6 +485,10 @@ declare module '@polkadot/api-base/types/errors' {
             [key: string]: AugmentedError<ApiType>;
         };
         electionProviderMultiPhase: {
+            /**
+             * Some bound not met
+             **/
+            BoundNotMet: AugmentedError<ApiType>;
             /**
              * The call is not allowed at this point.
              **/
@@ -557,6 +537,10 @@ declare module '@polkadot/api-base/types/errors' {
              * The signed submission consumes too much weight
              **/
             SignedTooMuchWeight: AugmentedError<ApiType>;
+            /**
+             * Submitted solution has too many winners
+             **/
+            TooManyWinners: AugmentedError<ApiType>;
             /**
              * Generic error
              **/
@@ -746,6 +730,10 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             JudgementGiven: AugmentedError<ApiType>;
             /**
+             * Error that occurs when there is an issue paying for judgement.
+             **/
+            JudgementPaymentFailed: AugmentedError<ApiType>;
+            /**
              * No identity found.
              **/
             NoIdentity: AugmentedError<ApiType>;
@@ -917,6 +905,10 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             FullyUnbonding: AugmentedError<ApiType>;
             /**
+             * Pool id provided is not correct/usable.
+             **/
+            InvalidPoolId: AugmentedError<ApiType>;
+            /**
              * Too many members in the pool or system.
              **/
             MaxPoolMembers: AugmentedError<ApiType>;
@@ -965,6 +957,10 @@ declare module '@polkadot/api-base/types/errors' {
              * Partial unbonding now allowed permissionlessly.
              **/
             PartialUnbondNotAllowedPermissionlessly: AugmentedError<ApiType>;
+            /**
+             * Pool id currently in use.
+             **/
+            PoolIdInUse: AugmentedError<ApiType>;
             /**
              * An account is not a member.
              **/
@@ -1160,6 +1156,10 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             CannotUpgrade: AugmentedError<ApiType>;
             /**
+             * Parachain cannot currently schedule a code upgrade.
+             **/
+            CannotUpgradeCode: AugmentedError<ApiType>;
+            /**
              * Para is not registered in our system.
              **/
             NotRegistered: AugmentedError<ApiType>;
@@ -1329,7 +1329,7 @@ declare module '@polkadot/api-base/types/errors' {
             /**
              * Preimage is too large to store on-chain.
              **/
-            TooLarge: AugmentedError<ApiType>;
+            TooBig: AugmentedError<ApiType>;
             /**
              * Generic error
              **/
@@ -1441,6 +1441,10 @@ declare module '@polkadot/api-base/types/errors' {
              * Failed to schedule a call
              **/
             FailedToSchedule: AugmentedError<ApiType>;
+            /**
+             * Attempt to use a non-named function on a named task.
+             **/
+            Named: AugmentedError<ApiType>;
             /**
              * Cannot find the scheduled call.
              **/
@@ -1599,8 +1603,8 @@ declare module '@polkadot/api-base/types/errors' {
              **/
             TooManyTargets: AugmentedError<ApiType>;
             /**
-             * There are too many validators in the system. Governance needs to adjust the staking
-             * settings to keep things safe for the runtime.
+             * There are too many validator candidates in the system. Governance needs to adjust the
+             * staking settings to keep things safe for the runtime.
              **/
             TooManyValidators: AugmentedError<ApiType>;
             /**

@@ -1,7 +1,9 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { hexAddPrefix } from "./addPrefix.js";
 import { hexStripPrefix } from "./stripPrefix.js";
+
 /**
  * @name hexFixLength
  * @summary Shifts a hex string to a specific bitLength
@@ -18,7 +20,6 @@ import { hexStripPrefix } from "./stripPrefix.js";
  * console.log('fixed', hexFixLength('0x0012', 8)); // => 0x12
  * ```
  */
-
 export function hexFixLength(value, bitLength = -1, withPadding = false) {
   const strLength = Math.ceil(bitLength / 4);
   const hexLength = strLength + 2;

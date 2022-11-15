@@ -45,13 +45,8 @@ Object.defineProperty(exports, "stringUpperFirst", {
     return _lowerFirst.stringUpperFirst;
   }
 });
-
 var _camelCase = require("./camelCase");
-
 var _lowerFirst = require("./lowerFirst");
-
 var _shorten = require("./shorten");
-
 var _toHex = require("./toHex");
-
 var _toU8a = require("./toU8a");

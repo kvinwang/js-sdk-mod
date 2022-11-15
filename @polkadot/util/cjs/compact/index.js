@@ -33,11 +33,7 @@ Object.defineProperty(exports, "compactToU8a", {
     return _toU8a.compactToU8a;
   }
 });
-
 var _addLength = require("./addLength");
-
 var _stripLength = require("./stripLength");
-
 var _fromU8a = require("./fromU8a");
-
 var _toU8a = require("./toU8a");

@@ -5,7 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.lazyMethod = lazyMethod;
 exports.lazyMethods = lazyMethods;
-
 // Copyright 2017-2022 @polkadot/types authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,35 +31,32 @@ function lazyMethod(result, item, creator, getName) {
       // all environment failures, so we are rather be safe than sorry
       if (value === undefined) {
         value = creator(item, index, this);
-
         try {
           // re-define the property as a value, next time around this
           // getter will only return the computed value
           Object.defineProperty(this, name, {
             value
           });
-        } catch {// ignore any errors, since this _should_ not happen due to
+        } catch {
+          // ignore any errors, since this _should_ not happen due to
           // the "configurable" property above. But if it ever does
           // from here-on we will be the cached value the next time
           // around (with a very slight dip in performance)
         }
       }
-
       return value;
     }
   });
 }
+
 /**
  * @name lazyMethods
  * @description
  * Creates lazy, on-demand getters for the specific values.
  */
-
-
 function lazyMethods(result, items, creator, getName) {
   for (let i = 0; i < items.length; i++) {
     lazyMethod(result, items[i], creator, getName, i);
   }
-
   return result;
 }

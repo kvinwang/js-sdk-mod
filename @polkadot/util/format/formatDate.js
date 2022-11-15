@@ -5,12 +5,11 @@
 function zeroPad(value) {
   return value.toString().padStart(2, '0');
 }
+
 /**
  * @name formatDate
  * @description Formats a date in CCYY-MM-DD HH:MM:SS format
  */
-
-
 export function formatDate(date) {
   const year = date.getFullYear().toString();
   const month = zeroPad(date.getMonth() + 1);

@@ -82,9 +82,10 @@ class Contract extends _Base.Base {
       storageDepositLimit = null,
       value = _util.BN_ZERO
     } = _ref;
-    return this.api.tx.contracts.call(this.address, value, this._isOldWeight
-    // jiggle v1 weights, metadata points to latest
-    ? (0, _util3.convertWeight)(gasLimit).v1Weight : (0, _util3.convertWeight)(gasLimit).v2Weight, storageDepositLimit, this.abi.findMessage(messageOrId).toU8a(params)).withResultTransform(result =>
+    return this.api.tx.contracts.call(this.address, value,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore jiggle v1 weights, metadata points to latest
+    this._isWeightV1 ? (0, _util3.convertWeight)(gasLimit).v1Weight : (0, _util3.convertWeight)(gasLimit).v2Weight, storageDepositLimit, this.abi.findMessage(messageOrId).toU8a(params)).withResultTransform(result =>
     // ContractEmitted is the current generation, ContractExecution is the previous generation
     new ContractSubmittableResult(result, (0, _util2.applyOnEvent)(result, ['ContractEmitted', 'ContractExecution'], records => records.map(_ref2 => {
       let {
@@ -110,8 +111,9 @@ class Contract extends _Base.Base {
     return {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       send: this._decorateMethod(origin => this.api.rx.call.contractsApi.call(origin, this.address, value,
-      // the runtime interface still used u64 inputs
-      this.#getGas(gasLimit, true).v1Weight, storageDepositLimit, message.toU8a(params)).pipe((0, _rxjs.map)(_ref4 => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore jiggle v1 weights, metadata points to latest
+      this._isWeightV1 ? this.#getGas(gasLimit, true).v1Weight : this.#getGas(gasLimit, true).v2Weight, storageDepositLimit, message.toU8a(params)).pipe((0, _rxjs.map)(_ref4 => {
         let {
           debugMessage,
           gasConsumed,
@@ -122,7 +124,7 @@ class Contract extends _Base.Base {
         return {
           debugMessage,
           gasConsumed,
-          gasRequired: gasRequired && !gasRequired.isZero() ? gasRequired : gasConsumed,
+          gasRequired: gasRequired && !(0, _util3.convertWeight)(gasRequired).v1Weight.isZero() ? gasRequired : gasConsumed,
           output: result.isOk && message.returnType ? this.abi.registry.createTypeUnsafe(message.returnType.lookupName || message.returnType.type, [result.asOk.data.toU8a(true)], {
             isPedantic: true
           }) : null,

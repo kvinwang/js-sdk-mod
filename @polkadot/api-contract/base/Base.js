@@ -15,7 +15,7 @@ export class Base {
     this.abi = abi instanceof Abi ? abi : new Abi(abi, api.registry.getChainProperties());
     this.api = api;
     this._decorateMethod = decorateMethod;
-    this._isOldWeight = isFunction(api.registry.createType('Weight').toBn);
+    this._isWeightV1 = !api.registry.createType('Weight').proofSize;
   }
   get registry() {
     return this.api.registry;

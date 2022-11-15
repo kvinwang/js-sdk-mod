@@ -21,5 +21,4 @@ Object.defineProperty(exports, "selectableNetworks", {
     return _networks.selectableNetworks;
   }
 });
-
 var _networks = require("@polkadot/networks");

@@ -9,5 +9,4 @@ Object.defineProperty(exports, "pbkdf2Encode", {
     return _encode.pbkdf2Encode;
   }
 });
-
 var _encode = require("./encode");

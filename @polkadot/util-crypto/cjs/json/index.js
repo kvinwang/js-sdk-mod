@@ -27,11 +27,7 @@ Object.defineProperty(exports, "jsonEncryptFormat", {
     return _encryptFormat.jsonEncryptFormat;
   }
 });
-
 var _decrypt = require("./decrypt");
-
 var _decryptData = require("./decryptData");
-
 var _encrypt = require("./encrypt");
-
 var _encryptFormat = require("./encryptFormat");

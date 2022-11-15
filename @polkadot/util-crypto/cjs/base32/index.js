@@ -27,5 +27,4 @@ Object.defineProperty(exports, "isBase32", {
     return _bs.isBase32;
   }
 });
-
 var _bs = require("./bs32");

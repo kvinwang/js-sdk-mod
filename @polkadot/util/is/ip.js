@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 // The regex patterns below were copied as-is from the ip-regex package 5.0.0,
 // https://github.com/sindresorhus/ip-regex/blob/a2a44dfa7f776528158c2a5ff9d8a1be435ec1b9/index.js#L1
 //
@@ -27,6 +28,7 @@ const v6 = `
 const v46Exact = new RegExp(`(?:^${v4}$)|(?:^${v6}$)`);
 const v4exact = new RegExp(`^${v4}$`);
 const v6exact = new RegExp(`^${v6}$`);
+
 /**
  * @name isIp
  * @summary Tests if the value is a valid IP address
@@ -44,15 +46,12 @@ const v6exact = new RegExp(`^${v6}$`);
  * isIp('1:2:3:4:5:6:7:8', 'v4'); // => false
  * ```
  */
-
 export function isIp(value, type) {
   switch (type) {
     case 'v4':
       return v4exact.test(value);
-
     case 'v6':
       return v6exact.test(value);
-
     default:
       return v46Exact.test(value);
   }

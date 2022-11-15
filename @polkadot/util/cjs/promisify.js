@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.promisify = promisify;
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,7 +27,6 @@ function promisify(self, fn) {
   for (var _len = arguments.length, params = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
     params[_key - 2] = arguments[_key];
   }
-
   return new Promise((resolve, reject) => {
     fn.apply(self, params.concat((error, result) => {
       if (error) {

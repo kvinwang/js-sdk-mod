@@ -11,8 +11,8 @@ exports.findSi = findSi;
 
 /** @internal */
 const SI_MID = 8;
-/** @internal */
 
+/** @internal */
 exports.SI_MID = SI_MID;
 const SI = [{
   power: -24,
@@ -50,7 +50,8 @@ const SI = [{
   power: 0,
   text: 'Unit',
   value: '-'
-}, // position 8
+},
+// position 8
 {
   power: 3,
   text: 'Kilo',
@@ -59,17 +60,20 @@ const SI = [{
   power: 6,
   text: 'Mill',
   value: 'M'
-}, // Mega, M
+},
+// Mega, M
 {
   power: 9,
   text: 'Bill',
   value: 'B'
-}, // Giga, G
+},
+// Giga, G
 {
   power: 12,
   text: 'Tril',
   value: 'T'
-}, // Tera, T
+},
+// Tera, T
 {
   power: 15,
   text: 'Peta',
@@ -86,12 +90,11 @@ const SI = [{
   power: 24,
   text: 'Yotta',
   value: 'Y'
-}]; // Given a SI type (e.g. k, m, Y) find the SI definition
+}];
 
+// Given a SI type (e.g. k, m, Y) find the SI definition
 /** @internal */
-
 exports.SI = SI;
-
 function findSi(type) {
   // use a loop here, better RN support (which doesn't have [].find)
   for (let i = 0; i < SI.length; i++) {
@@ -99,17 +102,14 @@ function findSi(type) {
       return SI[i];
     }
   }
-
   return SI[SI_MID];
 }
+
 /** @internal */
-
-
 function calcSi(text, decimals, forceUnit) {
   if (forceUnit) {
     return findSi(forceUnit);
   }
-
   const siDefIndex = SI_MID - 1 + Math.ceil((text.length - decimals) / 3);
   return SI[siDefIndex] || SI[siDefIndex < 0 ? 0 : SI.length - 1];
 }

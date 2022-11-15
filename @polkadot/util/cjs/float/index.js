@@ -9,5 +9,4 @@ Object.defineProperty(exports, "floatToU8a", {
     return _toU8a.floatToU8a;
   }
 });
-
 var _toU8a = require("./toU8a");

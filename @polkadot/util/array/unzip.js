@@ -8,10 +8,8 @@
 export function arrayUnzip(entries) {
   const keys = new Array(entries.length);
   const values = new Array(entries.length);
-
   for (let i = 0; i < entries.length; i++) {
     [keys[i], values[i]] = entries[i];
   }
-
   return [keys, values];
 }

@@ -9,7 +9,7 @@ import type { BeefySignedCommitment } from '@polkadot/types/interfaces/beefy';
 import type { BlockHash } from '@polkadot/types/interfaces/chain';
 import type { PrefixedStorageKey } from '@polkadot/types/interfaces/childstate';
 import type { AuthorityId } from '@polkadot/types/interfaces/consensus';
-import type { CodeUploadRequest, CodeUploadResult, ContractCallRequest, ContractExecResult, ContractInstantiateResult, InstantiateRequest } from '@polkadot/types/interfaces/contracts';
+import type { CodeUploadRequest, CodeUploadResult, ContractCallRequest, ContractExecResult, ContractInstantiateResult, InstantiateRequestV1 } from '@polkadot/types/interfaces/contracts';
 import type { BlockStats } from '@polkadot/types/interfaces/dev';
 import type { CreatedBlock } from '@polkadot/types/interfaces/engine';
 import type { EthAccount, EthCallRequest, EthFeeHistory, EthFilter, EthFilterChanges, EthLog, EthReceipt, EthRichBlock, EthSubKind, EthSubParams, EthSyncStatus, EthTransaction, EthTransactionRequest, EthWork } from '@polkadot/types/interfaces/eth';
@@ -158,11 +158,10 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
              * @deprecated Use the runtime interface `api.call.contractsApi.instantiate` instead
              * Instantiate a new contract
              **/
-            instantiate: AugmentedRpc<(request: InstantiateRequest | {
+            instantiate: AugmentedRpc<(request: InstantiateRequestV1 | {
                 origin?: any;
                 value?: any;
                 gasLimit?: any;
-                storageDepositLimit?: any;
                 code?: any;
                 data?: any;
                 salt?: any;

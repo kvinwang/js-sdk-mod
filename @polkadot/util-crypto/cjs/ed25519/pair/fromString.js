@@ -4,13 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ed25519PairFromString = ed25519PairFromString;
-
 var _util = require("@polkadot/util");
-
 var _asU8a = require("../../blake2/asU8a");
-
 var _fromSeed = require("./fromSeed");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

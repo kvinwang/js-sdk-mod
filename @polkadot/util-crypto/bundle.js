@@ -1,8 +1,10 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import "./bundleInit.js";
-export { packageInfo } from "./packageInfo.js"; // all internal exports
 
+import "./bundleInit.js";
+export { packageInfo } from "./packageInfo.js";
+
+// all internal exports
 export * from "./address/index.js";
 export * from "./base32/index.js";
 export * from "./base58/index.js";

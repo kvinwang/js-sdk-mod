@@ -51,17 +51,10 @@ Object.defineProperty(exports, "objectValues", {
     return _values.objectValues;
   }
 });
-
 var _clear = require("./clear");
-
 var _copy = require("./copy");
-
 var _entries = require("./entries");
-
 var _keys = require("./keys");
-
 var _property = require("./property");
-
 var _spread = require("./spread");
-
 var _values = require("./values");

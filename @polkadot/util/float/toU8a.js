@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 
 /**
@@ -14,15 +15,12 @@ export function floatToU8a(value = 0.0, {
   if (bitLength !== 32 && bitLength !== 64) {
     throw new Error('Invalid bitLength provided, expected 32 or 64');
   }
-
   const result = new Uint8Array(bitLength / 8);
   const dv = new DataView(result.buffer, result.byteOffset);
-
   if (bitLength === 32) {
     dv.setFloat32(0, Number(value), isLe);
   } else {
     dv.setFloat64(0, Number(value), isLe);
   }
-
   return result;
 }

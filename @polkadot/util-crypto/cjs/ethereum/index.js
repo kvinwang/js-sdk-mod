@@ -21,9 +21,6 @@ Object.defineProperty(exports, "isEthereumChecksum", {
     return _isChecksum.isEthereumChecksum;
   }
 });
-
 var _encode = require("./encode");
-
 var _isAddress = require("./isAddress");
-
 var _isChecksum = require("./isChecksum");

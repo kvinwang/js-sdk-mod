@@ -4,11 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.hexToBn = hexToBn;
-
 var _bn = require("../bn/bn");
-
 var _stripPrefix = require("./stripPrefix");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -35,14 +32,13 @@ function hexToBn(value) {
     isLe = false,
     isNegative = false
   } = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
   if (!value || value === '0x') {
     return new _bn.BN(0);
   }
-
   const stripped = (0, _stripPrefix.hexStripPrefix)(value);
-  const bn = new _bn.BN(stripped, 16, isLe ? 'le' : 'be'); // fromTwos takes as parameter the number of bits, which is the hex length
-  // multiplied by 4 (2 bytes being 8 bits)
+  const bn = new _bn.BN(stripped, 16, isLe ? 'le' : 'be');
 
+  // fromTwos takes as parameter the number of bits, which is the hex length
+  // multiplied by 4 (2 bytes being 8 bits)
   return isNegative ? bn.fromTwos(stripped.length * 4) : bn;
 }

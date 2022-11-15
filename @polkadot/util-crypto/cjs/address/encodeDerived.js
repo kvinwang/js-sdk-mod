@@ -4,13 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.encodeDerivedAddress = encodeDerivedAddress;
-
 var _decode = require("./decode");
-
 var _encode = require("./encode");
-
 var _keyDerived = require("./keyDerived");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

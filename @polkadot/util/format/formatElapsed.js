@@ -1,8 +1,9 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import { bnToBn } from "../bn/toBn.js";
-/** @internal */
 
+import { bnToBn } from "../bn/toBn.js";
+
+/** @internal */
 function formatValue(elapsed) {
   if (elapsed < 15) {
     return `${elapsed.toFixed(1)}s`;
@@ -11,15 +12,13 @@ function formatValue(elapsed) {
   } else if (elapsed < 3600) {
     return `${elapsed / 60 | 0}m`;
   }
-
   return `${elapsed / 3600 | 0}h`;
 }
+
 /**
  * @name formatElapsed
  * @description Formats an elapsed value into s, m, h or day segments
  */
-
-
 export function formatElapsed(now, value) {
   const tsNow = now && now.getTime() || 0;
   const tsValue = value instanceof Date ? value.getTime() : bnToBn(value).toNumber();

@@ -4,15 +4,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ledgerDerivePrivate = ledgerDerivePrivate;
-
 var _util = require("@polkadot/util");
-
 var _bn = require("../../bn");
-
 var _hmac = require("../../hmac");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 // performs hard-only derivation on the xprv
 function ledgerDerivePrivate(xprv, index) {
   const kl = xprv.subarray(0, 32);

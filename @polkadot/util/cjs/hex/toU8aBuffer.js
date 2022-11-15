@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.hexToU8a = hexToU8a;
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,27 +24,21 @@ exports.hexToU8a = hexToU8a;
  */
 function hexToU8a(_value) {
   let bitLength = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -1;
-
   if (!_value) {
     return new Uint8Array();
   }
-
   const value = _value.startsWith('0x') ? _value.substring(2) : _value;
   const buf = Buffer.from(value, 'hex');
   const valLength = value.length / 2;
   const resultLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
-
   if (resultLength === valLength) {
     return Uint8Array.from(buf);
   }
-
   const offset = resultLength > valLength ? resultLength - valLength : 0;
-
   if (offset) {
     const u8a = new Uint8Array(resultLength);
     u8a.set(buf, offset);
     return u8a;
   }
-
   return Uint8Array.from(buf.slice(0, resultLength));
 }

@@ -4,13 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.scryptToU8a = scryptToU8a;
-
 var _util = require("@polkadot/util");
-
 var _bn = require("../bn");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 function scryptToU8a(salt, _ref) {
   let {
     N,

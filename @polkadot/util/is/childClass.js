@@ -18,6 +18,7 @@
  */
 export function isChildClass(Parent, Child) {
   // https://stackoverflow.com/questions/30993434/check-if-a-constructor-inherits-another-in-es6/30993664
-  return Child // eslint-disable-next-line no-prototype-builtins
+  return Child
+  // eslint-disable-next-line no-prototype-builtins
   ? Parent === Child || Parent.isPrototypeOf(Child) : false;
 }

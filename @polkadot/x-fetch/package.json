@@ -17,7 +17,7 @@
   },
   "sideEffects": false,
   "type": "module",
-  "version": "10.1.11",
+  "version": "10.1.12",
   "main": "./cjs/node.js",
   "module": "./node.js",
   "browser": "./cjs/browser.js",
@@ -79,9 +79,9 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.19.4",
-    "@polkadot/x-global": "10.1.11",
+    "@babel/runtime": "^7.20.1",
+    "@polkadot/x-global": "10.1.12",
     "@types/node-fetch": "^2.6.2",
-    "node-fetch": "^3.2.10"
+    "node-fetch": "^3.3.0"
   }
 }

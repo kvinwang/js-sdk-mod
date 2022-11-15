@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.stringUpperFirst = exports.stringLowerFirst = void 0;
-
 var _camelCase = require("./camelCase");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -14,6 +12,7 @@ var _camelCase = require("./camelCase");
 function converter(map) {
   return value => value ? map[value.charCodeAt(0)] + value.slice(1) : '';
 }
+
 /**
  * @name stringLowerFirst
  * @summary Lowercase the first letter of a string
@@ -28,9 +27,8 @@ function converter(map) {
  * stringLowerFirst('ABC'); // => 'aBC'
  * ```
  */
-
-
 const stringLowerFirst = converter(_camelCase.CC_TO_LO);
+
 /**
  * @name stringUpperFirst
  * @summary Uppercase the first letter of a string
@@ -45,7 +43,6 @@ const stringLowerFirst = converter(_camelCase.CC_TO_LO);
  * stringUpperFirst('abc'); // => 'Abc'
  * ```
  */
-
 exports.stringLowerFirst = stringLowerFirst;
 const stringUpperFirst = converter(_camelCase.CC_TO_UP);
 exports.stringUpperFirst = stringUpperFirst;

@@ -1,7 +1,6 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -12,19 +11,15 @@ Object.defineProperty(exports, "packageInfo", {
     return _packageInfo.packageInfo;
   }
 });
-
 var _crypto = _interopRequireDefault(require("crypto"));
-
 var _packageInfo = require("./packageInfo");
-
 // Copyright 2017-2022 @polkadot/x-randomvalues authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 function getRandomValues(output) {
   const bytes = _crypto.default.randomBytes(output.length);
-
   for (let i = 0; i < bytes.length; i++) {
     output[i] = bytes[i];
   }
-
   return output;
 }

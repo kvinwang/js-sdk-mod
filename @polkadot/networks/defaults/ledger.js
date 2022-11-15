@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/networks authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 // These match up with the keys of the ledgerApps object in the @polkadot/hw-ledger/defaults.ts
 // and maps to the known slip44 (minus the `0x8` hard derivation flag)
 //

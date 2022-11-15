@@ -4,11 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.hexFixLength = hexFixLength;
-
 var _addPrefix = require("./addPrefix");
-
 var _stripPrefix = require("./stripPrefix");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

@@ -15,5 +15,4 @@ Object.defineProperty(exports, "packageInfo", {
     return _browser.packageInfo;
   }
 });
-
 var _browser = require("./browser");

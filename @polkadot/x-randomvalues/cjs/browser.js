@@ -10,13 +10,11 @@ Object.defineProperty(exports, "packageInfo", {
     return _packageInfo.packageInfo;
   }
 });
-
 var _xGlobal = require("@polkadot/x-global");
-
 var _packageInfo = require("./packageInfo");
-
 // Copyright 2017-2022 @polkadot/x-randomvalues authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 function getRandomValues(arr) {
   // We use x-global here - this prevents packagers such as rollup
   // confusing this with the "normal" Node.js import and stubbing it

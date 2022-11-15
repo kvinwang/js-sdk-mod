@@ -38,7 +38,7 @@ export const rpc = {
     description: 'Instantiate a new contract',
     params: [{
       name: 'request',
-      type: 'InstantiateRequest'
+      type: 'InstantiateRequestV1'
     }, {
       isHistoric: true,
       isOptional: true,

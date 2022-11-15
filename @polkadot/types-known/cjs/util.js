@@ -18,12 +18,18 @@ var _upgrades = _interopRequireDefault(require("./upgrades"));
 // Copyright 2017-2022 @polkadot/types-known authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * @description Perform the callback function using the stringified spec/chain
+ * @internal
+ * */
 function withNames(chainName, specName, fn) {
   return fn(chainName.toString(), specName.toString());
 }
 
-// flatten a VersionedType[] into a Record<string, string>
-/** @internal */
+/**
+ * @descriptionFflatten a VersionedType[] into a Record<string, string>
+ * @internal
+ * */
 function filterVersions() {
   let versions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   let specVersion = arguments.length > 1 ? arguments[1] : undefined;
@@ -72,6 +78,10 @@ function getSpecTypes(_ref4, chainName, specName, specVersion) {
     );
   });
 }
+
+/**
+ * @description Based on the chain or spec, return the hasher used
+ */
 function getSpecHasher(_ref5, chainName, specName) {
   let {
     knownTypes

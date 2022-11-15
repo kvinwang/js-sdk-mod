@@ -4,19 +4,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.bnToBn = bnToBn;
-
 var _toBn = require("../hex/toBn");
-
 var _bigInt = require("../is/bigInt");
-
 var _hex = require("../is/hex");
-
 var _toBigInt = require("../is/toBigInt");
-
 var _toBn2 = require("../is/toBn");
-
 var _bn = require("./bn");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

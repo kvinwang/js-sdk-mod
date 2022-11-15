@@ -20,18 +20,6 @@ const NET_EXTRA = {
 };
 
 /** @internal */
-function checkOrder(network, versions) {
-  const ooo = versions.filter((curr, index) => {
-    const prev = versions[index - 1];
-    return index === 0 ? false : curr[0] <= prev[0] || curr[1] <= prev[1];
-  });
-  if (ooo.length) {
-    throw new Error(`${network}: Mismatched upgrade ordering: ${(0, _util.stringify)(ooo)}`);
-  }
-  return versions;
-}
-
-/** @internal */
 function mapRaw(_ref) {
   let [network, versions] = _ref;
   const chain = _networks.selectableNetworks.find(n => n.network === network) || NET_EXTRA[network];
@@ -41,7 +29,7 @@ function mapRaw(_ref) {
   return {
     genesisHash: (0, _util.hexToU8a)(chain.genesisHash[0]),
     network,
-    versions: checkOrder(network, versions).map(_ref2 => {
+    versions: versions.map(_ref2 => {
       let [blockNumber, specVersion, apis] = _ref2;
       return {
         apis,

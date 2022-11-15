@@ -57,19 +57,11 @@ Object.defineProperty(exports, "ed25519Verify", {
     return _verify.ed25519Verify;
   }
 });
-
 var _convertKey = require("./convertKey");
-
 var _deriveHard = require("./deriveHard");
-
 var _fromRandom = require("./pair/fromRandom");
-
 var _fromSecret = require("./pair/fromSecret");
-
 var _fromSeed = require("./pair/fromSeed");
-
 var _fromString = require("./pair/fromString");
-
 var _sign = require("./sign");
-
 var _verify = require("./verify");

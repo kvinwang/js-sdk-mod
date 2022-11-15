@@ -4,6 +4,7 @@
 /**
  * @summary Internal utilities to create and test for hex values
  */
+
 export { hexAddPrefix } from "./addPrefix.js";
 export { hexFixLength } from "./fixLength.js";
 export { hexHasPrefix } from "./hasPrefix.js";

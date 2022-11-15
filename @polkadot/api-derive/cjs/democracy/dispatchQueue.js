@@ -13,6 +13,9 @@ var _util3 = require("./util");
 // SPDX-License-Identifier: Apache-2.0
 
 const DEMOCRACY_ID = (0, _util.stringToHex)('democrac');
+
+// included here for backwards compat
+
 function isMaybeHashedOrBounded(call) {
   // check for enum
   return call instanceof _types.Enum;

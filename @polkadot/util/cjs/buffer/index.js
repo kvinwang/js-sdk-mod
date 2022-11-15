@@ -9,5 +9,4 @@ Object.defineProperty(exports, "bufferToU8a", {
     return _toU8a.bufferToU8a;
   }
 });
-
 var _toU8a = require("./toU8a");

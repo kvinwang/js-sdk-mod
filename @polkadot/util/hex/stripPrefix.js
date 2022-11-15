@@ -1,6 +1,8 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { REGEX_HEX_NOPREFIX, REGEX_HEX_PREFIXED } from "../is/hex.js";
+
 /**
  * @name hexStripPrefix
  * @summary Strips any leading `0x` prefix.
@@ -15,7 +17,6 @@ import { REGEX_HEX_NOPREFIX, REGEX_HEX_PREFIXED } from "../is/hex.js";
  * console.log('stripped', hexStripPrefix('0x1234')); // => 1234
  * ```
  */
-
 export function hexStripPrefix(value) {
   if (!value || value === '0x') {
     return '';
@@ -24,6 +25,5 @@ export function hexStripPrefix(value) {
   } else if (REGEX_HEX_NOPREFIX.test(value)) {
     return value;
   }
-
   throw new Error(`Expected hex value to convert, found '${value}'`);
 }

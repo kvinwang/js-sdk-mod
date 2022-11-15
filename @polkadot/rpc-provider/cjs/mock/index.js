@@ -71,7 +71,9 @@ class MockProvider {
       ss58Format: 42
     }),
     system_upgradedToTripleRefCount: () => this.registry.createType('bool', true),
-    system_version: () => '9.8.7'
+    system_version: () => '9.8.7',
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, sort-keys
+    dev_echo: (_, params) => params
   };
   subscriptions = SUBSCRIPTIONS.reduce((subs, name) => {
     subs[name] = {

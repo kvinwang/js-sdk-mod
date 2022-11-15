@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { availableNetworks } from "../networks.js";
 export const defaults = {
   allowedDecodedLengths: [1, 2, 4, 8, 32, 33],

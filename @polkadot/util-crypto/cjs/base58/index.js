@@ -27,5 +27,4 @@ Object.defineProperty(exports, "isBase58", {
     return _bs.isBase58;
   }
 });
-
 var _bs = require("./bs58");

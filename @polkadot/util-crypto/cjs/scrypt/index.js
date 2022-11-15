@@ -21,9 +21,6 @@ Object.defineProperty(exports, "scryptToU8a", {
     return _toU8a.scryptToU8a;
   }
 });
-
 var _encode = require("./encode");
-
 var _fromU8a = require("./fromU8a");
-
 var _toU8a = require("./toU8a");

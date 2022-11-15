@@ -21,9 +21,6 @@ Object.defineProperty(exports, "hdValidatePath", {
     return _validatePath.hdValidatePath;
   }
 });
-
 var _ethereum = require("./ethereum");
-
 var _ledger = require("./ledger");
-
 var _validatePath = require("./validatePath");

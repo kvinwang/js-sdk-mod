@@ -1,6 +1,8 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import nacl from 'tweetnacl';
+
 /**
  * @name naclBoxPairFromSecret
  * @summary Creates a new public/secret box keypair from a secret.
@@ -15,7 +17,6 @@ import nacl from 'tweetnacl';
  * naclBoxPairFromSecret(...); // => { secretKey: [...], publicKey: [...] }
  * ```
  */
-
 export function naclBoxPairFromSecret(secret) {
   return nacl.box.keyPair.fromSecretKey(secret.slice(0, 32));
 }

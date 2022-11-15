@@ -78,6 +78,13 @@ export default {
       result: 'ContractExecResultResult'
     },
     ContractExecResult: {
+      gasConsumed: 'Weight',
+      gasRequired: 'Weight',
+      storageDeposit: 'StorageDeposit',
+      debugMessage: 'Text',
+      result: 'ContractExecResultResult'
+    },
+    ContractExecResultU64: {
       gasConsumed: 'u64',
       gasRequired: 'u64',
       storageDeposit: 'StorageDeposit',
@@ -247,6 +254,15 @@ export default {
     ContractInstantiateResultTo267: 'Result<InstantiateReturnValueTo267, Null>',
     ContractInstantiateResultTo299: 'Result<InstantiateReturnValueOk, Null>',
     ContractInstantiateResult: {
+      gasConsumed: 'WeightV2',
+      gasRequired: 'WeightV2',
+      storageDeposit: 'StorageDeposit',
+      debugMessage: 'Text',
+      result: 'InstantiateReturnValue'
+    },
+    ContractInstantiateResultU64: {
+      // only this one can fail, the current version (above) _should_ be correctly
+      // versioned now, aka no more deprecated RPCs involved, only runtime calls
       _fallback: 'ContractInstantiateResultTo299',
       gasConsumed: 'u64',
       gasRequired: 'u64',

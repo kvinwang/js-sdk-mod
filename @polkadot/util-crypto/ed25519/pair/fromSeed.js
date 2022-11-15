@@ -1,7 +1,9 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import nacl from 'tweetnacl';
 import { ed25519KeypairFromSeed, isReady } from '@polkadot/wasm-crypto';
+
 /**
  * @name ed25519PairFromSeed
  * @summary Creates a new public/secret keypair from a seed.
@@ -16,7 +18,6 @@ import { ed25519KeypairFromSeed, isReady } from '@polkadot/wasm-crypto';
  * ed25519PairFromSeed(...); // => { secretKey: [...], publicKey: [...] }
  * ```
  */
-
 export function ed25519PairFromSeed(seed, onlyJs) {
   if (!onlyJs && isReady()) {
     const full = ed25519KeypairFromSeed(seed);
@@ -25,6 +26,5 @@ export function ed25519PairFromSeed(seed, onlyJs) {
       secretKey: full.slice(0, 64)
     };
   }
-
   return nacl.sign.keyPair.fromSeed(seed);
 }

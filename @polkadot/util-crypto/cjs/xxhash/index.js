@@ -15,5 +15,4 @@ Object.defineProperty(exports, "xxhashAsU8a", {
     return _asU8a.xxhashAsU8a;
   }
 });
-
 var _asU8a = require("./asU8a");

@@ -1,7 +1,7 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import { isFunction } from "./is/function.js";
 
+import { isFunction } from "./is/function.js";
 /**
  * @name assert
  * @summary Checks for a valid test, if not Error is thrown.
@@ -23,20 +23,20 @@ export function assert(condition, message) {
     throw new Error(isFunction(message) ? message() : message);
   }
 }
+
 /**
  * @name assertReturn
  * @description Returns when the value is not undefined/null, otherwise throws assertion error
  */
-
 export function assertReturn(value, message) {
   assert(value !== undefined && value !== null, message);
   return value;
 }
+
 /**
  * @name assertUnreachable
  * @description An assertion helper that ensures all codepaths are followed
  */
-
 export function assertUnreachable(x) {
   throw new Error(`This codepath should be unreachable. Unhandled input: ${x}`);
 }

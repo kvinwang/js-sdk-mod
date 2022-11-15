@@ -23,34 +23,32 @@ export function lazyMethod(result, item, creator, getName, index = 0) {
       // all environment failures, so we are rather be safe than sorry
       if (value === undefined) {
         value = creator(item, index, this);
-
         try {
           // re-define the property as a value, next time around this
           // getter will only return the computed value
           Object.defineProperty(this, name, {
             value
           });
-        } catch {// ignore any errors, since this _should_ not happen due to
+        } catch {
+          // ignore any errors, since this _should_ not happen due to
           // the "configurable" property above. But if it ever does
           // from here-on we will be the cached value the next time
           // around (with a very slight dip in performance)
         }
       }
-
       return value;
     }
   });
 }
+
 /**
  * @name lazyMethods
  * @description
  * Creates lazy, on-demand getters for the specific values.
  */
-
 export function lazyMethods(result, items, creator, getName) {
   for (let i = 0; i < items.length; i++) {
     lazyMethod(result, items[i], creator, getName, i);
   }
-
   return result;
 }

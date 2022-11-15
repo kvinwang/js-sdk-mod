@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.isJsonObject = isJsonObject;
-
 var _stringify = require("../stringify");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +34,6 @@ var _stringify = require("../stringify");
  */
 function isJsonObject(value) {
   const str = typeof value !== 'string' ? (0, _stringify.stringify)(value) : value;
-
   try {
     const obj = JSON.parse(str);
     return typeof obj === 'object' && obj !== null;

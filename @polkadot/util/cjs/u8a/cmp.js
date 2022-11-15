@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.u8aCmp = u8aCmp;
-
 var _toU8a = require("./toU8a");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -30,11 +28,9 @@ function u8aCmp(a, b) {
   const u8aa = (0, _toU8a.u8aToU8a)(a);
   const u8ab = (0, _toU8a.u8aToU8a)(b);
   let i = 0;
-
   while (true) {
     const overA = i >= u8aa.length;
     const overB = i >= u8ab.length;
-
     if (overA && overB) {
       // both ends reached
       return 0;
@@ -49,7 +45,6 @@ function u8aCmp(a, b) {
       // (we don't use u8aa[i] - u8ab[i] since that doesn't match with localeCompare)
       return u8aa[i] > u8ab[i] ? 1 : -1;
     }
-
     i++;
   }
 }

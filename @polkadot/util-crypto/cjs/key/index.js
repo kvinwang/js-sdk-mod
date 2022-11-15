@@ -39,15 +39,9 @@ Object.defineProperty(exports, "keyHdkdSr25519", {
     return _hdkdSr.keyHdkdSr25519;
   }
 });
-
 var _extractPath = require("./extractPath");
-
 var _extractSuri = require("./extractSuri");
-
 var _fromPath = require("./fromPath");
-
 var _hdkdEd = require("./hdkdEd25519");
-
 var _hdkdSr = require("./hdkdSr25519");
-
 var _hdkdEcdsa = require("./hdkdEcdsa");

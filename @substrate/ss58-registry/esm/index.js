@@ -889,6 +889,19 @@ export default [
 		"website": "https://polkadex.trade"
 	},
 	{
+		"prefix": 90,
+		"network": "frequency",
+		"displayName": "Frequency",
+		"symbols": [
+			"FRQCY"
+		],
+		"decimals": [
+			8
+		],
+		"standardAccount": "*25519",
+		"website": "https://www.frequency.xyz"
+	},
+	{
 		"prefix": 92,
 		"network": "anmol",
 		"displayName": "Anmol Network",

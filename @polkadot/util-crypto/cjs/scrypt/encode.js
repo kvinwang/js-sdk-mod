@@ -4,19 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.scryptEncode = scryptEncode;
-
 var _scrypt = require("@noble/hashes/scrypt");
-
 var _util = require("@polkadot/util");
-
 var _wasmCrypto = require("@polkadot/wasm-crypto");
-
 var _asU8a = require("../random/asU8a");
-
 var _defaults = require("./defaults");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 function scryptEncode(passphrase) {
   let salt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0, _asU8a.randomAsU8a)();
   let params = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _defaults.DEFAULT_PARAMS;

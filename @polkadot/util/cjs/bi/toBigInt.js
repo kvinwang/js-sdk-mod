@@ -4,19 +4,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.nToBigInt = nToBigInt;
-
 var _xBigint = require("@polkadot/x-bigint");
-
 var _toBigInt = require("../hex/toBigInt");
-
 var _bn = require("../is/bn");
-
 var _hex = require("../is/hex");
-
 var _toBigInt2 = require("../is/toBigInt");
-
 var _toBn = require("../is/toBn");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

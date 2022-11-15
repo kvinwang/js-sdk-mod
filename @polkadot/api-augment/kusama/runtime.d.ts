@@ -383,7 +383,7 @@ declare module '@polkadot/api-base/types/calls' {
              **/
             [key: string]: DecoratedCallBase<ApiType>;
         };
-        /** 0x37c8bb1350a9a2a8/1 */
+        /** 0x37c8bb1350a9a2a8/2 */
         transactionPaymentApi: {
             /**
              * The transaction fee details
@@ -398,7 +398,7 @@ declare module '@polkadot/api-base/types/calls' {
              **/
             [key: string]: DecoratedCallBase<ApiType>;
         };
-        /** 0xf3ff14d5ab527059/1 */
+        /** 0xf3ff14d5ab527059/2 */
         transactionPaymentCallApi: {
             /**
              * The call fee details

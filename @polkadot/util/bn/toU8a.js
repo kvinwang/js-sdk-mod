@@ -1,11 +1,13 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { bnToBn } from "./toBn.js";
 const DEFAULT_OPTS = {
   bitLength: -1,
   isLe: true,
   isNegative: false
 };
+
 /**
  * @name bnToU8a
  * @summary Creates a Uint8Array object from a BN.
@@ -20,7 +22,6 @@ const DEFAULT_OPTS = {
  * bnToU8a(new BN(0x1234)); // => [0x12, 0x34]
  * ```
  */
-
 export function bnToU8a(value, {
   bitLength = -1,
   isLe = true,
@@ -28,11 +29,9 @@ export function bnToU8a(value, {
 } = DEFAULT_OPTS) {
   const valueBn = bnToBn(value);
   const byteLength = bitLength === -1 ? Math.ceil(valueBn.bitLength() / 8) : Math.ceil((bitLength || 0) / 8);
-
   if (!value) {
     return bitLength === -1 ? new Uint8Array(1) : new Uint8Array(byteLength);
   }
-
   const output = new Uint8Array(byteLength);
   const bn = isNegative ? valueBn.toTwos(byteLength * 8) : valueBn;
   output.set(bn.toArray(isLe ? 'le' : 'be', byteLength), 0);

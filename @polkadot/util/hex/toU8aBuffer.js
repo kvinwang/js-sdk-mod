@@ -20,23 +20,18 @@ export function hexToU8a(_value, bitLength = -1) {
   if (!_value) {
     return new Uint8Array();
   }
-
   const value = _value.startsWith('0x') ? _value.substring(2) : _value;
   const buf = Buffer.from(value, 'hex');
   const valLength = value.length / 2;
   const resultLength = Math.ceil(bitLength === -1 ? valLength : bitLength / 8);
-
   if (resultLength === valLength) {
     return Uint8Array.from(buf);
   }
-
   const offset = resultLength > valLength ? resultLength - valLength : 0;
-
   if (offset) {
     const u8a = new Uint8Array(resultLength);
     u8a.set(buf, offset);
     return u8a;
   }
-
   return Uint8Array.from(buf.slice(0, resultLength));
 }

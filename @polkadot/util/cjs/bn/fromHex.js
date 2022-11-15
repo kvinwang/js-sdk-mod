@@ -9,5 +9,4 @@ Object.defineProperty(exports, "bnFromHex", {
     return _toBn.hexToBn;
   }
 });
-
 var _toBn = require("../hex/toBn");

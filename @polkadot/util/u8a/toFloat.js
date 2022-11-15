@@ -15,7 +15,6 @@ export function u8aToFloat(value, {
   } else if (value.length < bitLength / 8) {
     throw new Error(`Invalid input buffer provided, expected at least ${bitLength / 8} bytes, found ${value.length}`);
   }
-
   const dv = new DataView(value.buffer, value.byteOffset);
   return bitLength === 32 ? dv.getFloat32(0, isLe) : dv.getFloat64(0, isLe);
 }

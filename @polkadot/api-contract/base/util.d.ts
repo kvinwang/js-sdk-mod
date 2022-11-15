@@ -13,4 +13,5 @@ export declare function withMeta<T extends {
 export declare function createBluePrintTx<ApiType extends ApiTypes, R extends SubmittableResult>(meta: AbiMessage, fn: (options: BlueprintOptions, params: unknown[]) => SubmittableExtrinsic<ApiType, R>): BlueprintDeploy<ApiType>;
 export declare function createBluePrintWithId<T>(fn: (constructorOrId: AbiConstructor | string | number, options: BlueprintOptions, params: unknown[]) => T): ContractGeneric<BlueprintOptions, T>;
 export declare function encodeSalt(salt?: Uint8Array | string | null): Uint8Array;
-export declare function convertWeight(orig: WeightV1 | WeightV2 | bigint | string | number | BN): WeightAll;
+export declare function convertWeight(weight: WeightV1 | WeightV2 | bigint | string | number | BN): WeightAll;
+export declare function isWeightV2(weight: WeightV1 | WeightV2 | bigint | string | number | BN): weight is WeightV2;

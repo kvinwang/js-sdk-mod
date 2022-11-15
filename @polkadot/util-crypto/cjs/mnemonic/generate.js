@@ -4,13 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.mnemonicGenerate = mnemonicGenerate;
-
 var _util = require("@polkadot/util");
-
 var _wasmCrypto = require("@polkadot/wasm-crypto");
-
 var _bip = require("./bip39");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

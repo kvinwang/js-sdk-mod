@@ -99,35 +99,19 @@ Object.defineProperty(exports, "validateAddress", {
     return _validate.validateAddress;
   }
 });
-
 var _addressToEvm = require("./addressToEvm");
-
 var _check = require("./check");
-
 var _checksum = require("./checksum");
-
 var _keyMulti = require("./keyMulti");
-
 var _keyDerived = require("./keyDerived");
-
 var _decode = require("./decode");
-
 var _derive = require("./derive");
-
 var _encode = require("./encode");
-
 var _encodeDerived = require("./encodeDerived");
-
 var _encodeMulti = require("./encodeMulti");
-
 var _evmToAddress = require("./evmToAddress");
-
 var _eq = require("./eq");
-
 var _is = require("./is");
-
 var _setSS58Format = require("./setSS58Format");
-
 var _sort = require("./sort");
-
 var _validate = require("./validate");

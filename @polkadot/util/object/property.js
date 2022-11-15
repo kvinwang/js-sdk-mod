@@ -6,13 +6,14 @@
  * @summary Assign a get property on the input object
  */
 export function objectProperty(that, key, getter, getName, index = 0) {
-  const name = getName ? getName(key, index) : key; // There are 3 approaches here -
+  const name = getName ? getName(key, index) : key;
+
+  // There are 3 approaches here -
   //  - Object.prototype.hasOwnProperty.call(that, key) - this only checks the current class, i.e
   //    will retuirn false if the property is set in the parent class
   //  - isUndefined(...) - this may yield a false positive when the property is there, but not set.
   //    Additionally, on pre-defined getters it may make a call
   //  - key in that - Does not need to be combined with either of the above and checks the full chain
-
   if (!(name in that)) {
     Object.defineProperty(that, name, {
       enumerable: true,
@@ -24,11 +25,11 @@ export function objectProperty(that, key, getter, getName, index = 0) {
     });
   }
 }
+
 /**
  * @name objectProperties
  * @summary Assign get properties on the input object
  */
-
 export function objectProperties(that, keys, getter, getName) {
   for (let i = 0; i < keys.length; i++) {
     objectProperty(that, keys[i], getter, getName, i);

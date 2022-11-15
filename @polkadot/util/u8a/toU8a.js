@@ -1,10 +1,12 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { hexToU8a } from "../hex/toU8a.js";
 import { isBuffer } from "../is/buffer.js";
 import { isHex } from "../is/hex.js";
 import { isU8a } from "../is/u8a.js";
 import { stringToU8a } from "../string/toU8a.js";
+
 /**
  * @name u8aToU8a
  * @summary Creates a Uint8Array value from a Uint8Array, Buffer, string or hex input.
@@ -20,7 +22,6 @@ import { stringToU8a } from "../string/toU8a.js";
  * u8aToU8a(0x1234); // => Uint8Array([0x12, 0x34])
  * ```
  */
-
 export function u8aToU8a(value) {
   return isU8a(value) ? value : isHex(value) ? hexToU8a(value) : isBuffer(value) || Array.isArray(value) ? new Uint8Array(value) : stringToU8a(value);
 }

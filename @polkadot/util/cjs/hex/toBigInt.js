@@ -4,13 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.hexToBigInt = hexToBigInt;
-
 var _xBigint = require("@polkadot/x-bigint");
-
 var _toBigInt = require("../u8a/toBigInt");
-
 var _toU8a = require("./toU8a");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

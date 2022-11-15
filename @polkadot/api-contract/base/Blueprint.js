@@ -37,9 +37,10 @@ export class Blueprint extends Base {
     storageDepositLimit = null,
     value = BN_ZERO
   }, params) => {
-    return this.api.tx.contracts.instantiate(value, this._isOldWeight
-    // jiggle v1 weights, metadata points to latest
-    ? convertWeight(gasLimit).v1Weight : convertWeight(gasLimit).v2Weight, storageDepositLimit, this.codeHash, this.abi.findConstructor(constructorOrId).toU8a(params), encodeSalt(salt)).withResultTransform(result => new BlueprintSubmittableResult(result, applyOnEvent(result, ['Instantiated'], ([record]) => new Contract(this.api, this.abi, record.event.data[1], this._decorateMethod))));
+    return this.api.tx.contracts.instantiate(value,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore jiggle v1 weights, metadata points to latest
+    this._isWeightV1 ? convertWeight(gasLimit).v1Weight : convertWeight(gasLimit).v2Weight, storageDepositLimit, this.codeHash, this.abi.findConstructor(constructorOrId).toU8a(params), encodeSalt(salt)).withResultTransform(result => new BlueprintSubmittableResult(result, applyOnEvent(result, ['Instantiated'], ([record]) => new Contract(this.api, this.abi, record.event.data[1], this._decorateMethod))));
   };
 }
 export function extendBlueprint(type, decorateMethod) {

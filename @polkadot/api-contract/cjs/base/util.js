@@ -8,6 +8,7 @@ exports.convertWeight = convertWeight;
 exports.createBluePrintTx = createBluePrintTx;
 exports.createBluePrintWithId = createBluePrintWithId;
 exports.encodeSalt = encodeSalt;
+exports.isWeightV2 = isWeightV2;
 exports.withMeta = withMeta;
 var _types = require("@polkadot/types");
 var _util = require("@polkadot/util");
@@ -41,12 +42,16 @@ function encodeSalt() {
   let salt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _utilCrypto.randomAsU8a)();
   return salt instanceof _types.Bytes ? salt : salt && salt.length ? (0, _util.compactAddLength)((0, _util.u8aToU8a)(salt)) : EMPTY_SALT;
 }
-function convertWeight(orig) {
-  const refTime = orig.proofSize ? orig.refTime.toBn() : (0, _util.bnToBn)(orig);
+function convertWeight(weight) {
+  const [refTime, proofSize] = isWeightV2(weight) ? [weight.refTime.toBn(), weight.proofSize.toBn()] : [(0, _util.bnToBn)(weight), undefined];
   return {
     v1Weight: refTime,
     v2Weight: {
+      proofSize,
       refTime
     }
   };
+}
+function isWeightV2(weight) {
+  return !!weight.proofSize;
 }

@@ -4,11 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.defaults = void 0;
-
 var _networks = require("../networks");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const defaults = {
   allowedDecodedLengths: [1, 2, 4, 8, 32, 33],
   // publicKey has prefix + 2 checksum bytes, short only prefix + 1 checksum byte

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.BN_LE_OPTS = exports.BN_LE_512_OPTS = exports.BN_LE_32_OPTS = exports.BN_LE_256_OPTS = exports.BN_LE_16_OPTS = exports.BN_BE_OPTS = exports.BN_BE_32_OPTS = exports.BN_BE_256_OPTS = void 0;
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const BN_BE_OPTS = {
   isLe: false
 };

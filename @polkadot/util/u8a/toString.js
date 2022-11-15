@@ -1,7 +1,9 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { TextDecoder } from '@polkadot/x-textdecoder';
 const decoder = new TextDecoder('utf-8');
+
 /**
  * @name u8aToString
  * @summary Creates a utf-8 string from a Uint8Array object.
@@ -16,7 +18,6 @@ const decoder = new TextDecoder('utf-8');
  * u8aToString(new Uint8Array([0x68, 0x65, 0x6c, 0x6c, 0x6f])); // hello
  * ```
  */
-
 export function u8aToString(value) {
   return value ? decoder.decode(value) : '';
 }

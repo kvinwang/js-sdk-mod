@@ -1,6 +1,8 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { isOn } from "./helpers.js";
+
 /**
  * @name isBObservable
  * @summary Tests for a `Observable` object instance.
@@ -15,5 +17,4 @@ import { isOn } from "./helpers.js";
  * console.log('isObservable', isObservable(...));
  * ```
  */
-
 export const isObservable = isOn('next');

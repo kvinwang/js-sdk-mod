@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.arrayRange = arrayRange;
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,16 +24,12 @@ exports.arrayRange = arrayRange;
  */
 function arrayRange(size) {
   let startAt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-
   if (size <= 0) {
     throw new Error('Expected non-zero, positive number as a range size');
   }
-
   const result = new Array(size);
-
   for (let i = 0; i < size; i++) {
     result[i] = i + startAt;
   }
-
   return result;
 }

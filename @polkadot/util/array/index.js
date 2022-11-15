@@ -4,6 +4,7 @@
 /**
  * @summary Utility methods that operates on arrays
  */
+
 export { arrayChunk } from "./chunk.js";
 export { arrayFilter } from "./filter.js";
 export { arrayFlatten } from "./flatten.js";

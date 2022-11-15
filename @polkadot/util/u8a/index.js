@@ -4,6 +4,7 @@
 /**
  * @summary Utility methods to convert to and from `Uint8Array` objects
  */
+
 export { u8aCmp } from "./cmp.js";
 export { u8aConcat, u8aConcatStrict } from "./concat.js";
 export { u8aEmpty } from "./empty.js";

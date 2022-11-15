@@ -45,17 +45,10 @@ Object.defineProperty(exports, "arrayZip", {
     return _zip.arrayZip;
   }
 });
-
 var _chunk = require("./chunk");
-
 var _filter = require("./filter");
-
 var _flatten = require("./flatten");
-
 var _range = require("./range");
-
 var _shuffle = require("./shuffle");
-
 var _unzip = require("./unzip");
-
 var _zip = require("./zip");

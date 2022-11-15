@@ -47,9 +47,7 @@ Object.defineProperty(exports, "nToU8a", {
     return _toU8a.nToU8a;
   }
 });
-
 var _consts = require("./consts");
-
 Object.keys(_consts).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -61,13 +59,8 @@ Object.keys(_consts).forEach(function (key) {
     }
   });
 });
-
 var _sqrt = require("./sqrt");
-
 var _toBigInt = require("./toBigInt");
-
 var _min = require("./min");
-
 var _toHex = require("./toHex");
-
 var _toU8a = require("./toU8a");

@@ -171,59 +171,31 @@ Object.defineProperty(exports, "isWasm", {
     return _wasm.isWasm;
   }
 });
-
 var _array = require("./array");
-
 var _ascii = require("./ascii");
-
 var _bigInt = require("./bigInt");
-
 var _bn = require("./bn");
-
 var _buffer = require("./buffer");
-
 var _boolean = require("./boolean");
-
 var _childClass = require("./childClass");
-
 var _codec = require("./codec");
-
 var _compact = require("./compact");
-
 var _error = require("./error");
-
 var _function = require("./function");
-
 var _hex = require("./hex");
-
 var _instanceOf = require("./instanceOf");
-
 var _ip = require("./ip");
-
 var _jsonObject = require("./jsonObject");
-
 var _null = require("./null");
-
 var _number = require("./number");
-
 var _object = require("./object");
-
 var _observable = require("./observable");
-
 var _promise = require("./promise");
-
 var _string = require("./string");
-
 var _testChain = require("./testChain");
-
 var _toBigInt = require("./toBigInt");
-
 var _toBn = require("./toBn");
-
 var _u8a = require("./u8a");
-
 var _undefined = require("./undefined");
-
 var _utf = require("./utf8");
-
 var _wasm = require("./wasm");

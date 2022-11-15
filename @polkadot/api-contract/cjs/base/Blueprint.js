@@ -46,9 +46,10 @@ class Blueprint extends _Base.Base {
       storageDepositLimit = null,
       value = _util.BN_ZERO
     } = _ref;
-    return this.api.tx.contracts.instantiate(value, this._isOldWeight
-    // jiggle v1 weights, metadata points to latest
-    ? (0, _util3.convertWeight)(gasLimit).v1Weight : (0, _util3.convertWeight)(gasLimit).v2Weight, storageDepositLimit, this.codeHash, this.abi.findConstructor(constructorOrId).toU8a(params), (0, _util3.encodeSalt)(salt)).withResultTransform(result => new BlueprintSubmittableResult(result, (0, _util2.applyOnEvent)(result, ['Instantiated'], _ref2 => {
+    return this.api.tx.contracts.instantiate(value,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore jiggle v1 weights, metadata points to latest
+    this._isWeightV1 ? (0, _util3.convertWeight)(gasLimit).v1Weight : (0, _util3.convertWeight)(gasLimit).v2Weight, storageDepositLimit, this.codeHash, this.abi.findConstructor(constructorOrId).toU8a(params), (0, _util3.encodeSalt)(salt)).withResultTransform(result => new BlueprintSubmittableResult(result, (0, _util2.applyOnEvent)(result, ['Instantiated'], _ref2 => {
       let [record] = _ref2;
       return new _Contract.Contract(this.api, this.abi, record.event.data[1], this._decorateMethod);
     })));

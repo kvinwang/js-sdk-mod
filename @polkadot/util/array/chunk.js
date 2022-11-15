@@ -16,18 +16,16 @@
  * ```
  */
 export function arrayChunk(array, chunkSize) {
-  const outputSize = Math.ceil(array.length / chunkSize); // noop for the single-split case
+  const outputSize = Math.ceil(array.length / chunkSize);
 
+  // noop for the single-split case
   if (outputSize === 1) {
     return [array];
   }
-
   const output = Array(outputSize);
-
   for (let i = 0; i < outputSize; i++) {
     const offset = i * chunkSize;
     output[i] = array.slice(offset, offset + chunkSize);
   }
-
   return output;
 }

@@ -5,15 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.blake2AsHex = void 0;
 exports.blake2AsU8a = blake2AsU8a;
-
 var _blake2b = require("@noble/hashes/blake2b");
-
 var _util = require("@polkadot/util");
-
 var _wasmCrypto = require("@polkadot/wasm-crypto");
-
 var _helpers = require("../helpers");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -42,11 +37,10 @@ function blake2AsU8a(data) {
     key: key || undefined
   });
 }
+
 /**
  * @name blake2AsHex
  * @description Creates a blake2b hex from the input.
  */
-
-
 const blake2AsHex = (0, _helpers.createAsHex)(blake2AsU8a);
 exports.blake2AsHex = blake2AsHex;

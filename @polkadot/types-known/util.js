@@ -5,12 +5,19 @@ import { bnToBn, objectSpread } from '@polkadot/util';
 import typesChain from "./chain/index.js";
 import typesSpec from "./spec/index.js";
 import upgrades from "./upgrades/index.js";
+
+/**
+ * @description Perform the callback function using the stringified spec/chain
+ * @internal
+ * */
 function withNames(chainName, specName, fn) {
   return fn(chainName.toString(), specName.toString());
 }
 
-// flatten a VersionedType[] into a Record<string, string>
-/** @internal */
+/**
+ * @descriptionFflatten a VersionedType[] into a Record<string, string>
+ * @internal
+ * */
 function filterVersions(versions = [], specVersion) {
   return versions.filter(({
     minmax: [min, max]
@@ -49,6 +56,10 @@ export function getSpecTypes({
     );
   });
 }
+
+/**
+ * @description Based on the chain or spec, return the hasher used
+ */
 export function getSpecHasher({
   knownTypes
 }, chainName, specName) {

@@ -21,5 +21,4 @@ Object.defineProperty(exports, "shaAsU8a", {
     return _asU8a.shaAsU8a;
   }
 });
-
 var _asU8a = require("./asU8a");

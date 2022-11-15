@@ -4,11 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.encodeMultiAddress = encodeMultiAddress;
-
 var _encode = require("./encode");
-
 var _keyMulti = require("./keyMulti");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 

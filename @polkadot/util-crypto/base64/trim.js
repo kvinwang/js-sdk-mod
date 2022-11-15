@@ -9,6 +9,5 @@ export function base64Trim(value) {
   while (value.length && value[value.length - 1] === '=') {
     value = value.slice(0, -1);
   }
-
   return value;
 }

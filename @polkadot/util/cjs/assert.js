@@ -6,9 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.assert = assert;
 exports.assertReturn = assertReturn;
 exports.assertUnreachable = assertUnreachable;
-
 var _function = require("./is/function");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -33,22 +31,20 @@ function assert(condition, message) {
     throw new Error((0, _function.isFunction)(message) ? message() : message);
   }
 }
+
 /**
  * @name assertReturn
  * @description Returns when the value is not undefined/null, otherwise throws assertion error
  */
-
-
 function assertReturn(value, message) {
   assert(value !== undefined && value !== null, message);
   return value;
 }
+
 /**
  * @name assertUnreachable
  * @description An assertion helper that ensures all codepaths are followed
  */
-
-
 function assertUnreachable(x) {
   throw new Error(`This codepath should be unreachable. Unhandled input: ${x}`);
 }

@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.isChildClass = isChildClass;
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -25,6 +24,7 @@ exports.isChildClass = isChildClass;
  */
 function isChildClass(Parent, Child) {
   // https://stackoverflow.com/questions/30993434/check-if-a-constructor-inherits-another-in-es6/30993664
-  return Child // eslint-disable-next-line no-prototype-builtins
+  return Child
+  // eslint-disable-next-line no-prototype-builtins
   ? Parent === Child || Parent.isPrototypeOf(Child) : false;
 }

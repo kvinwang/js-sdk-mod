@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { selectableNetworks } from '@polkadot/networks';
-import { BN, hexToU8a, stringify } from '@polkadot/util';
+import { BN, hexToU8a } from '@polkadot/util';
 import * as allKnown from "./e2e/index.js";
 
 // testnets are not available in the networks map
@@ -13,18 +13,6 @@ const NET_EXTRA = {
 };
 
 /** @internal */
-function checkOrder(network, versions) {
-  const ooo = versions.filter((curr, index) => {
-    const prev = versions[index - 1];
-    return index === 0 ? false : curr[0] <= prev[0] || curr[1] <= prev[1];
-  });
-  if (ooo.length) {
-    throw new Error(`${network}: Mismatched upgrade ordering: ${stringify(ooo)}`);
-  }
-  return versions;
-}
-
-/** @internal */
 function mapRaw([network, versions]) {
   const chain = selectableNetworks.find(n => n.network === network) || NET_EXTRA[network];
   if (!chain) {
@@ -33,7 +21,7 @@ function mapRaw([network, versions]) {
   return {
     genesisHash: hexToU8a(chain.genesisHash[0]),
     network,
-    versions: checkOrder(network, versions).map(([blockNumber, specVersion, apis]) => ({
+    versions: versions.map(([blockNumber, specVersion, apis]) => ({
       apis,
       blockNumber: new BN(blockNumber),
       specVersion: new BN(specVersion)

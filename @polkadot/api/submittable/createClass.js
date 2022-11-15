@@ -77,11 +77,18 @@ export function createClass({
       });
       this.#ignoreStatusCb = apiType === 'rxjs';
     }
+    get hasDryRun() {
+      var _api$rpc$system;
+      return isFunction((_api$rpc$system = api.rpc.system) == null ? void 0 : _api$rpc$system.dryRun);
+    }
+    get hasPaymentInfo() {
+      var _api$call$transaction;
+      return isFunction((_api$call$transaction = api.call.transactionPaymentApi) == null ? void 0 : _api$call$transaction.queryInfo);
+    }
 
     // dry run an extrinsic
     dryRun(account, optionsOrHash) {
-      var _api$rpc$system;
-      if (!((_api$rpc$system = api.rpc.system) != null && _api$rpc$system.dryRun)) {
+      if (!this.hasDryRun) {
         throw new Error('The system.dryRun RPC call is not available in your environment');
       }
       if (blockHash || isString(optionsOrHash) || isU8a(optionsOrHash)) {
@@ -95,8 +102,7 @@ export function createClass({
 
     // calculate the payment info for this transaction (if signed and submitted)
     paymentInfo(account, optionsOrHash) {
-      var _api$call$transaction;
-      if (!((_api$call$transaction = api.call.transactionPaymentApi) != null && _api$call$transaction.queryInfo)) {
+      if (!this.hasPaymentInfo) {
         throw new Error('The transactionPaymentApi.queryInfo runtime call is not available in your environment');
       }
       if (blockHash || isString(optionsOrHash) || isU8a(optionsOrHash)) {

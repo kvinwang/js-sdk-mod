@@ -45,17 +45,10 @@ Object.defineProperty(exports, "secp256k1Verify", {
     return _verify.secp256k1Verify;
   }
 });
-
 var _compress = require("./compress");
-
 var _expand = require("./expand");
-
 var _fromSeed = require("./pair/fromSeed");
-
 var _recover = require("./recover");
-
 var _sign = require("./sign");
-
 var _tweakAdd = require("./tweakAdd");
-
 var _verify = require("./verify");

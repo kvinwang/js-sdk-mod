@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.hexStripPrefix = hexStripPrefix;
-
 var _hex = require("../is/hex");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -32,6 +30,5 @@ function hexStripPrefix(value) {
   } else if (_hex.REGEX_HEX_NOPREFIX.test(value)) {
     return value;
   }
-
   throw new Error(`Expected hex value to convert, found '${value}'`);
 }

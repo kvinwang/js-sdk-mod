@@ -7,9 +7,11 @@ exports.REGEX_HEX_PREFIXED = exports.REGEX_HEX_NOPREFIX = void 0;
 exports.isHex = isHex;
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const REGEX_HEX_PREFIXED = /^0x[\da-fA-F]+$/;
 exports.REGEX_HEX_PREFIXED = REGEX_HEX_PREFIXED;
 const REGEX_HEX_NOPREFIX = /^[\da-fA-F]+$/;
+
 /**
  * @name isHex
  * @summary Tests for a hex string.
@@ -25,9 +27,7 @@ const REGEX_HEX_NOPREFIX = /^[\da-fA-F]+$/;
  * isHex('0x1234', 8); // => false
  * ```
  */
-
 exports.REGEX_HEX_NOPREFIX = REGEX_HEX_NOPREFIX;
-
 function isHex(value) {
   let bitLength = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -1;
   let ignoreLength = arguments.length > 2 ? arguments[2] : undefined;

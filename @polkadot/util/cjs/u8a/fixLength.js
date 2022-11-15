@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.u8aFixLength = u8aFixLength;
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -28,13 +27,11 @@ function u8aFixLength(value) {
   let bitLength = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : -1;
   let atStart = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   const byteLength = Math.ceil(bitLength / 8);
-
   if (bitLength === -1 || value.length === byteLength) {
     return value;
   } else if (value.length > byteLength) {
     return value.subarray(0, byteLength);
   }
-
   const result = new Uint8Array(byteLength);
   result.set(value, atStart ? 0 : byteLength - value.length);
   return result;

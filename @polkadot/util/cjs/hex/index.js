@@ -57,21 +57,12 @@ Object.defineProperty(exports, "hexToU8a", {
     return _toU8a.hexToU8a;
   }
 });
-
 var _addPrefix = require("./addPrefix");
-
 var _fixLength = require("./fixLength");
-
 var _hasPrefix = require("./hasPrefix");
-
 var _stripPrefix = require("./stripPrefix");
-
 var _toBigInt = require("./toBigInt");
-
 var _toBn = require("./toBn");
-
 var _toNumber = require("./toNumber");
-
 var _toString = require("./toString");
-
 var _toU8a = require("./toU8a");

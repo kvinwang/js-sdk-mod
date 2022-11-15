@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.u8aEq = u8aEq;
-
 var _toU8a = require("./toU8a");
-
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -27,27 +25,22 @@ var _toU8a = require("./toU8a");
 function u8aEq(a, b) {
   const u8aa = (0, _toU8a.u8aToU8a)(a);
   const u8ab = (0, _toU8a.u8aToU8a)(b);
-
   if (u8aa.length === u8ab.length) {
     const dvA = new DataView(u8aa.buffer, u8aa.byteOffset);
     const dvB = new DataView(u8ab.buffer, u8ab.byteOffset);
     const mod = u8aa.length % 4 | 0;
     const length = u8aa.length - mod | 0;
-
     for (let i = 0; i < length; i += 4) {
       if (dvA.getUint32(i) !== dvB.getUint32(i)) {
         return false;
       }
     }
-
     for (let i = length; i < u8aa.length; i++) {
       if (u8aa[i] !== u8ab[i]) {
         return false;
       }
     }
-
     return true;
   }
-
   return false;
 }

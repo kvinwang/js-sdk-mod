@@ -57,21 +57,12 @@ Object.defineProperty(exports, "sr25519VrfVerify", {
     return _vrfVerify.sr25519VrfVerify;
   }
 });
-
 var _agreement = require("./agreement");
-
 var _deriveHard = require("./deriveHard");
-
 var _derivePublic = require("./derivePublic");
-
 var _deriveSoft = require("./deriveSoft");
-
 var _fromSeed = require("./pair/fromSeed");
-
 var _sign = require("./sign");
-
 var _verify = require("./verify");
-
 var _vrfSign = require("./vrfSign");
-
 var _vrfVerify = require("./vrfVerify");

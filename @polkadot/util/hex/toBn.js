@@ -1,7 +1,9 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { BN } from "../bn/bn.js";
 import { hexStripPrefix } from "./stripPrefix.js";
+
 /**
  * @name hexToBn
  * @summary Creates a BN.js object from a hex string.
@@ -20,7 +22,6 @@ import { hexStripPrefix } from "./stripPrefix.js";
  * hexToBn('0x123480001f'); // => BN(0x123480001f)
  * ```
  */
-
 export function hexToBn(value, {
   isLe = false,
   isNegative = false
@@ -28,10 +29,10 @@ export function hexToBn(value, {
   if (!value || value === '0x') {
     return new BN(0);
   }
-
   const stripped = hexStripPrefix(value);
-  const bn = new BN(stripped, 16, isLe ? 'le' : 'be'); // fromTwos takes as parameter the number of bits, which is the hex length
-  // multiplied by 4 (2 bytes being 8 bits)
+  const bn = new BN(stripped, 16, isLe ? 'le' : 'be');
 
+  // fromTwos takes as parameter the number of bits, which is the hex length
+  // multiplied by 4 (2 bytes being 8 bits)
   return isNegative ? bn.fromTwos(stripped.length * 4) : bn;
 }

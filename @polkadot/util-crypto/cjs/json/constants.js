@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.SCRYPT_LENGTH = exports.NONCE_LENGTH = exports.ENCODING_VERSION = exports.ENCODING_NONE = exports.ENCODING = void 0;
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 const ENCODING = ['scrypt', 'xsalsa20-poly1305'];
 exports.ENCODING = ENCODING;
 const ENCODING_NONE = ['none'];

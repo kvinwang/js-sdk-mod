@@ -1,8 +1,8 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import nacl from 'tweetnacl';
 import { randomAsU8a } from "../random/asU8a.js";
-
 /**
  * @name naclSeal
  * @summary Seals a message using the sender's encrypting secretKey, receiver's public key, and nonce

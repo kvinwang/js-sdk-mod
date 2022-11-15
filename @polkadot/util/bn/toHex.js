@@ -1,7 +1,9 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { u8aToHex } from "../u8a/index.js";
 import { bnToU8a } from "./toU8a.js";
+
 /**
  * @name bnToHex
  * @summary Creates a hex value from a BN.js bignumber object.
@@ -17,7 +19,6 @@ import { bnToU8a } from "./toU8a.js";
  * bnToHex(new BN(0x123456)); // => '0x123456'
  * ```
  */
-
 export function bnToHex(value, {
   bitLength = -1,
   isLe = false,

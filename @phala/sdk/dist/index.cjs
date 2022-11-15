@@ -60,11 +60,7 @@ var types = {
   },
   InkQueryData: {
     _enum: {
-      InkMessage: {
-        payload: "Vec<u8>",
-        deposit: "u128",
-        transfer: "u128"
-      },
+      InkMessage: "Vec<u8>",
       SidevmMessage: "Vec<u8>"
     }
   },
@@ -89,23 +85,9 @@ var types = {
   },
   InkMessage: {
     nonce: "Vec<u8>",
-    message: "Vec<u8>",
-    transfer: 'u128',
-    gasLimit: 'u64',
-    storageDepositLimit: 'Option<u128>',
+    message: "Vec<u8>"
   },
-  InkCommand: { _enum: { InkMessage: "InkMessage" } },
-  WeightV2: {
-    refTime: "Compact<u64>",
-    proofSize: "Compact<u64>"
-  },
-  ContractExecResultV2: {
-    gasConsumedV2: "WeightV2",
-    gasRequiredV2: "WeightV2",
-    storageDeposit: "StorageDeposit",
-    debugMessage: "Text",
-    result: "ContractExecResultResult"
-  }
+  InkCommand: { _enum: { InkMessage: "InkMessage" } }
 };
 
 // src/lib/hex.ts
@@ -5822,7 +5804,7 @@ var createPruntimeApi = (baseURL) => {
   );
   return pruntimeApi;
 };
-var create = async ({ api, baseURL, contractId, autoDeposit = false }) => {
+var create = async ({ api, baseURL, contractId }) => {
   await (0, import_wasm_crypto.waitReady)();
   const pruntimeApi = createPruntimeApi(baseURL);
   const { publicKey } = await pruntimeApi.getInfo({});
@@ -5836,12 +5818,6 @@ var create = async ({ api, baseURL, contractId, autoDeposit = false }) => {
     (0, import_util2.hexToU8a)((0, import_util2.hexAddPrefix)(remotePubkey)),
     sk
   );
-  let gasPrice = 0;
-  if (autoDeposit) {
-    // TODO: no unwrap
-    const cluster = (await api.query.phalaFatContracts.contracts(contractId)).unwrap().cluster;
-    gasPrice = (await api.query.phalaFatContracts.clusters(cluster)).unwrap().gasPrice;
-  }
   const contractKey = (await api.query.phalaRegistry.contractKeys(contractId)).toString();
   if (!contractKey) {
     throw new Error(`No contract key for ${contractId}`);
@@ -5886,35 +5862,24 @@ var create = async ({ api, baseURL, contractId, autoDeposit = false }) => {
     }).toHex(),
     certificateData
   );
-  const command = ({ contractId: contractId2, payload, deposit }) => {
+  const command = ({ contractId: contractId2, payload }) => {
     const encodedPayload = api.createType("CommandPayload", {
       encrypted: createEncryptedData(payload, commandAgreementKey)
     }).toHex();
-    return api.tx.phalaFatContracts.pushContractMessage(
-      contractId2,
-      encodedPayload,
-      deposit
+    return api.tx.phalaMq.pushMessage(
+      (0, import_util2.stringToHex)(`phala/contract/${(0, import_util2.hexStripPrefix)(contractId2)}/command`),
+      encodedPayload
     );
   };
   const txContracts = (dest, value, gas, storageDepositLimit, encParams) => {
-    let deposit = 0;
-    if (autoDeposit) {
-      // FIXME: use BN.js
-      const gasFee = gas * gasPrice;
-      deposit = value + gasFee + (storageDepositLimit || 0);
-    }
     return command({
       contractId: dest.toHex(),
       payload: api.createType("InkCommand", {
         InkMessage: {
           nonce: (0, import_util2.hexAddPrefix)(randomHex(32)),
-          message: api.createType("Vec<u8>", encParams).toHex(),
-          transfer: value,
-          gasLimit: gas,
-          storageDepositLimit
+          message: api.createType("Vec<u8>", encParams).toHex()
         }
-      }).toHex(),
-      deposit
+      }).toHex()
     });
   };
   Object.defineProperty(txContracts, "meta", {
@@ -5941,25 +5906,15 @@ var create = async ({ api, baseURL, contractId, autoDeposit = false }) => {
                 id: dest
               },
               data: {
-                // Better pass the `deposit` in by the caller. A hard coded large enough value is acceptable at the moment.
-                InkMessage: { payload: inputData, deposit: "10000000000000000", transfer: value }
+                InkMessage: inputData
               }
             }).toHex(),
             origin
           ).then((data) => {
-            const inkMessageReturn = api.createType("InkResponse", (0, import_util2.hexAddPrefix)(data)).toJSON().result.ok.inkMessageReturn;
-            let result;
-            try {
-              result = api.createType("ContractExecResult", inkMessageReturn);
-            } catch (err) {
-              result = api.createType(
-                "ContractExecResultV2",
-                inkMessageReturn
-              );
-              result.gasConsumed = result.gasConsumedV2.proofSize.unwrap();
-              result.gasRequired = result.gasRequiredV2.proofSize.unwrap();
-            }
-            return result;
+            return api.createType(
+              "ContractExecResult",
+              api.createType("InkResponse", (0, import_util2.hexAddPrefix)(data)).toJSON().result.ok.inkMessageReturn
+            );
           })
         );
       }

@@ -1,9 +1,11 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { BN_EIGHT, bnToU8a, u8aConcat, u8aToBn } from '@polkadot/util';
 import { BN_LE_32_OPTS, BN_LE_512_OPTS, BN_LE_OPTS } from "../../bn.js";
-import { hmacShaAsU8a } from "../../hmac/index.js"; // performs hard-only derivation on the xprv
+import { hmacShaAsU8a } from "../../hmac/index.js";
 
+// performs hard-only derivation on the xprv
 export function ledgerDerivePrivate(xprv, index) {
   const kl = xprv.subarray(0, 32);
   const kr = xprv.subarray(32, 64);

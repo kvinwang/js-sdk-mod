@@ -1,6 +1,8 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import nacl from 'tweetnacl';
+
 /**
  * @name ed25519PairFromSecret
  * @summary Creates a new public/secret keypair from a secret.
@@ -15,7 +17,6 @@ import nacl from 'tweetnacl';
  * ed25519PairFromSecret(...); // => { secretKey: [...], publicKey: [...] }
  * ```
  */
-
 export function ed25519PairFromSecret(secret) {
   return nacl.sign.keyPair.fromSecretKey(secret);
 }

@@ -1,6 +1,8 @@
 // Copyright 2017-2022 @polkadot/util authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { u8aToU8a } from "./toU8a.js";
+
 /**
  * @name u8aCmp
  * @summary Compares two Uint8Arrays for sorting.
@@ -17,16 +19,13 @@ import { u8aToU8a } from "./toU8a.js";
  * u8aCmp(new Uint8Array([0x69, 0x65]), new Uint8Array([0x68, 0x65])); // +1
  * ```
  */
-
 export function u8aCmp(a, b) {
   const u8aa = u8aToU8a(a);
   const u8ab = u8aToU8a(b);
   let i = 0;
-
   while (true) {
     const overA = i >= u8aa.length;
     const overB = i >= u8ab.length;
-
     if (overA && overB) {
       // both ends reached
       return 0;
@@ -41,7 +40,6 @@ export function u8aCmp(a, b) {
       // (we don't use u8aa[i] - u8ab[i] since that doesn't match with localeCompare)
       return u8aa[i] > u8ab[i] ? 1 : -1;
     }
-
     i++;
   }
 }

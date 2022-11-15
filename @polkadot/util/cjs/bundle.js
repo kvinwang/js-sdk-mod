@@ -12,11 +12,8 @@ Object.defineProperty(exports, "packageInfo", {
     return _packageInfo.packageInfo;
   }
 });
-
 var _packageInfo = require("./packageInfo");
-
 var _array = require("./array");
-
 Object.keys(_array).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -28,9 +25,7 @@ Object.keys(_array).forEach(function (key) {
     }
   });
 });
-
 var _assert = require("./assert");
-
 Object.keys(_assert).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -42,9 +37,7 @@ Object.keys(_assert).forEach(function (key) {
     }
   });
 });
-
 var _bi = require("./bi");
-
 Object.keys(_bi).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -56,9 +49,7 @@ Object.keys(_bi).forEach(function (key) {
     }
   });
 });
-
 var _bn = require("./bn");
-
 Object.keys(_bn).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -70,9 +61,7 @@ Object.keys(_bn).forEach(function (key) {
     }
   });
 });
-
 var _buffer = require("./buffer");
-
 Object.keys(_buffer).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -84,9 +73,7 @@ Object.keys(_buffer).forEach(function (key) {
     }
   });
 });
-
 var _compact = require("./compact");
-
 Object.keys(_compact).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -98,9 +85,7 @@ Object.keys(_compact).forEach(function (key) {
     }
   });
 });
-
 var _extractTime = require("./extractTime");
-
 Object.keys(_extractTime).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -112,9 +97,7 @@ Object.keys(_extractTime).forEach(function (key) {
     }
   });
 });
-
 var _float = require("./float");
-
 Object.keys(_float).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -126,9 +109,7 @@ Object.keys(_float).forEach(function (key) {
     }
   });
 });
-
 var _format = require("./format");
-
 Object.keys(_format).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -140,9 +121,7 @@ Object.keys(_format).forEach(function (key) {
     }
   });
 });
-
 var _has = require("./has");
-
 Object.keys(_has).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -154,9 +133,7 @@ Object.keys(_has).forEach(function (key) {
     }
   });
 });
-
 var _hex = require("./hex");
-
 Object.keys(_hex).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -168,9 +145,7 @@ Object.keys(_hex).forEach(function (key) {
     }
   });
 });
-
 var _is = require("./is");
-
 Object.keys(_is).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -182,9 +157,7 @@ Object.keys(_is).forEach(function (key) {
     }
   });
 });
-
 var _lazy = require("./lazy");
-
 Object.keys(_lazy).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -196,9 +169,7 @@ Object.keys(_lazy).forEach(function (key) {
     }
   });
 });
-
 var _logger = require("./logger");
-
 Object.keys(_logger).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -210,9 +181,7 @@ Object.keys(_logger).forEach(function (key) {
     }
   });
 });
-
 var _memoize = require("./memoize");
-
 Object.keys(_memoize).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -224,9 +193,7 @@ Object.keys(_memoize).forEach(function (key) {
     }
   });
 });
-
 var _nextTick = require("./nextTick");
-
 Object.keys(_nextTick).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -238,9 +205,7 @@ Object.keys(_nextTick).forEach(function (key) {
     }
   });
 });
-
 var _number = require("./number");
-
 Object.keys(_number).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -252,9 +217,7 @@ Object.keys(_number).forEach(function (key) {
     }
   });
 });
-
 var _object = require("./object");
-
 Object.keys(_object).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -266,9 +229,7 @@ Object.keys(_object).forEach(function (key) {
     }
   });
 });
-
 var _promisify = require("./promisify");
-
 Object.keys(_promisify).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -280,9 +241,7 @@ Object.keys(_promisify).forEach(function (key) {
     }
   });
 });
-
 var _string = require("./string");
-
 Object.keys(_string).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -294,9 +253,7 @@ Object.keys(_string).forEach(function (key) {
     }
   });
 });
-
 var _stringify = require("./stringify");
-
 Object.keys(_stringify).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -308,9 +265,7 @@ Object.keys(_stringify).forEach(function (key) {
     }
   });
 });
-
 var _u8a = require("./u8a");
-
 Object.keys(_u8a).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
@@ -322,9 +277,7 @@ Object.keys(_u8a).forEach(function (key) {
     }
   });
 });
-
 var _versionDetect = require("./versionDetect");
-
 Object.keys(_versionDetect).forEach(function (key) {
   if (key === "default" || key === "__esModule") return;
   if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;

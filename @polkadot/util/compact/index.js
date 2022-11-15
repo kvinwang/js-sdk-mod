@@ -21,6 +21,7 @@
  *
  * Note: we use *LOW BITS* of the LSB in LE encoding to encode the 2 bit key.
  */
+
 export { compactAddLength } from "./addLength.js";
 export { compactStripLength } from "./stripLength.js";
 export { compactFromU8a, compactFromU8aLim } from "./fromU8a.js";

@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 export function createSeedDeriveFn(fromSeed, derive) {
   return (keypair, {
     chainCode,
@@ -8,7 +9,6 @@ export function createSeedDeriveFn(fromSeed, derive) {
     if (!isHard) {
       throw new Error('A soft key was found in the path and is not supported');
     }
-
     return fromSeed(derive(keypair.secretKey.subarray(0, 32), chainCode));
   };
 }

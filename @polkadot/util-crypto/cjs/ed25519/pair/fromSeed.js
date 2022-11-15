@@ -1,16 +1,12 @@
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ed25519PairFromSeed = ed25519PairFromSeed;
-
 var _tweetnacl = _interopRequireDefault(require("tweetnacl"));
-
 var _wasmCrypto = require("@polkadot/wasm-crypto");
-
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
@@ -36,6 +32,5 @@ function ed25519PairFromSeed(seed, onlyJs) {
       secretKey: full.slice(0, 64)
     };
   }
-
   return _tweetnacl.default.sign.keyPair.fromSeed(seed);
 }

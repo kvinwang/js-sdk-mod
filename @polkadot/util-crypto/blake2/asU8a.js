@@ -1,9 +1,11 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { blake2b as blake2bJs } from '@noble/hashes/blake2b';
 import { hasBigInt, u8aToU8a } from '@polkadot/util';
 import { blake2b, isReady } from '@polkadot/wasm-crypto';
 import { createAsHex } from "../helpers.js";
+
 /**
  * @name blake2AsU8a
  * @summary Creates a blake2b u8a from the input.
@@ -18,7 +20,6 @@ import { createAsHex } from "../helpers.js";
  * blake2AsU8a('abc'); // => [0xba, 0x80, 0xa5, 0x3f, 0x98, 0x1c, 0x4d, 0x0d]
  * ```
  */
-
 export function blake2AsU8a(data, bitLength = 256, key, onlyJs) {
   const byteLength = Math.ceil(bitLength / 8);
   const u8a = u8aToU8a(data);
@@ -27,9 +28,9 @@ export function blake2AsU8a(data, bitLength = 256, key, onlyJs) {
     key: key || undefined
   });
 }
+
 /**
  * @name blake2AsHex
  * @description Creates a blake2b hex from the input.
  */
-
 export const blake2AsHex = createAsHex(blake2AsU8a);

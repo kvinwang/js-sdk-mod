@@ -21,7 +21,5 @@ Object.defineProperty(exports, "randomAsU8a", {
     return _asU8a.randomAsU8a;
   }
 });
-
 var _asNumber = require("./asNumber");
-
 var _asU8a = require("./asU8a");

@@ -9,5 +9,4 @@ Object.defineProperty(exports, "signatureVerify", {
     return _verify.signatureVerify;
   }
 });
-
 var _verify = require("./verify");

@@ -4,6 +4,7 @@
 /**
  * @summary Utility methods to convert to and from `bigint` objects
  */
+
 export * from "./consts.js";
 export { nSqrt } from "./sqrt.js";
 export { nToBigInt } from "./toBigInt.js";

@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { bnToU8a, u8aConcat } from '@polkadot/util';
 import { BN_LE_32_OPTS } from "../bn.js";
 export function scryptToU8a(salt, {

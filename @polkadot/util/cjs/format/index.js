@@ -45,15 +45,9 @@ Object.defineProperty(exports, "formatNumber", {
     return _formatNumber.formatNumber;
   }
 });
-
 var _formatBalance = require("./formatBalance");
-
 var _formatDate = require("./formatDate");
-
 var _formatDecimal = require("./formatDecimal");
-
 var _formatElapsed = require("./formatElapsed");
-
 var _formatNumber = require("./formatNumber");
-
 var _si = require("./si");

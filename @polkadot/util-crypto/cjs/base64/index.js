@@ -39,9 +39,6 @@ Object.defineProperty(exports, "isBase64", {
     return _bs.isBase64;
   }
 });
-
 var _bs = require("./bs64");
-
 var _pad = require("./pad");
-
 var _trim = require("./trim");

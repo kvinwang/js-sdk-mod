@@ -13,6 +13,6 @@ const packageInfo = {
   name: '@polkadot/types',
   path: typeof __dirname === 'string' ? __dirname : 'auto',
   type: 'cjs',
-  version: '9.7.1'
+  version: '9.8.1'
 };
 exports.packageInfo = packageInfo;

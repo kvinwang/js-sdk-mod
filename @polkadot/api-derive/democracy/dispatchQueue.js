@@ -7,6 +7,9 @@ import { isFunction, objectSpread, stringToHex } from '@polkadot/util';
 import { memo } from "../util/index.js";
 import { getImageHashBounded } from "./util.js";
 const DEMOCRACY_ID = stringToHex('democrac');
+
+// included here for backwards compat
+
 function isMaybeHashedOrBounded(call) {
   // check for enum
   return call instanceof Enum;

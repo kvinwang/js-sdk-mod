@@ -8,7 +8,6 @@
 export function objectSpread(dest, ...sources) {
   for (let i = 0; i < sources.length; i++) {
     const src = sources[i];
-
     if (src) {
       if (typeof src.entries === 'function') {
         for (const [key, value] of src.entries()) {
@@ -19,6 +18,5 @@ export function objectSpread(dest, ...sources) {
       }
     }
   }
-
   return dest;
 }

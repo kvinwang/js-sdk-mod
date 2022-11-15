@@ -1,5 +1,6 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { scrypt as scryptJs } from '@noble/hashes/scrypt';
 import { hasBigInt, objectSpread, u8aToU8a } from '@polkadot/util';
 import { isReady, scrypt } from '@polkadot/wasm-crypto';

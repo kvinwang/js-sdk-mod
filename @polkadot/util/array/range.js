@@ -20,12 +20,9 @@ export function arrayRange(size, startAt = 0) {
   if (size <= 0) {
     throw new Error('Expected non-zero, positive number as a range size');
   }
-
   const result = new Array(size);
-
   for (let i = 0; i < size; i++) {
     result[i] = i + startAt;
   }
-
   return result;
 }

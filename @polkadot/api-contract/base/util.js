@@ -18,12 +18,16 @@ export function createBluePrintWithId(fn) {
 export function encodeSalt(salt = randomAsU8a()) {
   return salt instanceof Bytes ? salt : salt && salt.length ? compactAddLength(u8aToU8a(salt)) : EMPTY_SALT;
 }
-export function convertWeight(orig) {
-  const refTime = orig.proofSize ? orig.refTime.toBn() : bnToBn(orig);
+export function convertWeight(weight) {
+  const [refTime, proofSize] = isWeightV2(weight) ? [weight.refTime.toBn(), weight.proofSize.toBn()] : [bnToBn(weight), undefined];
   return {
     v1Weight: refTime,
     v2Weight: {
+      proofSize,
       refTime
     }
   };
+}
+export function isWeightV2(weight) {
+  return !!weight.proofSize;
 }

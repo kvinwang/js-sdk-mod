@@ -1,6 +1,8 @@
 // Copyright 2017-2022 @polkadot/util-crypto authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import nacl from 'tweetnacl';
+
 /**
  * @name naclOpen
  * @summary Opens a message using the receiver's secretKey and nonce
@@ -15,7 +17,6 @@ import nacl from 'tweetnacl';
  * naclOpen([...], [...], [...]); // => [...]
  * ```
  */
-
 export function naclOpen(sealed, nonce, senderBoxPublic, receiverBoxSecret) {
   return nacl.box.open(sealed, nonce, senderBoxPublic, receiverBoxSecret) || null;
 }

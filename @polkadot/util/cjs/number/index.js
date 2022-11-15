@@ -15,7 +15,5 @@ Object.defineProperty(exports, "numberToU8a", {
     return _toU8a.numberToU8a;
   }
 });
-
 var _toHex = require("./toHex");
-
 var _toU8a = require("./toU8a");
